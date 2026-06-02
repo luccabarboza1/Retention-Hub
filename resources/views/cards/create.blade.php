@@ -6,7 +6,7 @@
 <div class="max-w-3xl mx-auto space-y-6">
 
     {{-- Actions / Back --}}
-    <div class="flex items-center justify-between shrink-0 bg-slate-50/50 dark:bg-slate-850/50 px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800/80 backdrop-blur-sm">
+    <div class="flex items-center justify-between shrink-0 bg-slate-50/50 dark:bg-slate-800/30 px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800/80 backdrop-blur-sm">
         <div class="flex items-center gap-2 text-xs">
             <a href="{{ route('board') }}" class="font-bold text-brand-600 dark:text-brand-400 flex items-center gap-1">
                 ← Voltar ao Board
