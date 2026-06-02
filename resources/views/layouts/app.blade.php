@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Retention Hub') — Ouvidoria</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50:  '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe',
+                            300: '#c4b5fd', 400: '#a78bfa', 500: '#8b5cf6',
+                            600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95',
+                        },
+                        accent: {
+                            emerald: '#10b981', amber: '#f59e0b', rose: '#f43f5e',
+                            indigo: '#6366f1', purple: '#a855f7', cyan: '#06b6d4',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'Courier New', 'monospace'],
+                    },
+                    boxShadow: {
+                        'premium':       '0 8px 30px rgb(0 0 0 / 0.04)',
+                        'premium-hover': '0 20px 40px -10px rgb(124 58 237 / 0.08)',
+                        'glow-brand':    '0 0 20px rgba(124, 58, 237, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        [x-cloak] { display: none !important; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out both; }
+
+        .kanban-col { min-height: 250px; }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+
+        /* ─── Dark mode CSS overrides ─── */
+        .dark { color-scheme: dark; }
+
+        /* Inputs & selects */
+        .field-input {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 0.625rem 1rem;
+            font-size: 0.875rem;
+            background-color: rgba(248,250,252,0.5);
+            outline: none;
+            transition: all 0.2s;
+            color: #1e293b;
+            font-family: inherit;
+        }
+        .field-input:focus {
+            background-color: #fff;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 4px rgba(124,58,237,0.08);
+        }
+        .dark .field-input {
+            border-color: #334155;
+            background-color: rgba(30,41,59,0.5);
+            color: #f1f5f9;
+        }
+        .dark .field-input:focus {
+            background-color: #1e293b;
+            border-color: #7c3aed;
+        }
+        .dark .field-input::placeholder { color: #475569; }
+
+        /* Labels */
+        .field-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.375rem;
+        }
+        .dark .field-label { color: #64748b; }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            background-color: #7c3aed;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 0.75rem;
+            box-shadow: 0 0 20px rgba(124,58,237,0.15);
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn-primary:hover { background-color: #6d28d9; transform: translateY(-1px); }
+
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #7c3aed;
+            background-color: #f5f3ff;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn-ghost:hover { background-color: #ede9fe; color: #6d28d9; }
+        .dark .btn-ghost { color: #a78bfa; background-color: rgba(109,40,217,0.15); }
+        .dark .btn-ghost:hover { background-color: rgba(109,40,217,0.25); }
+    </style>
+
+    {{-- Aplicar dark mode antes do render --}}
+    <script>
+        (function() {
+            const saved = localStorage.getItem('rh-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'dark' || (!saved && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 font-sans antialiased text-slate-800 dark:text-slate-200 flex h-screen overflow-hidden transition-colors duration-200"
+      x-data="appShell()" :class="{ 'dark': isDark }">
+
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-brand-200/10 dark:bg-brand-500/5 blur-[120px] pointer-events-none z-0"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-accent-cyan/10 dark:bg-accent-cyan/5 blur-[120px] pointer-events-none z-0"></div>
+
+<div class="flex h-full w-full p-3 gap-3 z-10 relative">
+
+    {{-- ─── Sidebar ─── --}}
+    <aside :class="collapsed ? 'w-16' : 'w-64'"
+           class="bg-slate-900 dark:bg-slate-950 text-white flex flex-col shrink-0 rounded-2xl border border-slate-800 dark:border-slate-800/80 shadow-premium overflow-hidden transition-all duration-300">
+
+        {{-- Brand --}}
+        <div class="px-4 py-5 border-b border-slate-800/80 flex items-center gap-3 overflow-hidden">
+            <span class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-500 to-accent-indigo flex items-center justify-center font-extrabold text-sm text-white shadow-glow-brand shrink-0">
+                R
+            </span>
+            <div x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
+                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition-opacity duration-100" x-transition:leave-end="opacity-0"
+                 class="overflow-hidden min-w-0">
+                <p class="font-extrabold text-sm tracking-tight text-white truncate">Retention Hub</p>
+                <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Ouvidoria & Retenção</p>
+            </div>
+        </div>
+
+        {{-- Nav --}}
+        <nav class="flex-1 py-4 space-y-1 px-2">
+            @php
+            $nav = [
+                ['route' => 'board',           'pattern' => 'board',        'icon' => 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2', 'label' => 'Board'],
+                ['route' => 'customers.index', 'pattern' => 'customers.*',  'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Clientes'],
+                ['route' => 'cards.create',    'pattern' => 'cards.create', 'icon' => 'M12 4v16m8-8H4', 'label' => 'Novo Card'],
+            ];
+            @endphp
+
+            @foreach($nav as $item)
+            @php $active = request()->routeIs($item['pattern']); @endphp
+            <a href="{{ route($item['route']) }}"
+               :title="collapsed ? '{{ $item['label'] }}' : ''"
+               class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                      {{ $active ? 'bg-gradient-to-r from-brand-600 to-brand-700 text-white shadow-glow-brand' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
+                <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/>
+                </svg>
+                <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
+                      x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                      x-transition:leave="transition-opacity duration-100" x-transition:leave-end="opacity-0"
+                      class="truncate">{{ $item['label'] }}</span>
+            </a>
+            @endforeach
+        </nav>
+
+        {{-- Footer: tema + colapso --}}
+        <div class="px-2 pb-4 border-t border-slate-800/80 pt-4 space-y-1">
+
+            {{-- Dark mode toggle --}}
+            <button @click="toggleDark()"
+                    :title="isDark ? 'Tema claro' : 'Tema escuro'"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+                <svg x-show="!isDark" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                </svg>
+                <svg x-show="isDark" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+                <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
+                      x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                      x-transition:leave="transition-opacity duration-100" x-transition:leave-end="opacity-0"
+                      class="text-xs" x-text="isDark ? 'Tema claro' : 'Tema escuro'"></span>
+            </button>
+
+            {{-- Collapse toggle --}}
+            <button @click="collapsed = !collapsed"
+                    :title="collapsed ? 'Expandir menu' : 'Recolher menu'"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+                <svg class="w-5 h-5 shrink-0 transition-transform duration-300" :class="collapsed ? 'rotate-180' : ''"
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                </svg>
+                <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
+                      x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                      x-transition:leave="transition-opacity duration-100" x-transition:leave-end="opacity-0"
+                      class="text-xs">Recolher</span>
+            </button>
+
+            <div x-show="!collapsed" class="px-3 pt-2 text-[10px] text-slate-600">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="font-semibold uppercase tracking-wider text-emerald-600">Ambiente seguro</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    {{-- ─── Main ─── --}}
+    <div class="flex-1 flex flex-col overflow-hidden bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-premium transition-colors duration-200">
+
+        {{-- Header --}}
+        <header class="px-6 py-4 border-b border-slate-100 dark:border-slate-700/60 flex items-center gap-4 shrink-0">
+            <h1 class="text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100 shrink-0">@yield('header', 'Board')</h1>
+
+            <form action="{{ route('search') }}" method="GET" class="flex-1 max-w-md mx-2">
+                <div class="relative group">
+                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500 transition-colors group-focus-within:text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+                    </svg>
+                    <input name="q" value="{{ request('q') }}"
+                           placeholder="Buscar clientes, cards, chats..."
+                           autocomplete="off"
+                           class="w-full pl-10 pr-4 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none transition-all dark:text-slate-200 dark:placeholder-slate-500">
+                </div>
+            </form>
+
+            <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shrink-0">
+                {{ now()->format('d/m/Y') }}
+            </div>
+        </header>
+
+        {{-- Toasts --}}
+        @if(session('success'))
+        <div class="mx-6 mt-5 px-5 py-3.5 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-sm rounded-xl flex items-center gap-3 animate-fadeIn shrink-0">
+            <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 text-xs font-bold">✓</span>
+            <span class="font-medium">{{ session('success') }}</span>
+        </div>
+        @endif
+        @if(session('error'))
+        <div class="mx-6 mt-5 px-5 py-3.5 bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-sm rounded-xl flex items-center gap-3 animate-fadeIn shrink-0">
+            <span class="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-800 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0 text-xs font-bold">✕</span>
+            <span class="font-medium">{{ session('error') }}</span>
+        </div>
+        @endif
+
+        <main class="flex-1 overflow-auto p-6">
+            @yield('content')
+        </main>
+    </div>
+
+</div>
+
+<script>
+function appShell() {
+    return {
+        collapsed: localStorage.getItem('rh-sidebar') === '1',
+        isDark: document.documentElement.classList.contains('dark'),
+
+        toggleDark() {
+            this.isDark = !this.isDark;
+            document.documentElement.classList.toggle('dark', this.isDark);
+            localStorage.setItem('rh-theme', this.isDark ? 'dark' : 'light');
+        },
+
+        init() {
+            this.$watch('collapsed', v => localStorage.setItem('rh-sidebar', v ? '1' : '0'));
+        }
+    }
+}
+</script>
+
+</body>
+</html>

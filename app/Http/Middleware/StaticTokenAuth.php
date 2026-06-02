@@ -12,7 +12,11 @@ class StaticTokenAuth
     {
         $expected = config('app.api_access_token');
 
-        if (empty($expected) || $request->bearerToken() !== $expected) {
+        $token = $request->bearerToken()
+            ?? $request->header('X-Api-Token')
+            ?? $request->query('api_token');
+
+        if (empty($expected) || $token !== $expected) {
             return response()->json(['message' => 'Unauthorized.'], 401);
         }
 

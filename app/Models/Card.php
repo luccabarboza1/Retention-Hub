@@ -59,6 +59,11 @@ class Card extends Model
         return $this->hasMany(Chat::class, 'ombudsman_card_id');
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(CardComment::class);
+    }
+
     public function isFinished(): bool
     {
         return in_array($this->status, ['Retido', 'Churn']);

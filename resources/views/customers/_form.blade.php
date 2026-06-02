@@ -1,0 +1,153 @@
+{{-- Partial de formulário reestruturado com sistema de design premium --}}
+@php $c = $customer ?? null; @endphp
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+    {{-- Seção: Identificação --}}
+    <div class="md:col-span-2 border-b border-slate-100 dark:border-slate-800 pb-2 mb-1">
+        <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">👤 Identificação da Conta</h4>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Razão Social / Empresa <span class="text-rose-500">*</span></label>
+        <input type="text" name="company_name" value="{{ old('company_name', $c?->company_name) }}" required
+               placeholder="Ex: ACME Corporation"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-semibold text-slate-800 dark:text-slate-100 dark:placeholder-slate-500">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Responsável Principal <span class="text-rose-500">*</span></label>
+        <input type="text" name="client_name" value="{{ old('client_name', $c?->client_name) }}" required
+               placeholder="Ex: João Silva"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-300 dark:placeholder-slate-500">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">E-mail Principal de Contato</label>
+        <input type="email" name="email" value="{{ old('email', $c?->email) }}"
+               placeholder="contato@empresa.com.br"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all text-brand-600 dark:text-brand-400 font-medium dark:placeholder-slate-500">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Segmento de Atuação</label>
+        <input type="text" name="segment" value="{{ old('segment', $c?->segment) }}" placeholder="Ex: E-commerce, SaaS, Fintech"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all dark:text-slate-300 dark:placeholder-slate-500">
+    </div>
+
+    {{-- Seção: Contrato --}}
+    <div class="md:col-span-2 border-b border-slate-100 dark:border-slate-800 pb-2 mb-1 mt-3">
+        <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">📄 Contrato e Assinatura</h4>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Plano Contratado</label>
+        <input type="text" name="plan_name" value="{{ old('plan_name', $c?->plan_name) }}" placeholder="Ex: Enterprise, Pro, Growth"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-semibold text-slate-700 dark:text-slate-300 dark:placeholder-slate-500">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Categoria / Tier</label>
+        <input type="text" name="tier" value="{{ old('tier', $c?->tier) }}" placeholder="Ex: VIP, Gold, Silver"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-semibold uppercase tracking-wider text-slate-800 dark:text-slate-200 dark:placeholder-slate-500">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Valor Recorrente Mensal (MRR)</label>
+        <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 dark:text-slate-500">R$</span>
+            <input type="number" name="monthly_fee" value="{{ old('monthly_fee', $c?->monthly_fee) }}" min="0" step="0.01" placeholder="0,00"
+                   class="w-full border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-mono font-bold text-slate-800 dark:text-slate-250 dark:placeholder-slate-550">
+        </div>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Canal de Aquisição / Venda</label>
+        <input type="text" name="channel_type" value="{{ old('channel_type', $c?->channel_type) }}" placeholder="Ex: Outbound, Inbound, Parcerias"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all dark:text-slate-300 dark:placeholder-slate-500">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Data de Contratação</label>
+        <input type="date" name="contracted_at" value="{{ old('contracted_at', $c?->contracted_at?->format('Y-m-d')) }}"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all dark:text-slate-300">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Data de Cancelamento</label>
+        <input type="date" name="canceled_at" value="{{ old('canceled_at', $c?->canceled_at?->format('Y-m-d')) }}"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all text-rose-600 dark:text-rose-400">
+    </div>
+
+    {{-- Seção: Outros --}}
+    <div class="md:col-span-2 border-b border-slate-100 dark:border-slate-800 pb-2 mb-1 mt-3">
+        <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">🏢 Dados Complementares</h4>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Porte Corporativo</label>
+        <input type="text" name="company_size" value="{{ old('company_size', $c?->company_size) }}" placeholder="Ex: PME, Enterprise, Mid-Market"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all dark:text-slate-300 dark:placeholder-slate-500">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Seguidores do Instagram</label>
+        <input type="number" name="instagram_followers_count" value="{{ old('instagram_followers_count', $c?->instagram_followers_count) }}" min="0" placeholder="0"
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-mono dark:text-slate-300 dark:placeholder-slate-500">
+    </div>
+
+    {{-- Seção: Soluções --}}
+    <div class="md:col-span-2 border-b border-slate-100 dark:border-slate-800 pb-2 mb-1 mt-3">
+        <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">🔌 Ativação de Soluções</h4>
+    </div>
+
+    <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        {{-- Toggle: Chatbot --}}
+        <label class="border rounded-xl p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-3 select-none" 
+               x-data="{ checked: {{ old('has_chatbot', $c?->has_chatbot) ? 'true' : 'false' }} }" 
+               :class="checked ? 'border-brand-500 dark:border-brand-600 bg-brand-50/20 dark:bg-brand-950/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
+            <input type="hidden" name="has_chatbot" value="0">
+            <input type="checkbox" name="has_chatbot" value="1" @change="checked = $el.checked" {{ old('has_chatbot', $c?->has_chatbot) ? 'checked' : '' }} 
+                   class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500/20 accent-brand-600">
+            <div class="min-w-0">
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block leading-tight">Chatbot Ativo</span>
+                <span class="text-[9px] font-bold uppercase tracking-wider block mt-0.5" 
+                      :class="checked ? 'text-brand-600 dark:text-brand-400' : 'text-slate-400 dark:text-slate-650'"
+                      x-text="checked ? 'Habilitado' : 'Desabilitado'"></span>
+            </div>
+        </label>
+
+        {{-- Toggle: IA --}}
+        <label class="border rounded-xl p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-3 select-none" 
+               x-data="{ checked: {{ old('has_ai', $c?->has_ai) ? 'true' : 'false' }} }" 
+               :class="checked ? 'border-purple-500 dark:border-purple-600 bg-purple-50/20 dark:bg-purple-950/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
+            <input type="hidden" name="has_ai" value="0">
+            <input type="checkbox" name="has_ai" value="1" @change="checked = $el.checked" {{ old('has_ai', $c?->has_ai) ? 'checked' : '' }} 
+                   class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500/20 accent-purple-600">
+            <div class="min-w-0">
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block leading-tight">Inteligência Artificial</span>
+                <span class="text-[9px] font-bold uppercase tracking-wider block mt-0.5" 
+                      :class="checked ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400 dark:text-slate-650'"
+                      x-text="checked ? 'Habilitado' : 'Desabilitado'"></span>
+            </div>
+        </label>
+
+        {{-- Toggle: Implementation --}}
+        <label class="border rounded-xl p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-3 select-none" 
+               x-data="{ checked: {{ old('has_implementation', $c?->has_implementation) ? 'true' : 'false' }} }" 
+               :class="checked ? 'border-emerald-500 dark:border-emerald-600 bg-emerald-50/20 dark:bg-emerald-950/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
+            <input type="hidden" name="has_implementation" value="0">
+            <input type="checkbox" name="has_implementation" value="1" @change="checked = $el.checked" {{ old('has_implementation', $c?->has_implementation) ? 'checked' : '' }} 
+                   class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500/20 accent-emerald-600">
+            <div class="min-w-0">
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block leading-tight">Implementação Assistida</span>
+                <span class="text-[9px] font-bold uppercase tracking-wider block mt-0.5" 
+                      :class="checked ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-650'"
+                      x-text="checked ? 'Habilitado' : 'Desabilitado'"></span>
+            </div>
+        </label>
+
+    </div>
+
+</div>
