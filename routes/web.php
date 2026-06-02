@@ -6,6 +6,9 @@ use App\Http\Controllers\Web\CustomerWebController;
 use App\Http\Controllers\Web\SearchController;
 use Illuminate\Support\Facades\Route;
 
+// Documentação
+Route::get('/docs', fn () => view('docs'))->name('docs');
+
 // Busca universal
 Route::get('/search', SearchController::class)->name('search');
 
