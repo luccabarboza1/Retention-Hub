@@ -18,22 +18,25 @@ class SearchController extends Controller
         }
 
         $customers = Customer::query()
-            ->where('company_name', 'like', "%$q%")
-            ->orWhere('client_name',  'like', "%$q%")
-            ->orWhere('email',        'like', "%$q%")
-            ->orWhere('plan_name',    'like', "%$q%")
-            ->orWhere('tier',         'like', "%$q%")
+            ->where(function ($query) use ($q) {
+                $query->where('company_name', 'like', "%$q%")
+                      ->orWhere('client_name',  'like', "%$q%")
+                      ->orWhere('email',         'like', "%$q%")
+                      ->orWhere('plan_name',     'like', "%$q%")
+                      ->orWhere('tier',          'like', "%$q%")
+                      ->orWhereRaw("JSON_SEARCH(related_emails, 'one', ?) IS NOT NULL", ["%$q%"]);
+            })
             ->limit(10)->get();
 
         $cards = Card::with('customer')
-            ->where('contact_reason',   'like', "%$q%")
-            ->orWhere('ombudsman_agent', 'like', "%$q%")
-            ->orWhere('reason_details',  'like', "%$q%")
-            ->orWhere('applied_solution','like', "%$q%")
-            ->orWhere('responsible_team','like', "%$q%")
-            ->orWhere('ticket_origin',   'like', "%$q%")
-            ->orWhere(function ($query) use ($q) {
-                if (is_numeric($q)) $query->where('id', $q);
+            ->where(function ($query) use ($q) {
+                $query->where('contact_reason',    'like', "%$q%")
+                      ->orWhere('ombudsman_agent', 'like', "%$q%")
+                      ->orWhere('reason_details',  'like', "%$q%")
+                      ->orWhere('applied_solution','like', "%$q%")
+                      ->orWhere('responsible_team','like', "%$q%")
+                      ->orWhere('ticket_origin',   'like', "%$q%");
+                if (is_numeric($q)) $query->orWhere('id', $q);
             })
             ->limit(10)->get();
 

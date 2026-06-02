@@ -51,6 +51,7 @@
         html.sidebar-pre-collapsed .sidebar-brand-text { opacity: 0; }
         html.sidebar-pre-collapsed .sidebar-config-label { opacity: 0; }
         html.sidebar-pre-collapsed .sidebar-label { opacity: 0; }
+        html.sidebar-pre-expanded #app-sidebar { width: 16rem; transition: none; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -190,6 +191,8 @@
             }
             if (localStorage.getItem('rh-sidebar') === '1') {
                 document.documentElement.classList.add('sidebar-pre-collapsed');
+            } else {
+                document.documentElement.classList.add('sidebar-pre-expanded');
             }
         })();
     </script>
@@ -222,6 +225,7 @@
         <nav class="flex-1 py-4 space-y-1 px-2">
             @php
             $nav = [
+                ['route' => 'dashboard',        'pattern' => 'dashboard',    'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', 'label' => 'Dashboard'],
                 ['route' => 'board',           'pattern' => 'board',        'icon' => 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2', 'label' => 'Board'],
                 ['route' => 'customers.index', 'pattern' => 'customers.*',  'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Clientes'],
                 ['route' => 'cards.create',    'pattern' => 'cards.create', 'icon' => 'M12 4v16m8-8H4', 'label' => 'Novo Card'],
@@ -307,23 +311,17 @@
     <div class="flex-1 flex flex-col overflow-hidden bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-premium transition-colors duration-200">
 
         {{-- Header --}}
-        <header class="px-6 py-4 border-b border-slate-100 dark:border-slate-700/60 flex items-center gap-4 shrink-0">
-            <h1 class="text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100 shrink-0">@yield('header', 'Board')</h1>
-
-            <form action="{{ route('search') }}" method="GET" class="flex-1 max-w-md mx-2">
-                <div class="relative group">
-                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500 transition-colors group-focus-within:text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
-                    </svg>
-                    <input name="q" value="{{ request('q') }}"
-                           placeholder="Buscar clientes, cards, chats..."
-                           autocomplete="off"
-                           class="w-full pl-10 pr-4 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none transition-all dark:text-slate-200 dark:placeholder-slate-500">
+        <header class="px-6 py-4 border-b border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-4 shrink-0">
+            <h1 class="text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100 shrink-0">@yield('header', 'Dashboard')</h1>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('dashboard') }}"
+                   class="text-xs text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors flex items-center gap-1.5 font-medium">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+                    Busca
+                </a>
+                <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shrink-0">
+                    {{ now()->format('d/m/Y') }}
                 </div>
-            </form>
-
-            <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shrink-0">
-                {{ now()->format('d/m/Y') }}
             </div>
         </header>
 
@@ -365,6 +363,7 @@ function appShell() {
         init() {
             this.$nextTick(() => {
                 document.documentElement.classList.remove('sidebar-pre-collapsed');
+                document.documentElement.classList.remove('sidebar-pre-expanded');
             });
             this.$watch('collapsed', v => localStorage.setItem('rh-sidebar', v ? '1' : '0'));
         }

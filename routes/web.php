@@ -3,15 +3,19 @@
 use App\Http\Controllers\Web\BoardController;
 use App\Http\Controllers\Web\CardWebController;
 use App\Http\Controllers\Web\CustomerWebController;
+use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\ProductSettingsController;
 use App\Http\Controllers\Web\ProductWebController;
 use App\Http\Controllers\Web\SearchController;
 use Illuminate\Support\Facades\Route;
 
+// Dashboard (home operacional + busca universal)
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 // Documentação
 Route::get('/docs', fn () => view('docs'))->name('docs');
 
-// Busca universal
+// Busca universal (mantida para compatibilidade)
 Route::get('/search', SearchController::class)->name('search');
 
 // Board (Kanban)

@@ -82,13 +82,13 @@
         {{-- Step 1: Contrato --}}
         <div x-show="step === 1" x-cloak class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-5">
             <div>
-                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Contrato & Financeiro</h3>
-                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Informações de plano, valor e datas do contrato.</p>
+                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Contrato</h3>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Tier e datas do contrato.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                 {{-- Tier combobox --}}
-                <div x-data="combobox(@json($tiers->values()), '{{ old('tier') }}')" class="relative" @click.outside="open = false">
+                <div x-data="combobox(@json($tiers->values()), '{{ old('tier') }}')" class="relative md:col-span-2" @click.outside="open = false">
                     <label class="field-label">Tier</label>
                     <div class="relative">
                         <input type="text" x-model="query" @input="filter()" @focus="open = true"
@@ -100,55 +100,6 @@
                         </button>
                     </div>
                     <input type="hidden" name="tier" x-model="value">
-                    <div x-show="open && filtered.length" x-cloak class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
-                        <template x-for="(opt, i) in filtered" :key="opt">
-                            <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'" class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
-                        </template>
-                    </div>
-                </div>
-
-                {{-- Plano combobox --}}
-                <div x-data="combobox(@json($plans->values()), '{{ old('plan_name') }}')" class="relative" @click.outside="open = false">
-                    <label class="field-label">Plano Contratado</label>
-                    <div class="relative">
-                        <input type="text" x-model="query" @input="filter()" @focus="open = true"
-                               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
-                               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
-                               placeholder="Ex: Host Pro, Talk2 Basic…" class="field-input pr-8">
-                        <button type="button" @click="open = !open" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                    </div>
-                    <input type="hidden" name="plan_name" x-model="value">
-                    <div x-show="open && filtered.length" x-cloak class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
-                        <template x-for="(opt, i) in filtered" :key="opt">
-                            <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'" class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
-                        </template>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="field-label">MRR (R$)</label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 dark:text-slate-500 pointer-events-none">R$</span>
-                        <input type="number" name="monthly_fee" value="{{ old('monthly_fee') }}" min="0" step="0.01" placeholder="0,00"
-                               class="field-input pl-10 font-mono font-bold text-slate-800 dark:text-slate-100">
-                    </div>
-                </div>
-
-                {{-- Canal combobox --}}
-                <div x-data="combobox(@json($channels->values()), '{{ old('channel_type') }}')" class="relative" @click.outside="open = false">
-                    <label class="field-label">Canal de Aquisição</label>
-                    <div class="relative">
-                        <input type="text" x-model="query" @input="filter()" @focus="open = true"
-                               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
-                               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
-                               placeholder="Ex: Inbound, Outbound…" class="field-input pr-8">
-                        <button type="button" @click="open = !open" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                    </div>
-                    <input type="hidden" name="channel_type" x-model="value">
                     <div x-show="open && filtered.length" x-cloak class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
                         <template x-for="(opt, i) in filtered" :key="opt">
                             <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'" class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
@@ -188,26 +139,6 @@
                         </button>
                     </div>
                     <input type="hidden" name="segment" x-model="value">
-                    <div x-show="open && filtered.length" x-cloak class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
-                        <template x-for="(opt, i) in filtered" :key="opt">
-                            <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'" class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
-                        </template>
-                    </div>
-                </div>
-
-                {{-- Porte combobox --}}
-                <div x-data="combobox(@json($sizes->values()), '{{ old('company_size') }}')" class="relative" @click.outside="open = false">
-                    <label class="field-label">Porte Corporativo</label>
-                    <div class="relative">
-                        <input type="text" x-model="query" @input="filter()" @focus="open = true"
-                               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
-                               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
-                               placeholder="Ex: PME, Enterprise…" class="field-input pr-8">
-                        <button type="button" @click="open = !open" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                    </div>
-                    <input type="hidden" name="company_size" x-model="value">
                     <div x-show="open && filtered.length" x-cloak class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
                         <template x-for="(opt, i) in filtered" :key="opt">
                             <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'" class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
@@ -258,7 +189,7 @@
         {{-- Step 4: Produtos --}}
         <div x-show="step === 4" x-cloak
              class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-4"
-             x-data="{ rows: [], nextId: 0, addRow() { this.rows.push({ id: this.nextId++, ptype: '', planConfigs: @json($planConfigs->values()), planPrice: 0, attendants: 1, get total() { return this.planPrice * this.attendants; }, setPlan(name) { const p = this.planConfigs.find(c => c.plan_name === name); this.planPrice = p ? parseFloat(p.price_per_unit) : 0; } }); }, removeRow(id) { this.rows = this.rows.filter(r => r.id !== id); } }">
+             x-data="productRows()">
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Produtos (opcional)</h3>
                 <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Adicione produtos Host ou Talk2 agora ou depois pelo perfil do cliente.</p>
@@ -388,11 +319,34 @@
 </div>
 
 <script>
+const _planConfigs = @json($planConfigs->values());
+
 function wizard() {
     return {
         step: 0,
         next() { if (this.step < 4) this.step++; },
         prev() { if (this.step > 0) this.step--; }
+    };
+}
+
+function productRows() {
+    return {
+        rows: [],
+        nextId: 0,
+        addRow() {
+            this.rows.push({
+                id: this.nextId++,
+                ptype: '',
+                planPrice: 0,
+                attendants: 1,
+                get total() { return this.planPrice * this.attendants; },
+                setPlan(name) {
+                    const p = _planConfigs.find(c => c.plan_name === name && c.product_type === 'Talk2');
+                    this.planPrice = p ? parseFloat(p.price_per_unit) : 0;
+                }
+            });
+        },
+        removeRow(id) { this.rows = this.rows.filter(r => r.id !== id); }
     };
 }
 </script>

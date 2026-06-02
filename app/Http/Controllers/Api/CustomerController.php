@@ -17,6 +17,7 @@ class CustomerController extends Controller
                 $q->where('company_name', 'like', "%{$s}%")
                   ->orWhere('client_name', 'like', "%{$s}%")
                   ->orWhere('email', 'like', "%{$s}%")
+                  ->orWhereRaw("JSON_SEARCH(related_emails, 'one', ?) IS NOT NULL", ["%{$s}%"])
             )
             ->when($request->get('tier'), fn ($q, $tier) => $q->where('tier', $tier))
             ->when($request->get('segment'), fn ($q, $seg) => $q->where('segment', $seg))
