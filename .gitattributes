@@ -1,0 +1,11 @@
+# Força LF em todos os arquivos de texto
+* text=auto eol=lf
+
+# Scripts shell SEMPRE LF (quebra no Linux com CRLF)
+*.sh text eol=lf
+artisan text eol=lf
+
+# Binários
+*.png binary
+*.jpg binary
+*.zip binary

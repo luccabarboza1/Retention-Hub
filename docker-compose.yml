@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  # ── Container 1: API (php-fpm + nginx) ──────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: retention-hub:local
+    ports:
+      - "8080:80"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: base64:CHANGE_ME_RUN_php_artisan_key_generate==
+      APP_URL: http://localhost:8080
+      DB_HOST: mysql
+      DB_DATABASE: retention_hub
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      QUEUE_CONNECTION: database
+      API_ACCESS_TOKEN: dev-token-local
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./storage:/var/www/html/storage
+
+  # ── Container 2: Queue Worker ───────────────────────────────────────────────
+  # Em produção (Umbler Cloud) este é um segundo container com:
+  # CMD: php artisan queue:work --queue=webhooks,default --tries=1 --timeout=30 --max-jobs=500
+  worker:
+    image: retention-hub:local
+    command:
+      - php
+      - artisan
+      - queue:work
+      - --queue=webhooks,default
+      - --tries=1
+      - --timeout=30
+      - --max-jobs=500
+    environment:
+      APP_ENV: local
+      APP_KEY: base64:CHANGE_ME_RUN_php_artisan_key_generate==
+      DB_HOST: mysql
+      DB_DATABASE: retention_hub
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      QUEUE_CONNECTION: database
+      API_ACCESS_TOKEN: dev-token-local
+    depends_on:
+      - app
+    restart: unless-stopped
+
+  # ── MySQL ────────────────────────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: retention_hub
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
