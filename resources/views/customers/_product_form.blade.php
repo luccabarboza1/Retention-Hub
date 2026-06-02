@@ -81,7 +81,7 @@ $talk2Plans = $planConfigs->where('product_type', 'Talk2')->values();
             </div>
         </div>
         {{-- Total calculado --}}
-        <div class="bg-brand-50 dark:bg-brand-950/20 border border-brand-100 dark:border-brand-900/40 rounded-xl px-4 py-3 flex items-center justify-between">
+        <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-900/40 rounded-xl px-4 py-3 flex items-center justify-between">
             <span class="text-xs font-bold text-brand-700 dark:text-brand-400">Valor mensal estimado</span>
             <span class="text-base font-extrabold text-brand-700 dark:text-brand-300 font-mono"
                   x-text="'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})">

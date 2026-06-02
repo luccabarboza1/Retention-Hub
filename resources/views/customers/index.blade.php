@@ -21,7 +21,7 @@ $tierColors = [
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-5 shadow-premium flex items-center gap-4 relative overflow-hidden">
             <div class="absolute top-[-20px] right-[-20px] w-16 h-16 rounded-full bg-brand-500/5 blur-lg pointer-events-none"></div>
-            <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg font-bold shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg font-bold shrink-0">
                 👥
             </div>
             <div>

@@ -239,7 +239,7 @@
                             <label class="field-label">Atendentes</label>
                             <input type="number" :name="`products[${idx}][attendants_count]`" x-model.number="row.attendants" min="1" class="field-input font-mono">
                         </div>
-                        <div class="col-span-2 bg-brand-50 dark:bg-brand-950/20 border border-brand-100 dark:border-brand-900/40 rounded-xl px-3 py-2 flex justify-between items-center">
+                        <div class="col-span-2 bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-900/40 rounded-xl px-3 py-2 flex justify-between items-center">
                             <span class="text-[10px] font-bold text-brand-700 dark:text-brand-400">Valor estimado</span>
                             <span class="text-sm font-extrabold text-brand-700 dark:text-brand-300 font-mono"
                                   x-text="'R$ ' + row.total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})"></span>

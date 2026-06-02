@@ -233,7 +233,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
                             📦 Instâncias de Produto (Host / Talk2)
                         </h3>
                         <button @click="addingProduct = !addingProduct"
-                                class="text-[10px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/40 hover:bg-brand-100/50 px-3 py-1.5 rounded-lg transition-all">
+                                class="text-[10px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-100/50 px-3 py-1.5 rounded-lg transition-all">
                             + Adicionar Produto
                         </button>
                     </div>
@@ -382,7 +382,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
                     </div>
                 </div>
                 <a href="{{ route('customers.cards', $customer) }}"
-                   class="mt-4 block text-center text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/40 hover:bg-brand-100/50 dark:hover:bg-brand-900/50 py-2.5 rounded-xl transition-all">
+                   class="mt-4 block text-center text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-100/50 dark:hover:bg-brand-900/50 py-2.5 rounded-xl transition-all">
                     Acessar Linha do Tempo →
                 </a>
             </div>

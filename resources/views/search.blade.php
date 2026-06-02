@@ -36,7 +36,7 @@ $tierColors = [
         <div>
             <h2 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Resultado da Pesquisa</h2>
             <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                Localizados <span class="font-bold text-brand-600 dark:text-brand-450 font-mono text-sm px-1.5 py-0.5 rounded-md bg-brand-50 dark:bg-brand-950/40">{{ $total }}</span> termo(s) para a consulta "<span class="font-bold text-brand-755 dark:text-brand-400 italic">{{ $q }}</span>"
+                Localizados <span class="font-bold text-brand-600 dark:text-brand-450 font-mono text-sm px-1.5 py-0.5 rounded-md bg-brand-50 dark:bg-brand-900/30">{{ $total }}</span> termo(s) para a consulta "<span class="font-bold text-brand-755 dark:text-brand-400 italic">{{ $q }}</span>"
             </p>
         </div>
     </div>

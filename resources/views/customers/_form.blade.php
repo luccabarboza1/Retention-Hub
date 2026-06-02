@@ -106,7 +106,7 @@
         {{-- Toggle: Chatbot --}}
         <label class="border rounded-xl p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-3 select-none" 
                x-data="{ checked: {{ old('has_chatbot', $c?->has_chatbot) ? 'true' : 'false' }} }" 
-               :class="checked ? 'border-brand-500 dark:border-brand-600 bg-brand-50/20 dark:bg-brand-950/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
+               :class="checked ? 'border-brand-500 dark:border-brand-600 bg-brand-50/20 dark:bg-brand-900/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
             <input type="hidden" name="has_chatbot" value="0">
             <input type="checkbox" name="has_chatbot" value="1" @change="checked = $el.checked" {{ old('has_chatbot', $c?->has_chatbot) ? 'checked' : '' }} 
                    class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500/20 accent-brand-600">
