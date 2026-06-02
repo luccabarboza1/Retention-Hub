@@ -18,6 +18,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Dedoc\Scramble\ScrambleServiceProvider::class,
     ])->toArray(),
 
     'aliases' => Illuminate\Support\Facades\Facade::defaultAliases()->toArray(),
