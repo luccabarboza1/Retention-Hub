@@ -49,9 +49,12 @@ Route::get('/customers/{customer}',         [CustomerWebController::class, 'show
 Route::patch('/customers/{customer}',       [CustomerWebController::class, 'update'])->name('customers.update');
 Route::get('/customers/{customer}/cards',   [CustomerWebController::class, 'cards'])->name('customers.cards');
 
+// Hub de configurações
+Route::get('/settings',          fn () => view('settings.index'))->name('settings.index');
+
 // Configurações gerais
-Route::get('/settings',          [GeneralSettingsController::class, 'index'])->name('settings.general');
-Route::post('/settings',         [GeneralSettingsController::class, 'update'])->name('settings.general.update');
+Route::get('/settings/general',  [GeneralSettingsController::class, 'index'])->name('settings.general');
+Route::post('/settings/general', [GeneralSettingsController::class, 'update'])->name('settings.general.update');
 
 // Configurações de planos de produto
 Route::get('/settings/products',                        [ProductSettingsController::class, 'index'])->name('settings.products');

@@ -6,21 +6,9 @@
 <div class="max-w-2xl mx-auto space-y-6">
 
     <div class="flex items-center gap-2 text-xs mb-1 px-1">
-        <span class="font-bold text-slate-600 dark:text-slate-300">Configurações</span>
+        <a href="{{ route('settings.index') }}" class="font-bold text-brand-600 dark:text-brand-400">← Configurações</a>
         <span class="text-slate-300 dark:text-slate-700">/</span>
         <span class="text-slate-400 dark:text-slate-500 font-medium">Geral</span>
-    </div>
-
-    {{-- Nav entre páginas de settings --}}
-    <div class="flex gap-2">
-        <a href="{{ route('settings.general') }}"
-           class="text-xs font-bold px-4 py-2 rounded-xl {{ request()->routeIs('settings.general') ? 'bg-brand-600 text-white shadow-glow-brand' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800' }} transition-all">
-            Geral
-        </a>
-        <a href="{{ route('settings.products') }}"
-           class="text-xs font-bold px-4 py-2 rounded-xl {{ request()->routeIs('settings.products') ? 'bg-brand-600 text-white shadow-glow-brand' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800' }} transition-all">
-            Planos de Produto
-        </a>
     </div>
 
     <form method="POST" action="{{ route('settings.general.update') }}" class="space-y-4">

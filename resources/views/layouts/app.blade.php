@@ -50,7 +50,6 @@
         html.sidebar-pre-collapsed .sidebar-toggle-icon { transform: rotate(180deg); transition: none; }
         html.sidebar-pre-collapsed .sidebar-status { opacity: 0; pointer-events: none; }
         html.sidebar-pre-collapsed .sidebar-brand-text { opacity: 0; }
-        html.sidebar-pre-collapsed .sidebar-config-label { opacity: 0; }
         html.sidebar-pre-collapsed .sidebar-label { opacity: 0; }
         html.sidebar-pre-expanded #app-sidebar { width: 16rem; transition: none; }
 
@@ -230,6 +229,7 @@
                 ['route' => 'board',           'pattern' => 'board',        'icon' => 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2', 'label' => 'Board'],
                 ['route' => 'customers.index', 'pattern' => 'customers.*',  'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Clientes'],
                 ['route' => 'cards.create',    'pattern' => 'cards.create', 'icon' => 'M12 4v16m8-8H4', 'label' => 'Novo Card'],
+                ['route' => 'settings.index', 'pattern' => 'settings.*',   'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Configurações'],
             ];
             @endphp
 
@@ -248,28 +248,6 @@
             </a>
             @endforeach
         </nav>
-
-        {{-- Configurações --}}
-        <div class="px-2 pb-2 border-t border-slate-800/80 pt-3">
-            <p class="sidebar-config-label text-[9px] font-bold text-slate-600 uppercase tracking-widest px-3 mb-1 transition-opacity duration-200 whitespace-nowrap"
-               :class="collapsed ? 'opacity-0' : 'opacity-100'">Configurações</p>
-            <a href="/docs/api" target="_blank"
-               :title="collapsed ? 'API Docs' : ''"
-               class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all duration-200">
-                <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                <span class="sidebar-label text-sm whitespace-nowrap transition-opacity duration-200" :class="collapsed ? 'opacity-0' : ''">API Docs</span>
-            </a>
-            <a href="{{ route('settings.general') }}"
-               :title="collapsed ? 'Configurações' : ''"
-               class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium {{ request()->routeIs('settings.*') ? 'bg-gradient-to-r from-brand-600 to-brand-700 text-white shadow-glow-brand' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }} transition-all duration-200">
-                <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <span class="sidebar-label text-sm whitespace-nowrap transition-opacity duration-200" :class="collapsed ? 'opacity-0' : ''">Configurações</span>
-            </a>
-        </div>
 
         {{-- Footer: tema + colapso --}}
         <div class="px-2 pb-4 border-t border-slate-800/80 pt-4 space-y-1">
