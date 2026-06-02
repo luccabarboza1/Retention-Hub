@@ -25,6 +25,6 @@ class WebhookSubscription extends Model
     protected $casts = [
         'secret'        => 'encrypted',
         'is_active'     => 'boolean',
-        'trigger_types' => 'array',
+        'trigger_types' => 'json',
     ];
 }

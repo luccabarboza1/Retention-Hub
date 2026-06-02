@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\WebhookTrigger;
 use App\Http\Controllers\Controller;
 use App\Models\WebhookSubscription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Enum;
 
 class WebhookSubscriptionController extends Controller
 {
-    private const VALID_TRIGGERS = ['card.created', 'card.updated', 'card.finished', 'customer.updated', '*'];
-
     public function index(): JsonResponse
     {
         return response()->json(WebhookSubscription::whereNull('deleted_at')->orderByDesc('created_at')->get());
@@ -23,14 +23,15 @@ class WebhookSubscriptionController extends Controller
             'name'            => 'required|string|max:100',
             'url'             => 'required|url|max:2048',
             'trigger_types'   => 'required|array|min:1',
-            'trigger_types.*' => 'required|string|in:' . implode(',', self::VALID_TRIGGERS),
+            'trigger_types.*' => ['required', new Enum(WebhookTrigger::class)],
             'description'     => 'nullable|string',
             'is_active'       => 'nullable|boolean',
         ]);
 
         $subscription = WebhookSubscription::create([
             ...$data,
-            'secret' => Str::random(64),
+            'trigger_types' => array_values(array_unique($data['trigger_types'])),
+            'secret'        => Str::random(64),
         ]);
 
         return response()->json([
@@ -47,10 +48,14 @@ class WebhookSubscriptionController extends Controller
             'name'            => 'sometimes|string|max:100',
             'url'             => 'sometimes|url|max:2048',
             'trigger_types'   => 'sometimes|array|min:1',
-            'trigger_types.*' => 'required_with:trigger_types|string|in:' . implode(',', self::VALID_TRIGGERS),
+            'trigger_types.*' => ['required_with:trigger_types', new Enum(WebhookTrigger::class)],
             'description'     => 'nullable|string',
             'is_active'       => 'nullable|boolean',
         ]);
+
+        if (isset($data['trigger_types'])) {
+            $data['trigger_types'] = array_values(array_unique($data['trigger_types']));
+        }
 
         $subscription->update($data);
 
