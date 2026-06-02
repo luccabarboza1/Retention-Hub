@@ -45,6 +45,7 @@
     <style>
         [x-cloak] { display: none !important; }
         html.sidebar-pre-collapsed #app-sidebar { width: 4rem; transition: none; }
+        html.sidebar-pre-collapsed .sidebar-text { display: none !important; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -178,7 +179,7 @@
             </span>
             <div x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
                  x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                 class="overflow-hidden min-w-0">
+                 class="sidebar-text overflow-hidden min-w-0">
                 <p class="font-extrabold text-sm tracking-tight text-white truncate">Retention Hub</p>
                 <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Ouvidoria & Retenção</p>
             </div>
@@ -205,7 +206,7 @@
                 </svg>
                 <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
                       x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                      class="truncate">{{ $item['label'] }}</span>
+                      class="sidebar-text truncate">{{ $item['label'] }}</span>
             </a>
             @endforeach
         </nav>
@@ -225,7 +226,7 @@
                 </svg>
                 <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
                       x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                      class="text-xs" x-text="isDark ? 'Tema claro' : 'Tema escuro'"></span>
+                      class="sidebar-text text-xs" x-text="isDark ? 'Tema claro' : 'Tema escuro'"></span>
             </button>
 
             {{-- Collapse toggle --}}
@@ -238,10 +239,10 @@
                 </svg>
                 <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
                       x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                      class="text-xs">Recolher</span>
+                      class="sidebar-text text-xs">Recolher</span>
             </button>
 
-            <div x-show="!collapsed" class="px-3 pt-2 text-[10px] text-slate-600">
+            <div x-show="!collapsed" class="sidebar-text px-3 pt-2 text-[10px] text-slate-600">
                 <div class="flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span class="font-semibold uppercase tracking-wider text-emerald-600">Ambiente seguro</span>
