@@ -47,8 +47,6 @@
         html.sidebar-pre-collapsed #app-sidebar { width: 4rem; transition: none; }
         html.sidebar-pre-collapsed .sidebar-text { display: none !important; }
         html.sidebar-pre-collapsed .sidebar-toggle-icon { transform: rotate(180deg); transition: none; }
-        html.dark .sidebar-theme-light { display: none; }
-        html:not(.dark) .sidebar-theme-dark { display: none; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -114,6 +112,15 @@
         }
         .select-wrap select.field-input { padding-right: 2.25rem; cursor: pointer; }
         .dark .select-wrap::after { border-top-color: #64748b; }
+
+        /* Transição uniforme durante toggle de tema */
+        .theme-transitioning *,
+        .theme-transitioning *::before,
+        .theme-transitioning *::after {
+            transition-property: color, background-color, border-color, fill, stroke !important;
+            transition-duration: 200ms !important;
+            transition-timing-function: ease !important;
+        }
 
         /* Labels */
         .field-label {
@@ -254,10 +261,10 @@
             <button @click="toggleDark()"
                     :title="isDark ? 'Tema claro' : 'Tema escuro'"
                     class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
-                <svg x-show="!isDark" class="sidebar-theme-dark w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="dark:hidden w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
                 </svg>
-                <svg x-show="isDark" class="sidebar-theme-light w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="hidden dark:block w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
                 </svg>
                 <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
@@ -339,9 +346,11 @@ function appShell() {
         isDark: document.documentElement.classList.contains('dark'),
 
         toggleDark() {
+            document.documentElement.classList.add('theme-transitioning');
             this.isDark = !this.isDark;
             document.documentElement.classList.toggle('dark', this.isDark);
             localStorage.setItem('rh-theme', this.isDark ? 'dark' : 'light');
+            setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 300);
         },
 
         init() {
