@@ -85,7 +85,9 @@ return [
      * ],
      * ```
      */
-    'servers' => null,
+    'servers' => [
+        'Production' => env('APP_URL', 'https://rev-ops-dev.umbler.net') . '/api',
+    ],
 
     /**
      * Determines how Scramble stores the descriptions of enum cases.
