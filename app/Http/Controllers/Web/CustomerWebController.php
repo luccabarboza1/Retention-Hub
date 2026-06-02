@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Events\CustomerUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\ProductPlanConfig;
 
 class CustomerWebController extends Controller
 {
@@ -46,6 +47,34 @@ class CustomerWebController extends Controller
         $data = $this->validated();
         $data['instagram_followers_count'] ??= 0;
         $customer = Customer::create($data);
+
+        // Cria produtos enviados no wizard (step 5)
+        if (request()->has('products')) {
+            foreach (request()->input('products', []) as $pData) {
+                if (empty($pData['product_type']) || empty($pData['external_id'])) continue;
+
+                if ($pData['product_type'] === 'Talk2' && !empty($pData['plan_name']) && !empty($pData['attendants_count'])) {
+                    $plan = ProductPlanConfig::where('product_type', 'Talk2')
+                        ->where('plan_name', $pData['plan_name'])->first();
+                    if ($plan) {
+                        $pData['consumption'] = $plan->price_per_unit * (int) $pData['attendants_count'];
+                    }
+                }
+
+                $customer->products()->create([
+                    'external_id'         => $pData['external_id'] ?? null,
+                    'contract_identifier' => $pData['contract_identifier'] ?? null,
+                    'product_type'        => $pData['product_type'],
+                    'plan_name'           => $pData['plan_name'] ?? null,
+                    'attendants_count'    => $pData['attendants_count'] ?? null,
+                    'host_services'       => $pData['host_services'] ?? null,
+                    'consumption'         => $pData['consumption'] ?? null,
+                    'status'              => $pData['status'] ?? 'ativo',
+                    'external_created_at' => $pData['external_created_at'] ?? null,
+                ]);
+            }
+        }
+
         event(new CustomerUpdated($customer));
         return redirect()->route('customers.show', $customer)->with('success', 'Cliente cadastrado com sucesso.');
     }
@@ -90,6 +119,7 @@ class CustomerWebController extends Controller
 
     private function formOptions(): array
     {
+        $planConfigs = ProductPlanConfig::orderBy('product_type')->orderBy('plan_name')->get();
         $tiers    = collect(['Gold', 'Silver', 'Bronze', 'Premium', 'VIP']);
         $plans    = Customer::whereNotNull('plan_name')->distinct()->orderBy('plan_name')->pluck('plan_name')
                         ->merge(['Host Básico', 'Host Pro', 'Host Enterprise', 'Talk2 Basic', 'Talk2 Pro'])->unique()->sort()->values();
@@ -99,6 +129,6 @@ class CustomerWebController extends Controller
         $channels = Customer::whereNotNull('channel_type')->distinct()->orderBy('channel_type')->pluck('channel_type')
                         ->merge(['Inbound', 'Outbound', 'Indicação', 'Parceiro', 'RA', 'Marketplace'])->unique()->sort()->values();
 
-        return compact('tiers', 'plans', 'segments', 'sizes', 'channels');
+        return compact('tiers', 'plans', 'segments', 'sizes', 'channels', 'planConfigs');
     }
 }

@@ -241,52 +241,12 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
                     {{-- Form: Adicionar Produto --}}
                     <div x-show="addingProduct" x-cloak class="mb-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
                         <h4 class="text-xs font-bold text-slate-600 dark:text-slate-400 mb-3">Novo Produto</h4>
-                        <form method="POST" action="{{ route('products.store', $customer) }}" class="space-y-3">
-                            @csrf
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="field-label">Tipo de Produto</label>
-                                    <div class="select-wrap">
-                                        <select name="product_type" class="field-input" required>
-                                            <option value="Host">Host</option>
-                                            <option value="Talk2">Talk2</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="field-label">External ID</label>
-                                    <input type="text" name="external_id" class="field-input" required>
-                                </div>
-                                <div>
-                                    <label class="field-label">Contract Identifier</label>
-                                    <input type="text" name="contract_identifier" class="field-input">
-                                </div>
-                                <div>
-                                    <label class="field-label">Consumo (R$)</label>
-                                    <input type="number" name="consumption" step="0.01" min="0" class="field-input">
-                                </div>
-                                <div>
-                                    <label class="field-label">Status</label>
-                                    <div class="select-wrap">
-                                        <select name="status" class="field-input">
-                                            <option value="ativo">Ativo</option>
-                                            <option value="cancelado">Cancelado</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="field-label">Data de Criação (External)</label>
-                                    <input type="date" name="external_created_at" class="field-input">
-                                </div>
-                            </div>
-                            <div class="flex gap-2 pt-1">
-                                <button type="submit" class="btn-primary text-xs px-4 py-2">Salvar</button>
-                                <button type="button" @click="addingProduct = false"
-                                        class="text-xs px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
-                                    Cancelar
-                                </button>
-                            </div>
-                        </form>
+                        @include('customers._product_form', [
+                            'action'       => route('products.store', $customer),
+                            'method'       => 'POST',
+                            'planConfigs'  => $planConfigs,
+                            'cancelAlpine' => 'addingProduct = false',
+                        ])
                     </div>
 
                     {{-- Grid de produtos --}}
@@ -346,32 +306,13 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
 
                             {{-- Form inline de edição --}}
                             <div x-show="editing" x-cloak class="pt-2 border-t border-slate-100 dark:border-slate-800">
-                                <form method="POST" action="{{ route('products.update', $product) }}" class="space-y-2">
-                                    @csrf @method('PATCH')
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <div>
-                                            <label class="field-label">Consumo (R$)</label>
-                                            <input type="number" name="consumption" step="0.01" min="0"
-                                                   value="{{ $product->consumption }}" class="field-input">
-                                        </div>
-                                        <div>
-                                            <label class="field-label">Status</label>
-                                            <div class="select-wrap">
-                                                <select name="status" class="field-input">
-                                                    <option value="ativo" {{ $product->status === 'ativo' ? 'selected' : '' }}>Ativo</option>
-                                                    <option value="cancelado" {{ $product->status === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button type="submit" class="btn-primary text-[10px] px-3 py-1.5">Salvar</button>
-                                        <button type="button" @click="editing = false"
-                                                class="text-[10px] px-3 py-1.5 border border-slate-200 dark:border-slate-700 text-slate-500 font-bold rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
-                                            Cancelar
-                                        </button>
-                                    </div>
-                                </form>
+                                @include('customers._product_form', [
+                                    'action'       => route('products.update', $product),
+                                    'method'       => 'PATCH',
+                                    'product'      => $product,
+                                    'planConfigs'  => $planConfigs,
+                                    'cancelAlpine' => 'editing = false',
+                                ])
                             </div>
                         </div>
                         @endforeach

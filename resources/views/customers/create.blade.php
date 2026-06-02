@@ -14,7 +14,7 @@
 
     {{-- Progress --}}
     <div class="flex items-center gap-2 mb-6">
-        @php $steps = ['Identificação','Contrato','Empresa','Soluções']; @endphp
+        @php $steps = ['Identificação','Contrato','Empresa','Soluções','Produtos']; @endphp
         @foreach($steps as $i => $label)
         <div class="flex items-center gap-2 flex-1 {{ !$loop->last ? '' : '' }}">
             <div class="flex items-center gap-2">
@@ -80,7 +80,7 @@
         </div>
 
         {{-- Step 1: Contrato --}}
-        <div x-show="step === 1" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-5">
+        <div x-show="step === 1" x-cloak class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-5">
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Contrato & Financeiro</h3>
                 <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Informações de plano, valor e datas do contrato.</p>
@@ -168,7 +168,7 @@
         </div>
 
         {{-- Step 2: Empresa --}}
-        <div x-show="step === 2" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-5">
+        <div x-show="step === 2" x-cloak class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-5">
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Dados da Empresa</h3>
                 <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Porte corporativo, segmento e presença digital.</p>
@@ -224,7 +224,7 @@
         </div>
 
         {{-- Step 3: Soluções --}}
-        <div x-show="step === 3" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-5">
+        <div x-show="step === 3" x-cloak class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-5">
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Soluções Ativas</h3>
                 <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Produtos e funcionalidades habilitadas para este cliente.</p>
@@ -255,6 +255,112 @@
             @endif
         </div>
 
+        {{-- Step 4: Produtos --}}
+        <div x-show="step === 4" x-cloak
+             class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-4"
+             x-data="{ rows: [], nextId: 0, addRow() { this.rows.push({ id: this.nextId++, ptype: '', planConfigs: @json($planConfigs->values()), planPrice: 0, attendants: 1, get total() { return this.planPrice * this.attendants; }, setPlan(name) { const p = this.planConfigs.find(c => c.plan_name === name); this.planPrice = p ? parseFloat(p.price_per_unit) : 0; } }); }, removeRow(id) { this.rows = this.rows.filter(r => r.id !== id); } }">
+            <div>
+                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Produtos (opcional)</h3>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Adicione produtos Host ou Talk2 agora ou depois pelo perfil do cliente.</p>
+            </div>
+
+            <template x-for="(row, idx) in rows" :key="row.id">
+                <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-4 space-y-3 relative">
+                    <button type="button" @click="removeRow(row.id)"
+                            class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 text-lg leading-none transition-colors">×</button>
+
+                    {{-- Tipo --}}
+                    <div>
+                        <label class="field-label">Tipo</label>
+                        <div class="select-wrap">
+                            <select :name="`products[${idx}][product_type]`" x-model="row.ptype"
+                                    @change="row.planPrice = 0; row.attendants = 1"
+                                    class="field-input font-semibold" required>
+                                <option value="">Selecione…</option>
+                                <option value="Talk2">Talk2</option>
+                                <option value="Host">Host</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Talk2 fields --}}
+                    <div x-show="row.ptype === 'Talk2'" class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="field-label">ID da Organização</label>
+                            <input type="text" :name="`products[${idx}][external_id]`" class="field-input font-mono" placeholder="ID org">
+                        </div>
+                        <div>
+                            <label class="field-label">ID do Contrato</label>
+                            <input type="text" :name="`products[${idx}][contract_identifier]`" class="field-input font-mono">
+                        </div>
+                        <div>
+                            <label class="field-label">Plano</label>
+                            <div class="select-wrap">
+                                <select :name="`products[${idx}][plan_name]`" @change="row.setPlan($event.target.value)" class="field-input">
+                                    <option value="">Selecione…</option>
+                                    @foreach($planConfigs->where('product_type','Talk2') as $plan)
+                                    <option value="{{ $plan->plan_name }}">{{ $plan->plan_name }} (R$ {{ number_format($plan->price_per_unit,2,',','.') }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="field-label">Atendentes</label>
+                            <input type="number" :name="`products[${idx}][attendants_count]`" x-model.number="row.attendants" min="1" class="field-input font-mono">
+                        </div>
+                        <div class="col-span-2 bg-brand-50 dark:bg-brand-950/20 border border-brand-100 dark:border-brand-900/40 rounded-xl px-3 py-2 flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-brand-700 dark:text-brand-400">Valor estimado</span>
+                            <span class="text-sm font-extrabold text-brand-700 dark:text-brand-300 font-mono"
+                                  x-text="'R$ ' + row.total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})"></span>
+                        </div>
+                    </div>
+
+                    {{-- Host fields --}}
+                    <div x-show="row.ptype === 'Host'" class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="field-label">ID do Ninjato</label>
+                            <input type="text" :name="`products[${idx}][external_id]`" class="field-input font-mono" placeholder="ID Ninjato">
+                        </div>
+                        <div>
+                            <label class="field-label">ID do Contrato</label>
+                            <input type="text" :name="`products[${idx}][contract_identifier]`" class="field-input font-mono">
+                        </div>
+                        <div>
+                            <label class="field-label">Consumo (R$)</label>
+                            <input type="number" :name="`products[${idx}][consumption]`" step="0.01" min="0" class="field-input font-mono">
+                        </div>
+                        <div>
+                            <label class="field-label">Status</label>
+                            <div class="select-wrap">
+                                <select :name="`products[${idx}][status]`" class="field-input">
+                                    <option value="ativo">Ativo</option>
+                                    <option value="cancelado">Cancelado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="field-label">Serviços</label>
+                            <div class="flex flex-wrap gap-2 mt-1">
+                                @foreach(['email' => '📧 Email', 'dominio' => '🌐 Domínio', 'hospedagem' => '🖥️ Hospedagem'] as $val => $label)
+                                <label class="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border cursor-pointer select-none
+                                              bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400
+                                              has-[:checked]:bg-sky-50 has-[:checked]:dark:bg-sky-950/20 has-[:checked]:border-sky-300 has-[:checked]:dark:border-sky-700 has-[:checked]:text-sky-700 has-[:checked]:dark:text-sky-300">
+                                    <input type="checkbox" :name="`products[${idx}][host_services][]`" value="{{ $val }}" class="w-3.5 h-3.5 accent-sky-600">
+                                    {{ $label }}
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <button type="button" @click="addRow()"
+                    class="w-full py-3 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-400 hover:text-brand-600 hover:border-brand-300 dark:hover:border-brand-700 transition-all">
+                + Adicionar Produto
+            </button>
+        </div>
+
         {{-- Navigation --}}
         <div class="flex justify-between mt-5">
             <button type="button" @click="prev()" x-show="step > 0"
@@ -268,11 +374,11 @@
                    class="px-5 py-2.5 text-slate-400 dark:text-slate-600 text-xs font-semibold rounded-xl hover:text-slate-600 dark:hover:text-slate-400 transition-all flex items-center">
                     Cancelar
                 </a>
-                <button type="button" @click="next()" x-show="step < 3"
+                <button type="button" @click="next()" x-show="step < 4"
                         class="btn-primary">
                     Próximo →
                 </button>
-                <button type="submit" x-show="step === 3"
+                <button type="submit" x-show="step === 4"
                         class="btn-primary">
                     Cadastrar Cliente
                 </button>
@@ -285,7 +391,7 @@
 function wizard() {
     return {
         step: 0,
-        next() { if (this.step < 3) this.step++; },
+        next() { if (this.step < 4) this.step++; },
         prev() { if (this.step > 0) this.step--; }
     };
 }

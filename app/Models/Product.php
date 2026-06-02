@@ -17,6 +17,9 @@ class Product extends Model
         'external_id',
         'contract_identifier',
         'product_type',
+        'plan_name',
+        'attendants_count',
+        'host_services',
         'consumption',
         'status',
         'external_created_at',
@@ -26,6 +29,8 @@ class Product extends Model
 
     protected $casts = [
         'consumption'          => 'decimal:2',
+        'attendants_count'     => 'integer',
+        'host_services'        => 'array',
         'external_created_at'  => 'datetime',
     ];
 

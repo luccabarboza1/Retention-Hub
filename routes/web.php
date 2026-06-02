@@ -3,6 +3,7 @@
 use App\Http\Controllers\Web\BoardController;
 use App\Http\Controllers\Web\CardWebController;
 use App\Http\Controllers\Web\CustomerWebController;
+use App\Http\Controllers\Web\ProductSettingsController;
 use App\Http\Controllers\Web\ProductWebController;
 use App\Http\Controllers\Web\SearchController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,12 @@ Route::post('/customers',                   [CustomerWebController::class, 'stor
 Route::get('/customers/{customer}',         [CustomerWebController::class, 'show'])->name('customers.show');
 Route::patch('/customers/{customer}',       [CustomerWebController::class, 'update'])->name('customers.update');
 Route::get('/customers/{customer}/cards',   [CustomerWebController::class, 'cards'])->name('customers.cards');
+
+// Configurações de planos de produto
+Route::get('/settings/products',                        [ProductSettingsController::class, 'index'])->name('settings.products');
+Route::post('/settings/products',                       [ProductSettingsController::class, 'store'])->name('settings.products.store');
+Route::patch('/settings/products/{plan}',               [ProductSettingsController::class, 'update'])->name('settings.products.update');
+Route::delete('/settings/products/{plan}',              [ProductSettingsController::class, 'destroy'])->name('settings.products.destroy');
 
 // Produtos (vinculados a clientes)
 Route::post('/customers/{customer}/products', [ProductWebController::class, 'store'])->name('products.store');
