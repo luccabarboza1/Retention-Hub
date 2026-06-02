@@ -67,13 +67,22 @@ $tierColors = [
                 Monitorando <span class="font-bold text-brand-600 dark:text-brand-400 text-sm px-1.5 py-0.5 rounded-md bg-brand-50 dark:bg-brand-950/40">{{ $cards->flatten()->count() }}</span> card(s) ativo(s)
             </p>
         </div>
-        <button @click="showColModal = true"
-            class="group flex items-center gap-2 text-xs px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-glow-brand transition-all duration-200 hover:-translate-y-0.5">
-            <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-            </svg>
-            Nova Etapa
-        </button>
+        <div class="flex items-center gap-2">
+            <button @click="showColModal = true"
+                class="flex items-center gap-1.5 text-xs px-3 py-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium rounded-lg transition-all duration-200 border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                </svg>
+                Nova Etapa
+            </button>
+            <a href="{{ route('cards.create') }}"
+                class="group flex items-center gap-2 text-xs px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-glow-brand transition-all duration-200 hover:-translate-y-0.5">
+                <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                </svg>
+                Adicionar Card
+            </a>
+        </div>
     </div>
 
     {{-- Kanban Track (Horizontal Scroll) --}}
@@ -175,12 +184,6 @@ $tierColors = [
 
             </div>
 
-            {{-- Add card trigger --}}
-            <a href="{{ route('cards.create', ['status' => $col->name]) }}"
-               class="flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-brand-600 py-3 rounded-xl border border-dashed border-transparent hover:border-brand-200 dark:hover:border-brand-800/80 hover:bg-brand-50/30 dark:hover:bg-brand-950/20 transition-all font-semibold mt-2">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-                Adicionar Card
-            </a>
         </div>
         @endforeach
     </div>
