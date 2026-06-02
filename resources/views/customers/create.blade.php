@@ -20,7 +20,7 @@
             <div class="flex items-center gap-2">
                 <div :class="step > {{ $i }} ? 'bg-brand-600 text-white' : (step === {{ $i }} ? 'bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 border-2 border-brand-500' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600')"
                      class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold transition-all duration-200 shrink-0">
-                    <span x-show="step <= {{ $i }}">{{ $i + 1 }}</span>
+                    <span x-show="step <= {{ $i }}" {{ $i > 0 ? 'x-cloak' : '' }}>{{ $i + 1 }}</span>
                     <svg x-show="step > {{ $i }}" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" x-cloak><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                 </div>
                 <span :class="step === {{ $i }} ? 'text-slate-700 dark:text-slate-200 font-bold' : 'text-slate-400 dark:text-slate-600'"
@@ -294,7 +294,7 @@
 
         {{-- Navigation --}}
         <div class="flex justify-between mt-5">
-            <button type="button" @click="prev()" x-show="step > 0"
+            <button type="button" @click="prev()" x-show="step > 0" x-cloak
                     class="px-5 py-2.5 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                 ← Voltar
             </button>
@@ -309,7 +309,7 @@
                         class="btn-primary">
                     Próximo →
                 </button>
-                <button type="submit" x-show="step === 4"
+                <button type="submit" x-show="step === 4" x-cloak
                         class="btn-primary">
                     Cadastrar Cliente
                 </button>
