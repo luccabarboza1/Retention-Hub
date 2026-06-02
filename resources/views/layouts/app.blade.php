@@ -44,7 +44,7 @@
 
     <style>
         [x-cloak] { display: none !important; }
-        .preload * { transition: none !important; }
+        .preload * { transition-duration: 1ms !important; transition-delay: 0s !important; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -154,11 +154,9 @@
                 document.documentElement.classList.add('dark');
             }
             document.documentElement.classList.add('preload');
-            window.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('alpine:initialized', function() {
                 requestAnimationFrame(function() {
-                    requestAnimationFrame(function() {
-                        document.documentElement.classList.remove('preload');
-                    });
+                    document.documentElement.classList.remove('preload');
                 });
             });
         })();
@@ -183,7 +181,6 @@
             </span>
             <div x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
                  x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition-opacity duration-100" x-transition:leave-end="opacity-0"
                  class="overflow-hidden min-w-0">
                 <p class="font-extrabold text-sm tracking-tight text-white truncate">Retention Hub</p>
                 <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Ouvidoria & Retenção</p>
@@ -211,7 +208,6 @@
                 </svg>
                 <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
                       x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                      x-transition:leave="transition-opacity duration-100" x-transition:leave-end="opacity-0"
                       class="truncate">{{ $item['label'] }}</span>
             </a>
             @endforeach
@@ -232,7 +228,6 @@
                 </svg>
                 <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
                       x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                      x-transition:leave="transition-opacity duration-100" x-transition:leave-end="opacity-0"
                       class="text-xs" x-text="isDark ? 'Tema claro' : 'Tema escuro'"></span>
             </button>
 
@@ -246,7 +241,6 @@
                 </svg>
                 <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
                       x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                      x-transition:leave="transition-opacity duration-100" x-transition:leave-end="opacity-0"
                       class="text-xs">Recolher</span>
             </button>
 
