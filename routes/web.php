@@ -3,6 +3,7 @@
 use App\Http\Controllers\Web\BoardController;
 use App\Http\Controllers\Web\CardWebController;
 use App\Http\Controllers\Web\CustomerWebController;
+use App\Http\Controllers\Web\ProductWebController;
 use App\Http\Controllers\Web\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,3 +38,8 @@ Route::post('/customers',                   [CustomerWebController::class, 'stor
 Route::get('/customers/{customer}',         [CustomerWebController::class, 'show'])->name('customers.show');
 Route::patch('/customers/{customer}',       [CustomerWebController::class, 'update'])->name('customers.update');
 Route::get('/customers/{customer}/cards',   [CustomerWebController::class, 'cards'])->name('customers.cards');
+
+// Produtos (vinculados a clientes)
+Route::post('/customers/{customer}/products', [ProductWebController::class, 'store'])->name('products.store');
+Route::patch('/products/{product}',           [ProductWebController::class, 'update'])->name('products.update');
+Route::delete('/products/{product}',          [ProductWebController::class, 'destroy'])->name('products.destroy');

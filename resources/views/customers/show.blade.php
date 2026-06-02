@@ -225,6 +225,162 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
                     </div>
                 </div>
 
+                {{-- Products Instances Deck --}}
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium"
+                     x-data="{ addingProduct: false, editingProduct: null }">
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">
+                        <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                            📦 Instâncias de Produto (Host / Talk2)
+                        </h3>
+                        <button @click="addingProduct = !addingProduct"
+                                class="text-[10px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/40 hover:bg-brand-100/50 px-3 py-1.5 rounded-lg transition-all">
+                            + Adicionar Produto
+                        </button>
+                    </div>
+
+                    {{-- Form: Adicionar Produto --}}
+                    <div x-show="addingProduct" x-cloak class="mb-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                        <h4 class="text-xs font-bold text-slate-600 dark:text-slate-400 mb-3">Novo Produto</h4>
+                        <form method="POST" action="{{ route('products.store', $customer) }}" class="space-y-3">
+                            @csrf
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="field-label">Tipo de Produto</label>
+                                    <div class="select-wrap">
+                                        <select name="product_type" class="field-input" required>
+                                            <option value="Host">Host</option>
+                                            <option value="Talk2">Talk2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">External ID</label>
+                                    <input type="text" name="external_id" class="field-input" required>
+                                </div>
+                                <div>
+                                    <label class="field-label">Contract Identifier</label>
+                                    <input type="text" name="contract_identifier" class="field-input">
+                                </div>
+                                <div>
+                                    <label class="field-label">Consumo (R$)</label>
+                                    <input type="number" name="consumption" step="0.01" min="0" class="field-input">
+                                </div>
+                                <div>
+                                    <label class="field-label">Status</label>
+                                    <div class="select-wrap">
+                                        <select name="status" class="field-input">
+                                            <option value="ativo">Ativo</option>
+                                            <option value="cancelado">Cancelado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">Data de Criação (External)</label>
+                                    <input type="date" name="external_created_at" class="field-input">
+                                </div>
+                            </div>
+                            <div class="flex gap-2 pt-1">
+                                <button type="submit" class="btn-primary text-xs px-4 py-2">Salvar</button>
+                                <button type="button" @click="addingProduct = false"
+                                        class="text-xs px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {{-- Grid de produtos --}}
+                    @if($customer->products->count())
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        @foreach($customer->products as $product)
+                        <div class="border rounded-xl p-4 bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 space-y-2"
+                             x-data="{ editing: false }">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    @if($product->product_type === 'Host')
+                                    <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-sky-800">
+                                        Host
+                                    </span>
+                                    @else
+                                    <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 border border-violet-200 dark:border-violet-800">
+                                        Talk2
+                                    </span>
+                                    @endif
+                                    @if($product->status === 'ativo')
+                                    <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40">
+                                        Ativo
+                                    </span>
+                                    @else
+                                    <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 border border-rose-100 dark:border-rose-900/40">
+                                        Cancelado
+                                    </span>
+                                    @endif
+                                </div>
+                                <div class="flex gap-1">
+                                    <button @click="editing = !editing"
+                                            class="text-[10px] font-bold text-slate-500 hover:text-brand-600 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                                        ✏️
+                                    </button>
+                                    <form method="POST" action="{{ route('products.destroy', $product) }}"
+                                          onsubmit="return confirm('Excluir este produto?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit"
+                                                class="text-[10px] font-bold text-slate-400 hover:text-rose-600 px-2 py-1 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-all">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="space-y-0.5">
+                                <p class="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">{{ $product->external_id }}</p>
+                                @if($product->contract_identifier)
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500">Contrato: {{ $product->contract_identifier }}</p>
+                                @endif
+                                @if($product->consumption !== null)
+                                <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+                                    R$ {{ number_format($product->consumption, 2, ',', '.') }}
+                                </p>
+                                @endif
+                            </div>
+
+                            {{-- Form inline de edição --}}
+                            <div x-show="editing" x-cloak class="pt-2 border-t border-slate-100 dark:border-slate-800">
+                                <form method="POST" action="{{ route('products.update', $product) }}" class="space-y-2">
+                                    @csrf @method('PATCH')
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="field-label">Consumo (R$)</label>
+                                            <input type="number" name="consumption" step="0.01" min="0"
+                                                   value="{{ $product->consumption }}" class="field-input">
+                                        </div>
+                                        <div>
+                                            <label class="field-label">Status</label>
+                                            <div class="select-wrap">
+                                                <select name="status" class="field-input">
+                                                    <option value="ativo" {{ $product->status === 'ativo' ? 'selected' : '' }}>Ativo</option>
+                                                    <option value="cancelado" {{ $product->status === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button type="submit" class="btn-primary text-[10px] px-3 py-1.5">Salvar</button>
+                                        <button type="button" @click="editing = false"
+                                                class="text-[10px] px-3 py-1.5 border border-slate-200 dark:border-slate-700 text-slate-500 font-bold rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <p class="text-xs text-slate-400 dark:text-slate-500 italic text-center py-4">Nenhum produto registrado</p>
+                    @endif
+                </div>
+
             </div>
 
             {{-- 2. Edit Mode Workspace --}}
@@ -319,7 +475,48 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
             </div>
             @endif
 
-            {{-- 3. Profile Registry Metadata --}}
+            {{-- 3. Product Changes History --}}
+            @if($recentChanges->count() > 0)
+            <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-5 shadow-premium rounded-2xl">
+                <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">📊 Histórico de Produtos</h3>
+                <div class="space-y-2.5">
+                    @foreach($recentChanges as $change)
+                    @php
+                        $changeIcons = [
+                            'upgrade'      => ['icon' => '↑', 'color' => 'text-emerald-600 dark:text-emerald-400', 'bg' => 'bg-emerald-50 dark:bg-emerald-950/20'],
+                            'downgrade'    => ['icon' => '↓', 'color' => 'text-amber-600 dark:text-amber-400',    'bg' => 'bg-amber-50 dark:bg-amber-950/20'],
+                            'churn'        => ['icon' => '●', 'color' => 'text-rose-600 dark:text-rose-400',       'bg' => 'bg-rose-50 dark:bg-rose-950/20'],
+                            'reactivation' => ['icon' => '✓', 'color' => 'text-teal-600 dark:text-teal-400',      'bg' => 'bg-teal-50 dark:bg-teal-950/20'],
+                        ];
+                        $ci = $changeIcons[$change->change_type] ?? ['icon' => '·', 'color' => 'text-slate-400', 'bg' => 'bg-slate-50 dark:bg-slate-800'];
+                    @endphp
+                    <div class="flex items-start gap-2.5 text-xs">
+                        <span class="w-6 h-6 rounded-full {{ $ci['bg'] }} {{ $ci['color'] }} font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5">
+                            {{ $ci['icon'] }}
+                        </span>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-bold text-slate-700 dark:text-slate-300 truncate">
+                                {{ $change->product->product_type ?? '—' }} · {{ $change->product->external_id ?? '—' }}
+                            </p>
+                            <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                @if($change->delta_consumption !== null)
+                                <span class="font-mono text-[10px] {{ $change->delta_consumption >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} font-bold">
+                                    {{ $change->delta_consumption >= 0 ? '+' : '' }}R$ {{ number_format($change->delta_consumption, 2, ',', '.') }}
+                                </span>
+                                <span class="text-slate-300 dark:text-slate-600">·</span>
+                                @endif
+                                <span class="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold">{{ $change->change_type }}</span>
+                                <span class="text-slate-300 dark:text-slate-600">·</span>
+                                <span class="text-[10px] text-slate-400 dark:text-slate-500 font-mono">{{ $change->created_at->format('d/m/Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            {{-- 4. Profile Registry Metadata --}}
             <div class="bg-slate-950 text-slate-500 rounded-2xl p-5 border border-slate-900 shadow-premium text-[11px] space-y-1.5 dark:bg-slate-950 dark:text-slate-650 dark:border-slate-900">
                 <p>Criado em: {{ $customer->created_at->format('d/m/Y H:i') }}</p>
                 @if($customer->updated_at != $customer->created_at)

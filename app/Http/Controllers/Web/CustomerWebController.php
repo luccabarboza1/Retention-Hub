@@ -26,8 +26,14 @@ class CustomerWebController extends Controller
     public function show(Customer $customer)
     {
         $customer->loadCount(['cards', 'cards as open_cards_count' => fn ($q) => $q->whereIn('status', ['Aberto', 'Em Andamento'])]);
-        $recentCards = $customer->cards()->with('product')->orderBy('started_at', 'desc')->limit(5)->get();
-        return view('customers.show', array_merge(compact('customer', 'recentCards'), $this->formOptions()));
+        $customer->load(['products' => fn ($q) => $q->with(['changes' => fn ($q2) => $q2->orderByDesc('created_at')->limit(5)])->orderByDesc('created_at')]);
+        $recentCards   = $customer->cards()->with('product')->orderBy('started_at', 'desc')->limit(5)->get();
+        $recentChanges = \App\Models\ProductChange::where('customer_id', $customer->id)
+            ->with('product')
+            ->orderByDesc('created_at')
+            ->limit(8)
+            ->get();
+        return view('customers.show', array_merge(compact('customer', 'recentCards', 'recentChanges'), $this->formOptions()));
     }
 
     public function create()
