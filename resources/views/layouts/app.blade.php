@@ -44,7 +44,7 @@
 
     <style>
         [x-cloak] { display: none !important; }
-        .preload * { transition-duration: 1ms !important; transition-delay: 0s !important; }
+        html.sidebar-pre-collapsed #app-sidebar { width: 4rem; transition: none; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -145,7 +145,7 @@
         .dark .btn-ghost:hover { background-color: rgba(109,40,217,0.25); }
     </style>
 
-    {{-- Aplicar dark mode e suprimir transições no carregamento inicial --}}
+    {{-- Pré-aplicar dark mode e largura da sidebar antes do Alpine --}}
     <script>
         (function() {
             const saved = localStorage.getItem('rh-theme');
@@ -153,12 +153,9 @@
             if (saved === 'dark' || (!saved && prefersDark)) {
                 document.documentElement.classList.add('dark');
             }
-            document.documentElement.classList.add('preload');
-            document.addEventListener('alpine:initialized', function() {
-                requestAnimationFrame(function() {
-                    document.documentElement.classList.remove('preload');
-                });
-            });
+            if (localStorage.getItem('rh-sidebar') === '1') {
+                document.documentElement.classList.add('sidebar-pre-collapsed');
+            }
         })();
     </script>
 </head>
@@ -171,7 +168,7 @@
 <div class="flex h-full w-full p-3 gap-3 z-10 relative">
 
     {{-- ─── Sidebar ─── --}}
-    <aside :class="collapsed ? 'w-16' : 'w-64'"
+    <aside id="app-sidebar" :class="collapsed ? 'w-16' : 'w-64'"
            class="bg-slate-900 dark:bg-slate-950 text-white flex flex-col shrink-0 rounded-2xl border border-slate-800 dark:border-slate-800/80 shadow-premium overflow-hidden transition-all duration-300">
 
         {{-- Brand --}}
@@ -311,6 +308,9 @@ function appShell() {
         },
 
         init() {
+            this.$nextTick(() => {
+                document.documentElement.classList.remove('sidebar-pre-collapsed');
+            });
             this.$watch('collapsed', v => localStorage.setItem('rh-sidebar', v ? '1' : '0'));
         }
     }
