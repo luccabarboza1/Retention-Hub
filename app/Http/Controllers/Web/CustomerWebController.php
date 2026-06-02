@@ -27,12 +27,12 @@ class CustomerWebController extends Controller
     {
         $customer->loadCount(['cards', 'cards as open_cards_count' => fn ($q) => $q->whereIn('status', ['Aberto', 'Em Andamento'])]);
         $recentCards = $customer->cards()->with('product')->orderBy('started_at', 'desc')->limit(5)->get();
-        return view('customers.show', compact('customer', 'recentCards'));
+        return view('customers.show', array_merge(compact('customer', 'recentCards'), $this->formOptions()));
     }
 
     public function create()
     {
-        return view('customers.create');
+        return view('customers.create', $this->formOptions());
     }
 
     public function store()
@@ -65,6 +65,8 @@ class CustomerWebController extends Controller
             'company_name'              => 'required|string|max:255',
             'client_name'               => 'required|string|max:255',
             'email'                     => 'nullable|email|max:255',
+            'related_emails'            => 'nullable|array',
+            'related_emails.*'          => 'email',
             'segment'                   => 'nullable|string|max:100',
             'company_size'              => 'nullable|string|max:50',
             'tier'                      => 'nullable|string|max:50',
@@ -78,5 +80,19 @@ class CustomerWebController extends Controller
             'has_ai'                    => 'boolean',
             'has_implementation'        => 'boolean',
         ]);
+    }
+
+    private function formOptions(): array
+    {
+        $tiers    = collect(['Gold', 'Silver', 'Bronze', 'Premium', 'VIP']);
+        $plans    = Customer::whereNotNull('plan_name')->distinct()->orderBy('plan_name')->pluck('plan_name')
+                        ->merge(['Host Básico', 'Host Pro', 'Host Enterprise', 'Talk2 Basic', 'Talk2 Pro'])->unique()->sort()->values();
+        $segments = Customer::whereNotNull('segment')->distinct()->orderBy('segment')->pluck('segment')
+                        ->merge(['E-commerce', 'SaaS', 'Varejo', 'Serviços', 'Indústria', 'Fintech', 'EdTech'])->unique()->sort()->values();
+        $sizes    = collect(['Microempresa', 'Pequeno Porte', 'Médio Porte', 'Grande Porte', 'Enterprise']);
+        $channels = Customer::whereNotNull('channel_type')->distinct()->orderBy('channel_type')->pluck('channel_type')
+                        ->merge(['Inbound', 'Outbound', 'Indicação', 'Parceiro', 'RA', 'Marketplace'])->unique()->sort()->values();
+
+        return compact('tiers', 'plans', 'segments', 'sizes', 'channels');
     }
 }

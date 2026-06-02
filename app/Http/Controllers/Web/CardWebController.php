@@ -34,10 +34,13 @@ class CardWebController extends Controller
     public function create()
     {
         $customers = Customer::orderBy('company_name')->get(['id', 'company_name', 'client_name']);
-        return view('cards.create', [
-            'customers' => $customers,
-            'statuses'  => $this->statuses(),
-        ]);
+        $agents    = Card::whereNotNull('ombudsman_agent')->distinct()->orderBy('ombudsman_agent')->pluck('ombudsman_agent')->values();
+        $origins   = Card::whereNotNull('ticket_origin')->distinct()->orderBy('ticket_origin')->pluck('ticket_origin')
+                         ->merge(['RA', 'Email', 'Telefone', 'WhatsApp', 'Chat', 'Presencial'])->unique()->sort()->values();
+        $teams     = Card::whereNotNull('responsible_team')->distinct()->orderBy('responsible_team')->pluck('responsible_team')
+                         ->merge(['CS', 'Sucesso do Cliente', 'Comercial', 'Suporte', 'Produto', 'Financeiro'])->unique()->sort()->values();
+
+        return view('cards.create', compact('customers', 'agents', 'origins', 'teams') + ['statuses' => $this->statuses()]);
     }
 
     public function store()

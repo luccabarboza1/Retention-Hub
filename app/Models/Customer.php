@@ -27,6 +27,7 @@ class Customer extends Model
         'has_chatbot',
         'has_ai',
         'has_implementation',
+        'related_emails',
         'created_by',
         'updated_by',
     ];
@@ -39,6 +40,7 @@ class Customer extends Model
         'has_ai'                    => 'boolean',
         'has_implementation'        => 'boolean',
         'instagram_followers_count' => 'integer',
+        'related_emails'            => 'array',
     ];
 
     public function products(): HasMany

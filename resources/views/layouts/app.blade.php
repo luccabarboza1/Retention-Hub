@@ -78,6 +78,8 @@
             transition: all 0.2s;
             color: #1e293b;
             font-family: inherit;
+            appearance: none;
+            -webkit-appearance: none;
         }
         .field-input:focus {
             background-color: #fff;
@@ -94,6 +96,24 @@
             border-color: #7c3aed;
         }
         .dark .field-input::placeholder { color: #475569; }
+
+        /* Select wrapper with custom arrow */
+        .select-wrap { position: relative; }
+        .select-wrap::after {
+            content: '';
+            position: absolute;
+            right: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid #94a3b8;
+            pointer-events: none;
+        }
+        .select-wrap select.field-input { padding-right: 2.25rem; cursor: pointer; }
+        .dark .select-wrap::after { border-top-color: #64748b; }
 
         /* Labels */
         .field-label {
@@ -331,6 +351,56 @@ function appShell() {
             this.$watch('collapsed', v => localStorage.setItem('rh-sidebar', v ? '1' : '0'));
         }
     }
+}
+</script>
+
+<script>
+function combobox(opts, init) {
+    return {
+        options: opts || [],
+        filtered: [],
+        value: init || '',
+        query: init || '',
+        open: false,
+        hi: -1,
+        init() { this.filtered = [...this.options]; },
+        filter() {
+            this.value = this.query;
+            this.hi = -1;
+            this.filtered = this.query
+                ? this.options.filter(o => o.toLowerCase().includes(this.query.toLowerCase()))
+                : [...this.options];
+            this.open = true;
+        },
+        select(v) { this.value = v; this.query = v; this.open = false; this.hi = -1; },
+        nav(d) {
+            if (!this.open) { this.open = true; return; }
+            this.hi = Math.max(-1, Math.min(this.filtered.length - 1, this.hi + d));
+        },
+        confirm() {
+            if (this.hi >= 0 && this.filtered[this.hi]) this.select(this.filtered[this.hi]);
+            else this.open = false;
+        }
+    };
+}
+
+function emailTags(initial) {
+    return {
+        tags: Array.isArray(initial) ? initial : [],
+        input: '',
+        add() {
+            const v = this.input.trim().toLowerCase();
+            if (v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && !this.tags.includes(v)) {
+                this.tags.push(v);
+                this.input = '';
+            }
+        },
+        remove(i) { this.tags.splice(i, 1); },
+        key(e) {
+            if (['Enter','Tab',','].includes(e.key)) { e.preventDefault(); this.add(); }
+            if (e.key === 'Backspace' && !this.input && this.tags.length) this.tags.pop();
+        }
+    };
 }
 </script>
 
