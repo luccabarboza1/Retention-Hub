@@ -17,7 +17,7 @@ class DispatchWebhookJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 1;
-    public int $timeout = 30;
+    public int $timeout = 40;
 
     private const MAX_ATTEMPTS = 5;
 
