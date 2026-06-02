@@ -18,8 +18,8 @@
                 </svg>
             </div>
             <div class="min-w-0">
-                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Geral</h3>
-                <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Integrações externas, webhooks e URLs de serviços como o n8n.</p>
+                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">URL do Lookup de Cliente</h3>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Configure o endpoint n8n para preenchimento automático de dados do cliente.</p>
             </div>
             <svg class="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-brand-400 transition-colors shrink-0 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
