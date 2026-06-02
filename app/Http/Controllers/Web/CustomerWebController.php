@@ -37,6 +37,7 @@ class CustomerWebController extends Controller
     public function store()
     {
         $data = $this->validated();
+        $data['instagram_followers_count'] ??= 0;
         $customer = Customer::create($data);
         return redirect()->route('customers.show', $customer)->with('success', 'Cliente cadastrado com sucesso.');
     }
@@ -44,6 +45,7 @@ class CustomerWebController extends Controller
     public function update(Customer $customer)
     {
         $data = $this->validated();
+        $data['instagram_followers_count'] ??= 0;
         $customer->update($data);
         return redirect()->route('customers.show', $customer)->with('success', 'Cliente atualizado.');
     }
