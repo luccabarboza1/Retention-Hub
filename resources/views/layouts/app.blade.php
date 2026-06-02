@@ -46,6 +46,7 @@
         [x-cloak] { display: none !important; }
         html.sidebar-pre-collapsed #app-sidebar { width: 4rem; transition: none; }
         html.sidebar-pre-collapsed .sidebar-text { display: none !important; }
+        html.sidebar-pre-collapsed .sidebar-toggle-icon { transform: rotate(180deg); transition: none; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -233,7 +234,7 @@
             <button @click="collapsed = !collapsed"
                     :title="collapsed ? 'Expandir menu' : 'Recolher menu'"
                     class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
-                <svg class="w-5 h-5 shrink-0 transition-transform duration-300" :class="collapsed ? 'rotate-180' : ''"
+                <svg class="sidebar-toggle-icon w-5 h-5 shrink-0 transition-transform duration-300" :class="collapsed ? 'rotate-180' : ''"
                      fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
                 </svg>
