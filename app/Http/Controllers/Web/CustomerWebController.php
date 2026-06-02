@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Events\CustomerUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 
@@ -39,6 +40,7 @@ class CustomerWebController extends Controller
         $data = $this->validated();
         $data['instagram_followers_count'] ??= 0;
         $customer = Customer::create($data);
+        event(new CustomerUpdated($customer));
         return redirect()->route('customers.show', $customer)->with('success', 'Cliente cadastrado com sucesso.');
     }
 
@@ -47,6 +49,7 @@ class CustomerWebController extends Controller
         $data = $this->validated();
         $data['instagram_followers_count'] ??= 0;
         $customer->update($data);
+        event(new CustomerUpdated($customer->fresh()));
         return redirect()->route('customers.show', $customer)->with('success', 'Cliente atualizado.');
     }
 

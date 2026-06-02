@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Events\CardCreated;
+use App\Events\CardFinished;
+use App\Events\CardUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\CardComment;
@@ -52,11 +55,14 @@ class CardWebController extends Controller
         ]);
 
         $card = Card::create($data);
+        event(new CardCreated($card));
         return redirect()->route('cards.show', $card)->with('success', 'Card criado com sucesso.');
     }
 
     public function update(Card $card)
     {
+        $wasFinished = $card->isFinished();
+
         $data = request()->validate([
             'status'           => 'sometimes|in:' . implode(',', $this->statuses()),
             'ombudsman_agent'  => 'nullable|string|max:100',
@@ -75,23 +81,37 @@ class CardWebController extends Controller
         }
 
         $card->update($data);
+        $card->refresh();
+
+        if (!$wasFinished && $card->isFinished()) {
+            event(new CardFinished($card));
+        } else {
+            event(new CardUpdated($card));
+        }
+
         return redirect()->route('cards.show', $card)->with('success', 'Salvo.');
     }
 
-    // Chamado pelos botões de formulário no card detail (redireciona)
     public function updateStatus(Card $card)
     {
+        $wasFinished = $card->isFinished();
         $status = request()->validate(['status' => 'required|in:' . implode(',', $this->statuses())])['status'];
 
         $card->update([
             'status'      => $status,
             'finished_at' => in_array($status, ['Retido', 'Churn']) ? ($card->finished_at ?? now()) : null,
         ]);
+        $card->refresh();
+
+        if (!$wasFinished && $card->isFinished()) {
+            event(new CardFinished($card));
+        } else {
+            event(new CardUpdated($card));
+        }
 
         return redirect()->route('cards.show', $card)->with('success', 'Etapa atualizada.');
     }
 
-    // Chamado pelo drag & drop via fetch (retorna JSON)
     public function moveStatus(Card $card)
     {
         $status = request()->input('status');
@@ -100,10 +120,19 @@ class CardWebController extends Controller
             return response()->json(['ok' => false, 'error' => 'Status inválido'], 422);
         }
 
+        $wasFinished = $card->isFinished();
+
         $card->update([
             'status'      => $status,
             'finished_at' => in_array($status, ['Retido', 'Churn']) ? ($card->finished_at ?? now()) : null,
         ]);
+        $card->refresh();
+
+        if (!$wasFinished && $card->isFinished()) {
+            event(new CardFinished($card));
+        } else {
+            event(new CardUpdated($card));
+        }
 
         return response()->json(['ok' => true, 'status' => $status]);
     }
