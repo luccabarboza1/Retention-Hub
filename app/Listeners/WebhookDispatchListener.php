@@ -16,7 +16,10 @@ class WebhookDispatchListener
         $payload = $event->toWebhookPayload();
 
         WebhookSubscription::query()
-            ->where('trigger_type', $event->triggerType)
+            ->where(function ($q) use ($event) {
+                $q->whereJsonContains('trigger_types', $event->triggerType)
+                  ->orWhereJsonContains('trigger_types', '*');
+            })
             ->where('is_active', true)
             ->whereNull('deleted_at')
             ->each(function (WebhookSubscription $subscription) use ($event, $payload) {

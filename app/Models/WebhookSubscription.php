@@ -13,7 +13,7 @@ class WebhookSubscription extends Model
     protected $fillable = [
         'name',
         'url',
-        'trigger_type',
+        'trigger_types',
         'secret',
         'is_active',
         'description',
@@ -23,7 +23,8 @@ class WebhookSubscription extends Model
     protected $hidden = ['secret'];
 
     protected $casts = [
-        'secret'    => 'encrypted',
-        'is_active' => 'boolean',
+        'secret'        => 'encrypted',
+        'is_active'     => 'boolean',
+        'trigger_types' => 'array',
     ];
 }

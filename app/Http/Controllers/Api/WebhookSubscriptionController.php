@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 
 class WebhookSubscriptionController extends Controller
 {
+    private const VALID_TRIGGERS = ['card.created', 'card.updated', 'card.finished', 'customer.updated', '*'];
+
     public function index(): JsonResponse
     {
         return response()->json(WebhookSubscription::whereNull('deleted_at')->orderByDesc('created_at')->get());
@@ -18,11 +20,12 @@ class WebhookSubscriptionController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'name'         => 'required|string|max:100',
-            'url'          => 'required|url|max:2048',
-            'trigger_type' => 'required|in:card.created,card.updated,card.finished,customer.updated',
-            'description'  => 'nullable|string',
-            'is_active'    => 'nullable|boolean',
+            'name'            => 'required|string|max:100',
+            'url'             => 'required|url|max:2048',
+            'trigger_types'   => 'required|array|min:1',
+            'trigger_types.*' => 'required|string|in:' . implode(',', self::VALID_TRIGGERS),
+            'description'     => 'nullable|string',
+            'is_active'       => 'nullable|boolean',
         ]);
 
         $subscription = WebhookSubscription::create([
@@ -41,10 +44,12 @@ class WebhookSubscriptionController extends Controller
         $subscription = WebhookSubscription::whereNull('deleted_at')->findOrFail($id);
 
         $data = $request->validate([
-            'name'        => 'sometimes|string|max:100',
-            'url'         => 'sometimes|url|max:2048',
-            'description' => 'nullable|string',
-            'is_active'   => 'nullable|boolean',
+            'name'            => 'sometimes|string|max:100',
+            'url'             => 'sometimes|url|max:2048',
+            'trigger_types'   => 'sometimes|array|min:1',
+            'trigger_types.*' => 'required_with:trigger_types|string|in:' . implode(',', self::VALID_TRIGGERS),
+            'description'     => 'nullable|string',
+            'is_active'       => 'nullable|boolean',
         ]);
 
         $subscription->update($data);
