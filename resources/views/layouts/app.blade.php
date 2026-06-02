@@ -44,6 +44,7 @@
 
     <style>
         [x-cloak] { display: none !important; }
+        .preload * { transition: none !important; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -144,7 +145,7 @@
         .dark .btn-ghost:hover { background-color: rgba(109,40,217,0.25); }
     </style>
 
-    {{-- Aplicar dark mode antes do render --}}
+    {{-- Aplicar dark mode e suprimir transições no carregamento inicial --}}
     <script>
         (function() {
             const saved = localStorage.getItem('rh-theme');
@@ -152,6 +153,14 @@
             if (saved === 'dark' || (!saved && prefersDark)) {
                 document.documentElement.classList.add('dark');
             }
+            document.documentElement.classList.add('preload');
+            window.addEventListener('DOMContentLoaded', function() {
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        document.documentElement.classList.remove('preload');
+                    });
+                });
+            });
         })();
     </script>
 </head>
