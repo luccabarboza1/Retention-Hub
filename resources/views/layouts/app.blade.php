@@ -48,6 +48,8 @@
         html.sidebar-pre-collapsed .sidebar-text { display: none !important; }
         html.sidebar-pre-collapsed .sidebar-toggle-icon { transform: rotate(180deg); transition: none; }
         html.sidebar-pre-collapsed .sidebar-status { opacity: 0; pointer-events: none; }
+        html.sidebar-pre-collapsed .sidebar-brand-text { opacity: 0; }
+        html.sidebar-pre-collapsed .sidebar-config-label { opacity: 0; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -208,9 +210,8 @@
             <span class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-500 to-accent-indigo flex items-center justify-center font-extrabold text-sm text-white shadow-glow-brand shrink-0">
                 R
             </span>
-            <div x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
-                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                 class="sidebar-text overflow-hidden min-w-0">
+            <div class="sidebar-brand-text overflow-hidden min-w-0 transition-opacity duration-200"
+                 :class="collapsed ? 'opacity-0' : 'opacity-100'">
                 <p class="font-extrabold text-sm tracking-tight text-white truncate">Retention Hub</p>
                 <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Ouvidoria & Retenção</p>
             </div>
@@ -244,7 +245,8 @@
 
         {{-- Configurações --}}
         <div class="px-2 pb-2 border-t border-slate-800/80 pt-3">
-            <p x-show="!collapsed" class="sidebar-text text-[9px] font-bold text-slate-600 uppercase tracking-widest px-3 mb-1">Configurações</p>
+            <p class="sidebar-config-label text-[9px] font-bold text-slate-600 uppercase tracking-widest px-3 mb-1 transition-opacity duration-200"
+               :class="collapsed ? 'opacity-0' : 'opacity-100'">Configurações</p>
             <a href="/docs/api" target="_blank"
                :title="collapsed ? 'API Docs' : ''"
                class="group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all duration-200">
