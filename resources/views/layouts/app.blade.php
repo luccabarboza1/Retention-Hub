@@ -213,7 +213,7 @@
             <div class="sidebar-brand-text overflow-hidden min-w-0 transition-opacity duration-200"
                  :class="collapsed ? 'opacity-0' : 'opacity-100'">
                 <p class="font-extrabold text-sm tracking-tight text-white truncate">Retention Hub</p>
-                <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Ouvidoria & Retenção</p>
+                <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider truncate">Ouvidoria & Retenção</p>
             </div>
         </div>
 
@@ -245,7 +245,7 @@
 
         {{-- Configurações --}}
         <div class="px-2 pb-2 border-t border-slate-800/80 pt-3">
-            <p class="sidebar-config-label text-[9px] font-bold text-slate-600 uppercase tracking-widest px-3 mb-1 transition-opacity duration-200"
+            <p class="sidebar-config-label text-[9px] font-bold text-slate-600 uppercase tracking-widest px-3 mb-1 transition-opacity duration-200 whitespace-nowrap"
                :class="collapsed ? 'opacity-0' : 'opacity-100'">Configurações</p>
             <a href="/docs/api" target="_blank"
                :title="collapsed ? 'API Docs' : ''"
@@ -292,7 +292,7 @@
                  :class="collapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'">
                 <div class="flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="font-semibold uppercase tracking-wider text-emerald-600">Ambiente seguro</span>
+                    <span class="font-semibold uppercase tracking-wider text-emerald-600 whitespace-nowrap">Ambiente seguro</span>
                 </div>
             </div>
         </div>
