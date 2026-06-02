@@ -34,11 +34,50 @@
     </div>
 
     {{-- Form --}}
-    <form method="POST" action="{{ route('customers.store') }}">
+    <form method="POST" action="{{ route('customers.store') }}" class="relative">
         @csrf
+
+        {{-- Overlay de lookup --}}
+        <div x-show="lookupLoading" x-cloak
+             class="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm">
+            <div class="flex flex-col items-center gap-4 text-center px-6">
+                <div class="w-14 h-14 rounded-full border-4 border-brand-200 dark:border-brand-800 border-t-brand-600 dark:border-t-brand-400 animate-spin"></div>
+                <div>
+                    <p class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Buscando dados no n8n…</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Aguarde enquanto localizamos as informações do cliente.</p>
+                </div>
+            </div>
+        </div>
 
         {{-- Step 0: Identificação --}}
         <div x-show="step === 0" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-5">
+
+            {{-- Preenchimento automático --}}
+            <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-900/50 rounded-xl p-4 space-y-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-base">🔍</span>
+                    <div>
+                        <p class="text-xs font-extrabold text-brand-700 dark:text-brand-400 uppercase tracking-wider">Preenchimento automático</p>
+                        <p class="text-[10px] text-brand-600/70 dark:text-brand-500 mt-0.5">Digite o e-mail do cliente e busque os dados via n8n.</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" x-model="lookupEmail"
+                           @keydown.enter.prevent="lookup()"
+                           placeholder="email@empresa.com.br"
+                           class="flex-1 border border-brand-200 dark:border-brand-800 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-800/50 text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all">
+                    <button type="button" @click="lookup()"
+                            :disabled="!lookupEmail || lookupLoading"
+                            class="px-4 py-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-all shrink-0 whitespace-nowrap">
+                        Preencher automaticamente
+                    </button>
+                </div>
+                <p x-show="lookupError" x-text="lookupError" x-cloak
+                   class="text-xs text-rose-600 dark:text-rose-400 font-semibold"></p>
+                <p x-show="lookupFilled" x-cloak
+                   class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">✓ Dados preenchidos! Revise e continue.</p>
+            </div>
+
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Identificação</h3>
                 <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Dados principais de contato e acesso.</p>
@@ -320,12 +359,91 @@
 
 <script>
 const _planConfigs = @json($planConfigs->values());
+const _lookupRoute = '{{ route('customers.lookup') }}';
+const _csrfToken   = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
 function wizard() {
     return {
         step: 0,
         next() { if (this.step < 4) this.step++; },
-        prev() { if (this.step > 0) this.step--; }
+        prev() { if (this.step > 0) this.step--; },
+
+        // Lookup
+        lookupEmail:  '',
+        lookupLoading: false,
+        lookupError:  '',
+        lookupFilled: false,
+
+        async lookup() {
+            if (!this.lookupEmail) return;
+            this.lookupLoading = true;
+            this.lookupError   = '';
+            this.lookupFilled  = false;
+
+            try {
+                const resp = await fetch(_lookupRoute, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': _csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ email: this.lookupEmail })
+                });
+
+                const data = await resp.json();
+
+                if (!resp.ok || data.error) {
+                    this.lookupError = data.error || 'Erro ao buscar dados.';
+                    return;
+                }
+
+                this._fillForm(data);
+                this.lookupFilled = true;
+
+            } catch (e) {
+                this.lookupError = 'Não foi possível conectar ao n8n.';
+            } finally {
+                this.lookupLoading = false;
+            }
+        },
+
+        _fillForm(data) {
+            // Campos de texto simples
+            const textFields = [
+                'company_name', 'client_name', 'email',
+                'monthly_fee', 'contracted_at', 'canceled_at',
+                'instagram_followers_count'
+            ];
+            textFields.forEach(field => {
+                if (data[field] == null) return;
+                const el = document.querySelector(`[name="${field}"]`);
+                if (el) { el.value = data[field]; el.dispatchEvent(new Event('input', { bubbles: true })); }
+            });
+
+            // Campos combobox (hidden input + text input visível)
+            const comboFields = ['tier', 'segment', 'company_size', 'channel_type', 'plan_name'];
+            comboFields.forEach(field => {
+                if (data[field] == null) return;
+                const hidden = document.querySelector(`input[type="hidden"][name="${field}"]`);
+                if (!hidden) return;
+                hidden.value = data[field];
+                const wrapper = hidden.closest('[x-data]');
+                if (wrapper) {
+                    const textInput = wrapper.querySelector('input[type="text"]');
+                    if (textInput) { textInput.value = data[field]; }
+                }
+            });
+
+            // Emails relacionados (tag input)
+            if (Array.isArray(data.related_emails) && data.related_emails.length) {
+                const emailTagsEl = document.querySelector('[x-data*="emailTags"]');
+                if (emailTagsEl && window.Alpine) {
+                    const cmp = Alpine.$data(emailTagsEl);
+                    if (cmp) cmp.tags = data.related_emails;
+                }
+            }
+        }
     };
 }
 

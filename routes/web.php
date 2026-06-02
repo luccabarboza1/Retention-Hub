@@ -3,6 +3,7 @@
 use App\Http\Controllers\Web\BoardController;
 use App\Http\Controllers\Web\CardWebController;
 use App\Http\Controllers\Web\CustomerWebController;
+use App\Http\Controllers\Web\CustomerLookupController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\ProductSettingsController;
 use App\Http\Controllers\Web\ProductWebController;
@@ -35,6 +36,9 @@ Route::post('/cards/{card}/comments',                  [CardWebController::class
 Route::delete('/cards/{card}/comments/{comment}',      [CardWebController::class, 'destroyComment'])->name('cards.comments.destroy');
 Route::post('/cards/{card}/chats',                     [CardWebController::class, 'storeChat'])->name('cards.chats.store');
 Route::patch('/cards/{card}/chats/{chat}/close',       [CardWebController::class, 'closeChat'])->name('cards.chats.close');
+
+// Lookup de cliente via n8n
+Route::post('/customers/lookup-email', [CustomerLookupController::class, 'lookup'])->name('customers.lookup');
 
 // Clientes
 Route::get('/customers',                    [CustomerWebController::class, 'index'])->name('customers.index');

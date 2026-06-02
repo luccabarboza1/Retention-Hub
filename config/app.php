@@ -12,7 +12,8 @@ return [
     'key'    => env('APP_KEY'),
     'cipher' => 'AES-256-CBC',
 
-    'api_access_token' => env('API_ACCESS_TOKEN'),
+    'api_access_token'    => env('API_ACCESS_TOKEN'),
+    'customer_lookup_url' => env('CUSTOMER_LOOKUP_URL'),
 
     'providers' => Illuminate\Support\ServiceProvider::defaultProviders()->merge([
         App\Providers\AppServiceProvider::class,
