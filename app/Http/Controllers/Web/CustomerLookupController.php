@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\AppSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -12,7 +13,7 @@ class CustomerLookupController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $url = config('app.customer_lookup_url');
+        $url = AppSetting::get('customer_lookup_url', config('app.customer_lookup_url'));
 
         if (!$url) {
             return response()->json([

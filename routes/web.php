@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\CardWebController;
 use App\Http\Controllers\Web\CustomerWebController;
 use App\Http\Controllers\Web\CustomerLookupController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\GeneralSettingsController;
 use App\Http\Controllers\Web\ProductSettingsController;
 use App\Http\Controllers\Web\ProductWebController;
 use App\Http\Controllers\Web\SearchController;
@@ -47,6 +48,10 @@ Route::post('/customers',                   [CustomerWebController::class, 'stor
 Route::get('/customers/{customer}',         [CustomerWebController::class, 'show'])->name('customers.show');
 Route::patch('/customers/{customer}',       [CustomerWebController::class, 'update'])->name('customers.update');
 Route::get('/customers/{customer}/cards',   [CustomerWebController::class, 'cards'])->name('customers.cards');
+
+// Configurações gerais
+Route::get('/settings',          [GeneralSettingsController::class, 'index'])->name('settings.general');
+Route::post('/settings',         [GeneralSettingsController::class, 'update'])->name('settings.general.update');
 
 // Configurações de planos de produto
 Route::get('/settings/products',                        [ProductSettingsController::class, 'index'])->name('settings.products');
