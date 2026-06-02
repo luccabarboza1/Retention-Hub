@@ -64,7 +64,7 @@ $tierColors = [
         <div>
             <h2 class="text-sm font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Painel Executivo</h2>
             <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                Monitorando <span class="font-bold text-brand-600 dark:text-brand-450 text-sm px-1.5 py-0.5 rounded-md bg-brand-50 dark:bg-brand-950/40">{{ $cards->flatten()->count() }}</span> card(s) ativo(s)
+                Monitorando <span class="font-bold text-brand-600 dark:text-brand-400 text-sm px-1.5 py-0.5 rounded-md bg-brand-50 dark:bg-brand-950/40">{{ $cards->flatten()->count() }}</span> card(s) ativo(s)
             </p>
         </div>
         <button @click="showColModal = true"
