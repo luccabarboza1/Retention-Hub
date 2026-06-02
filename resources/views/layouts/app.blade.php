@@ -47,6 +47,7 @@
         html.sidebar-pre-collapsed #app-sidebar { width: 4rem; transition: none; }
         html.sidebar-pre-collapsed .sidebar-text { display: none !important; }
         html.sidebar-pre-collapsed .sidebar-toggle-icon { transform: rotate(180deg); transition: none; }
+        html.sidebar-pre-collapsed .sidebar-status { opacity: 0; pointer-events: none; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -285,7 +286,8 @@
                       class="sidebar-text text-xs">Recolher</span>
             </button>
 
-            <div x-show="!collapsed" class="sidebar-text px-3 pt-2 text-[10px] text-slate-600">
+            <div class="sidebar-status px-3 pt-2 text-[10px] text-slate-600 transition-opacity duration-200"
+                 :class="collapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'">
                 <div class="flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span class="font-semibold uppercase tracking-wider text-emerald-600">Ambiente seguro</span>
