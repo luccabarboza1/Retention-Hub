@@ -50,6 +50,7 @@
         html.sidebar-pre-collapsed .sidebar-status { opacity: 0; pointer-events: none; }
         html.sidebar-pre-collapsed .sidebar-brand-text { opacity: 0; }
         html.sidebar-pre-collapsed .sidebar-config-label { opacity: 0; }
+        html.sidebar-pre-collapsed .sidebar-label { opacity: 0; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -253,7 +254,7 @@
                 <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                <span x-show="!collapsed" class="sidebar-text truncate text-sm">API Docs</span>
+                <span class="sidebar-label text-sm whitespace-nowrap transition-opacity duration-200" :class="collapsed ? 'opacity-0' : ''">API Docs</span>
             </a>
         </div>
 
@@ -270,9 +271,7 @@
                 <svg class="hidden dark:block w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
                 </svg>
-                <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
-                      x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                      class="sidebar-text text-xs" x-text="isDark ? 'Tema claro' : 'Tema escuro'"></span>
+                <span class="sidebar-label text-xs whitespace-nowrap transition-opacity duration-200" :class="collapsed ? 'opacity-0' : ''" x-text="isDark ? 'Tema claro' : 'Tema escuro'"></span>
             </button>
 
             {{-- Collapse toggle --}}
@@ -283,9 +282,7 @@
                      fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
                 </svg>
-                <span x-show="!collapsed" x-transition:enter="transition-opacity duration-200 delay-100"
-                      x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                      class="sidebar-text text-xs">Recolher</span>
+                <span class="sidebar-label text-xs whitespace-nowrap transition-opacity duration-200" :class="collapsed ? 'opacity-0' : ''">Recolher</span>
             </button>
 
             <div class="sidebar-status px-3 pt-2 text-[10px] text-slate-600 transition-opacity duration-200"
