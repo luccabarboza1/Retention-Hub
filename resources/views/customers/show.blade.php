@@ -200,8 +200,6 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
 
             </div>
 
-        </div>
-
         {{-- RIGHT COLUMN: Ombudsman Activity (Span 1) --}}
         <div class="space-y-6">
 
