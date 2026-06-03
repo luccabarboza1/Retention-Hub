@@ -56,5 +56,10 @@
                 </svg>
             </div>
         </template>
+
+        <div x-show="options.length === 0"
+             class="px-4 py-3 text-xs text-slate-400 dark:text-slate-500 italic text-center">
+            Nenhuma etiqueta criada.
+        </div>
     </div>
 </div>
