@@ -96,6 +96,12 @@ class CustomerWebController extends Controller
         return view('customers.cards', compact('customer', 'cards'));
     }
 
+    public function destroy(Customer $customer)
+    {
+        $customer->delete();
+        return redirect()->route('customers.index')->with('success', 'Cliente excluído com sucesso.');
+    }
+
     private function validated(?Customer $customer = null): array
     {
         return request()->validate([

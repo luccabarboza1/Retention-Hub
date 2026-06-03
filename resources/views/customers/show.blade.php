@@ -32,6 +32,17 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
         </div>
         
         <div class="flex gap-2">
+            <form method="POST" action="{{ route('customers.destroy', $customer) }}" onsubmit="return confirm('Deseja realmente excluir este cliente? Esta ação ocultará o cliente e seus registros.')" class="inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                        class="px-4 py-2.5 bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/30 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Excluir
+                </button>
+            </form>
             <a href="{{ route('cards.create', ['customer_id' => $customer->id]) }}"
                class="px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-glow-brand transition-all flex items-center gap-1.5 hover:-translate-y-0.5">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
@@ -363,7 +374,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
         <div class="space-y-6">
 
             {{-- 1. Ombudsman Summary Stats --}}
-            <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-5 shadow-premium">
+            <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-5 rounded-2xl shadow-premium">
                 <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4 flex items-center justify-between">
                     🚨 Ouvidoria Ativa
                 </h3>
@@ -391,7 +402,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
 
             {{-- 2. Recent Cards Tracker --}}
             @if($recentCards->count())
-            <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-5 shadow-premium">
+            <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-5 shadow-premium rounded-2xl">
                 <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">⏳ Últimas Ocorrências</h3>
                 
                 <div class="space-y-3 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100 dark:before:bg-slate-800">

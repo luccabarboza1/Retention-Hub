@@ -47,6 +47,7 @@ Route::get('/customers/create',             [CustomerWebController::class, 'crea
 Route::post('/customers',                   [CustomerWebController::class, 'store'])->name('customers.store');
 Route::get('/customers/{customer}',         [CustomerWebController::class, 'show'])->name('customers.show');
 Route::patch('/customers/{customer}',       [CustomerWebController::class, 'update'])->name('customers.update');
+Route::delete('/customers/{customer}',      [CustomerWebController::class, 'destroy'])->name('customers.destroy');
 Route::get('/customers/{customer}/cards',   [CustomerWebController::class, 'cards'])->name('customers.cards');
 
 // Opções de campos gerenciadas inline
