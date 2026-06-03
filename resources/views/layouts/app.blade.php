@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/app.css?v={{ filemtime(public_path('css/app.css')) }}">
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -486,6 +486,42 @@ function emailTags(initial) {
                 this.tags.push(v);
                 this.input = '';
             }
+        },
+        remove(i) { this.tags.splice(i, 1); },
+        key(e) {
+            if (['Enter','Tab',','].includes(e.key)) { e.preventDefault(); this.add(); }
+            if (e.key === 'Backspace' && !this.input && this.tags.length) this.tags.pop();
+        }
+    };
+}
+
+function tagInput(initial, suggestions) {
+    return {
+        tags: Array.isArray(initial) ? initial : [],
+        available: Array.isArray(suggestions) ? suggestions : [],
+        input: '',
+        open: false,
+        get filteredSuggestions() {
+            const search = this.input.trim().toLowerCase();
+            return this.available.filter(tag => {
+                const isSelected = this.tags.some(t => t.toLowerCase() === tag.toLowerCase());
+                if (isSelected) return false;
+                return tag.toLowerCase().includes(search);
+            });
+        },
+        add(value) {
+            let v = (value || this.input).trim();
+            if (!v) return;
+            const matchedSuggestion = this.available.find(tag => tag.toLowerCase() === v.toLowerCase());
+            if (matchedSuggestion) {
+                v = matchedSuggestion;
+            }
+            const exists = this.tags.some(t => t.toLowerCase() === v.toLowerCase());
+            if (!exists) {
+                this.tags.push(v);
+            }
+            this.input = '';
+            this.open = false;
         },
         remove(i) { this.tags.splice(i, 1); },
         key(e) {
