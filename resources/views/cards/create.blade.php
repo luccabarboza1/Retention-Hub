@@ -39,16 +39,15 @@
                 </div>
 
                 {{-- Etapa Kanban --}}
-                <div>
-                    <label class="field-label">Etapa Kanban <span class="text-rose-500">*</span></label>
-                    <div class="select-wrap">
-                        <select name="status" required class="field-input font-semibold text-slate-800 dark:text-slate-100">
-                            @foreach($statuses as $s)
-                            <option value="{{ $s }}" {{ old('status', request('status', $statuses[0])) === $s ? 'selected' : '' }}>{{ $s }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                @include('cards._managed_combobox', [
+                    'name' => 'status',
+                    'label' => 'Etapa Kanban',
+                    'placeholder' => 'Selecione…',
+                    'options' => $statuses,
+                    'old' => old('status', request('status', $statuses[0])),
+                    'col' => '',
+                    'freeText' => false
+                ])
 
                 <div>
                     <label class="field-label">Data de Abertura <span class="text-rose-500">*</span></label>
