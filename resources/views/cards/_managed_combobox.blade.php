@@ -11,7 +11,8 @@
     $currentValue = old($name, $old ?? '');
 @endphp
 
-<div x-data="managedCombobox('{{ $saveUrl }}', @json($normalizedOptions), '{{ $currentValue }}')"
+<div x-data="managedCombobox('{{ $saveUrl }}', JSON.parse($el.dataset.opts), '{{ $currentValue }}')"
+     data-opts='@json($normalizedOptions)'
      class="{{ $col ?? '' }}">
 
     {{-- Label + botão Gerenciar --}}
