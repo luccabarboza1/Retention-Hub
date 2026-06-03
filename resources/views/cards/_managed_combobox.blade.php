@@ -36,27 +36,22 @@
             <span x-text="value || '{{ $placeholder }}'"></span>
         </button>
         @endif
-        <span class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 transition-transform duration-200"
-              :class="open ? 'rotate-180' : ''">
+        <button type="button" @click="open = !open" tabindex="-1"
+                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
-        </span>
+        </button>
     </div>
     <input type="hidden" name="{{ $name }}" x-model="value">
 
     {{-- Dropdown: estado vazio --}}
     <div x-show="open && options.length === 0" x-cloak
-         class="absolute z-50 w-full mt-1.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-premium overflow-hidden">
-        <div class="px-4 py-5 flex flex-col items-center gap-3 text-center">
-            <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-            </div>
+         class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-hidden">
+        <div class="px-4 py-4 flex flex-col items-center gap-2.5 text-center">
             <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">Nenhuma opção criada.</p>
-            <button type="button" @click="open = false; managing = true; $nextTick(() => $el.closest('[x-data]').querySelector('input[type=text]')?.focus())"
-                    class="text-[10px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 hover:bg-brand-100 dark:hover:bg-brand-900/40 px-3 py-1.5 rounded-lg transition-all">
+            <button type="button" @click="open = false; managing = true"
+                    class="text-[10px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-100 dark:hover:bg-brand-900/50 px-3 py-1.5 rounded-lg transition-all">
                 + Adicionar primeira opção
             </button>
         </div>
@@ -64,42 +59,19 @@
 
     {{-- Dropdown: com opções --}}
     <div x-show="open && options.length > 0" x-cloak
-         class="absolute z-50 w-full mt-1.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-premium overflow-hidden">
-
-        {{-- Campo de busca (apenas freeText) --}}
-        @if($freeText)
-        <div class="px-3 pt-3 pb-2 border-b border-slate-100 dark:border-slate-800">
-            <div class="relative">
-                <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+         class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
+        <template x-for="(opt, i) in filtered" :key="opt">
+            <div @click="select(opt)"
+                 :class="hi === i || value === opt
+                     ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300'
+                     : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
+                 class="px-4 py-2.5 text-sm cursor-pointer transition-colors flex items-center justify-between">
+                <span x-text="opt"></span>
+                <svg x-show="value === opt" x-cloak class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                 </svg>
-                <input type="text" x-model="query" @input="filter()"
-                       placeholder="Buscar…"
-                       class="w-full pl-7 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/10 transition-all text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600">
             </div>
-        </div>
-        @endif
-
-        <div class="overflow-auto max-h-48 py-1">
-            <template x-for="(opt, i) in filtered" :key="opt">
-                <div @click="select(opt)"
-                     :class="[
-                         hi === i || value === opt
-                             ? 'bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300'
-                             : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60',
-                         value === opt ? 'font-bold' : 'font-medium'
-                     ]"
-                     class="flex items-center justify-between px-4 py-2.5 text-sm cursor-pointer transition-colors">
-                    <span x-text="opt"></span>
-                    <svg x-show="value === opt" class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                    </svg>
-                </div>
-            </template>
-            <div x-show="filtered.length === 0" class="px-4 py-3 text-xs text-slate-400 dark:text-slate-500 italic text-center">
-                Sem resultados.
-            </div>
-        </div>
+        </template>
     </div>
 
     {{-- Painel de gestão --}}
