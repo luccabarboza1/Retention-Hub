@@ -5,20 +5,29 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\KanbanColumn;
+use App\Models\Tag;
 
 class BoardController extends Controller
 {
     public function index()
     {
         $columns = KanbanColumn::orderBy('order')->get();
+        $tagFilter = request('tag');
 
-        $cards = Card::with('customer', 'product')
-            ->whereNull('deleted_at')
-            ->orderBy('started_at', 'desc')
+        $cardsQuery = Card::with(['customer', 'product'])
+            ->whereNull('deleted_at');
+
+        if ($tagFilter) {
+            $cardsQuery->whereHas('tagsRelation', fn ($q) => $q->where('name', $tagFilter));
+        }
+
+        $cards = $cardsQuery->orderBy('started_at', 'desc')
             ->get()
             ->groupBy('status');
 
-        return view('board', compact('columns', 'cards'));
+        $allTags = Tag::where('type', 'card')->orderBy('name')->pluck('name');
+
+        return view('board', compact('columns', 'cards', 'allTags', 'tagFilter'));
     }
 
     public function storeColumn()
