@@ -317,7 +317,9 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
                     <p class="text-[10px] text-rose-600/70 dark:text-rose-500 mt-1 leading-relaxed">Excluir este cliente irá ocultá-lo e remover seus produtos e atendimentos associados de forma definitiva.</p>
                 </div>
                 <form method="POST" action="{{ route('customers.destroy', $customer) }}"
-                      onsubmit="return confirm('Deseja realmente excluir este cliente? Esta ação ocultará o cliente e seus registros.')">
+                      data-confirm-title="Excluir Cliente"
+                      data-confirm-msg="{{ $customer->company_name }} — esta ação é definitiva e removerá todos os seus registros de forma irreversível."
+                      @submit.prevent="$dispatch('open-confirm', { title: $el.dataset.confirmTitle, message: $el.dataset.confirmMsg, form: $el })">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
