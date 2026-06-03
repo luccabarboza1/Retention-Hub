@@ -12,6 +12,17 @@
         <span class="text-slate-500 dark:text-slate-400 font-medium">Novo Cadastro</span>
     </div>
 
+    {{-- Erros de validação (sempre visível, independente do step) --}}
+    @if($errors->any())
+    <div class="bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800/50 rounded-xl px-4 py-3 mb-4 flex items-start gap-2.5 animate-fadeIn">
+        <span class="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">✕</span>
+        <div>
+            <p class="text-xs font-bold text-rose-700 dark:text-rose-400">Não foi possível cadastrar o cliente:</p>
+            <p class="text-xs text-rose-600 dark:text-rose-400 mt-0.5">{{ $errors->first() }}</p>
+        </div>
+    </div>
+    @endif
+
     {{-- Progress --}}
     <div class="flex items-center gap-2 mb-6">
         @php $steps = ['Identificação','Contrato','Empresa','Produtos']; @endphp

@@ -121,7 +121,7 @@ class CustomerWebController extends Controller
         return request()->validate([
             'company_name'              => 'required|string|max:255',
             'client_name'               => 'required|string|max:255',
-            'email'                     => 'nullable|email|max:255|unique:customers,email' . ($customer ? ',' . $customer->id : ''),
+            'email'                     => 'nullable|email|max:255',
             'related_emails'            => 'nullable|array',
             'related_emails.*'          => 'email',
             'segment'                   => 'nullable|string|max:100',
