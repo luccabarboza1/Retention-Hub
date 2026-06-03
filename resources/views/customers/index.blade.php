@@ -5,12 +5,11 @@
 @php
 // Mapeamento de Tiers para gradientes estéticos
 $tierColors = [
-    'gold' => 'from-amber-400 to-amber-600 text-white font-bold',
-    'silver' => 'from-slate-300 to-slate-400 text-slate-800 font-bold',
-    'bronze' => 'from-orange-300 to-orange-500 text-white font-bold',
-    'premium' => 'from-brand-500 to-accent-indigo text-white font-bold shadow-glow-brand',
-    'vip' => 'from-rose-500 to-pink-600 text-white font-bold shadow-sm',
-    'standard' => 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 text-slate-600 dark:text-slate-300 font-bold',
+    'gold'    => ['gradient' => true,  'class' => 'from-amber-400 to-amber-600 text-white font-bold'],
+    'silver'  => ['gradient' => true,  'class' => 'from-slate-300 to-slate-400 text-slate-800 font-bold'],
+    'bronze'  => ['gradient' => true,  'class' => 'from-orange-300 to-orange-500 text-white font-bold'],
+    'premium' => ['gradient' => true,  'class' => 'from-brand-500 to-accent-indigo text-white font-bold shadow-glow-brand'],
+    'vip'     => ['gradient' => true,  'class' => 'from-rose-500 to-pink-600 text-white font-bold shadow-sm'],
 ];
 @endphp
 
@@ -103,7 +102,7 @@ $tierColors = [
                 @forelse($customers as $c)
                 @php
                     $tColorKey = strtolower($c->tier ?? '');
-                    $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
+                    $tDef = $tierColors[$tColorKey] ?? null;
                 @endphp
                 <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors group">
                     <td class="px-6 py-4">
@@ -131,9 +130,15 @@ $tierColors = [
                     </td>
                     <td class="px-6 py-4">
                         @if($c->tier)
-                        <span class="text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-gradient-to-r {{ $tGrad }}">
+                        @if($tDef)
+                        <span class="text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-gradient-to-r {{ $tDef['class'] }}">
                             {{ $c->tier }}
                         </span>
+                        @else
+                        <span class="text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold">
+                            {{ $c->tier }}
+                        </span>
+                        @endif
                         @else
                         <span class="text-xs text-slate-400 dark:text-slate-500 font-medium">—</span>
                         @endif
