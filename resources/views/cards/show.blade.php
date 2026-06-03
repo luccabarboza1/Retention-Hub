@@ -272,7 +272,8 @@ $tGrad = $tierColors[$tColorKey] ?? 'bg-slate-100 text-slate-600';
                                     <span class="text-[9px] text-slate-400 dark:text-slate-500 font-semibold block uppercase">{{ $comment->created_at->format('d/m/Y H:i') }}</span>
                                 </div>
                             </div>
-                            <form method="POST" action="{{ route('cards.comments.destroy', [$card, $comment]) }}" onsubmit="return confirm('Excluir nota?')">
+                            <form method="POST" action="{{ route('cards.comments.destroy', [$card, $comment]) }}"
+                                  @submit.prevent="$dispatch('open-confirm', { title: 'Excluir nota', message: 'Deseja remover esta nota permanentemente?', form: $el })">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="opacity-0 group-hover:opacity-100 text-slate-300 dark:text-slate-600 hover:text-rose-600 transition-opacity p-0.5 rounded">✕</button>
                             </form>

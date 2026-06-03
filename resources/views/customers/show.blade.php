@@ -282,7 +282,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
                                         ✏️
                                     </button>
                                     <form method="POST" action="{{ route('products.destroy', $product) }}"
-                                          onsubmit="return confirm('Excluir este produto?')">
+                                          @submit.prevent="$dispatch('open-confirm', { title: 'Excluir produto', message: 'Deseja remover o produto {{ $product->product_type }} #{{ $product->external_id }}?', form: $el })">
                                         @csrf @method('DELETE')
                                         <button type="submit"
                                                 class="text-[10px] font-bold text-slate-400 hover:text-rose-600 px-2 py-1 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-all">

@@ -399,5 +399,62 @@ function emailTags(initial) {
 }
 </script>
 
+{{-- Modal de confirmação global --}}
+<div x-data="confirmModal()"
+     @open-confirm.window="open($event.detail)"
+     x-show="show" x-cloak
+     class="fixed inset-0 z-[200] flex items-center justify-center">
+
+    {{-- Backdrop --}}
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="cancel()"></div>
+
+    {{-- Dialog --}}
+    <div class="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl w-full max-w-sm mx-4 p-6 animate-fadeIn">
+
+        {{-- Ícone --}}
+        <div class="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            </svg>
+        </div>
+
+        <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 text-center mb-1" x-text="title"></h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 text-center mb-6 leading-relaxed" x-text="message"></p>
+
+        <div class="flex gap-3">
+            <button type="button" @click="cancel()"
+                    class="flex-1 px-4 py-2.5 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                Cancelar
+            </button>
+            <button type="button" @click="confirm()"
+                    class="flex-1 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition-all">
+                Confirmar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmModal() {
+    return {
+        show: false,
+        title: 'Confirmar ação',
+        message: '',
+        _form: null,
+        open(detail) {
+            this.title   = detail.title   || 'Confirmar ação';
+            this.message = detail.message || 'Tem certeza que deseja continuar?';
+            this._form   = detail.form    || null;
+            this.show    = true;
+        },
+        confirm() {
+            this.show = false;
+            if (this._form) this.$nextTick(() => this._form.submit());
+        },
+        cancel() { this.show = false; }
+    };
+}
+</script>
+
 </body>
 </html>
