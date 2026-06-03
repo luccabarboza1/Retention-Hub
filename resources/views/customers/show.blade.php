@@ -17,7 +17,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
 @endphp
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6" x-data="{ editing: false }">
+<div class="max-w-7xl mx-auto space-y-6">
 
     {{-- Header Action Deck --}}
     <div class="flex items-center justify-between bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-5 shadow-premium shrink-0">
@@ -32,26 +32,11 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
         </div>
         
         <div class="flex gap-2">
-            <form method="POST" action="{{ route('customers.destroy', $customer) }}" onsubmit="return confirm('Deseja realmente excluir este cliente? Esta ação ocultará o cliente e seus registros.')" class="inline">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                        class="px-4 py-2.5 bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/30 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                    Excluir
-                </button>
-            </form>
             <a href="{{ route('cards.create', ['customer_id' => $customer->id]) }}"
                class="px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-glow-brand transition-all flex items-center gap-1.5 hover:-translate-y-0.5">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                 Novo Card
             </a>
-            <button @click="editing = !editing"
-                    class="px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-750 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center"
-                    x-text="editing ? 'Cancelar Edição' : 'Editar Cliente'">
-            </button>
         </div>
     </div>
 
@@ -60,112 +45,40 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
         {{-- LEFT & CENTER: Client Details / Forms (Span 2) --}}
         <div class="lg:col-span-2 space-y-6">
 
-            {{-- 1. View Mode Profile Deck --}}
-            <div x-show="!editing" class="space-y-6 animate-fadeIn">
+            {{-- Edit Form Workspace (Editable by default) --}}
+            <form method="POST" action="{{ route('customers.update', $customer) }}"
+                  x-data="{ changed: false }"
+                  @input="changed = true"
+                  @change="changed = true"
+                  class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium space-y-6 relative">
+                @csrf @method('PATCH')
                 
-                {{-- Identificação & Contrato --}}
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium space-y-6">
-                    
-                    {{-- Section: Identificação --}}
-                    <div>
-                        <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
-                            👤 Informações de Identificação
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Razão Social / Empresa</p>
-                                <p class="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{{ $customer->company_name }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Responsável Principal</p>
-                                <p class="text-sm font-bold text-slate-700 dark:text-slate-300 mt-1">{{ $customer->client_name }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">E-mail Corporativo</p>
-                                <p class="text-sm font-semibold text-brand-600 dark:text-brand-400 mt-1 underline">{{ $customer->email ?? '—' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Segmento de Mercado</p>
-                                <p class="text-sm font-bold text-slate-600 dark:text-slate-400 mt-1 bg-slate-50 dark:bg-slate-800 border border-slate-200/40 dark:border-slate-700/60 px-2.5 py-0.5 rounded-lg inline-block">
-                                    {{ $customer->segment ?? '—' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Section: Plano e Contrato --}}
-                    <div>
-                        <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
-                            📄 Detalhes de Contrato & MRR
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Plano</p>
-                                <p class="text-sm font-bold text-slate-700 dark:text-slate-350 mt-1">{{ $customer->plan_name ?? '—' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Classificação (Tier)</p>
-                                <div class="mt-1">
-                                    @if($customer->tier)
-                                    <span class="text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-gradient-to-r {{ $tGrad }}">
-                                        {{ $customer->tier }}
-                                    </span>
-                                    @else
-                                    <p class="text-sm font-bold text-slate-400 dark:text-slate-500 mt-1">—</p>
-                                    @endif
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Faturamento Recorrente (MRR)</p>
-                                <p class="text-base font-extrabold text-emerald-600 dark:text-emerald-400 font-mono mt-0.5">
-                                    {{ $customer->monthly_fee ? 'R$ ' . number_format($customer->monthly_fee, 2, ',', '.') : '—' }}
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Canal de Aquisição</p>
-                                <p class="text-xs font-bold text-slate-600 dark:text-slate-400 mt-1">{{ $customer->channel_type ?? '—' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Data de Contratação</p>
-                                <p class="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-1">
-                                    📅 {{ $customer->contracted_at?->format('d/m/Y') ?? '—' }}
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Status do Contrato</p>
-                                @if($customer->canceled_at)
-                                <span class="inline-block mt-1 bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-455 border border-rose-100 dark:border-rose-900/40 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                                    Cancelado em {{ $customer->canceled_at->format('d/m/Y') }}
-                                </span>
-                                @else
-                                <span class="inline-block mt-1 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                                    Ativo
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Section: Infos adicionais --}}
-                    <div>
-                        <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
-                            🏢 Dados Corporativos Complementares
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Porte da Empresa</p>
-                                <p class="text-sm font-bold text-slate-700 dark:text-slate-350 mt-1">{{ $customer->company_size ?? '—' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Seguidores no Instagram</p>
-                                <p class="text-sm font-bold text-slate-700 dark:text-slate-350 mt-1 font-mono">
-                                    {{ $customer->instagram_followers_count ? number_format($customer->instagram_followers_count, 0, ',', '.') : '—' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
+                <div>
+                    <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
+                        👤 Informações do Cliente
+                    </h3>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Altere os campos abaixo para atualizar o perfil corporativo em tempo real.</p>
                 </div>
+
+                @include('customers._form', ['customer' => $customer])
+
+                @if($errors->any())
+                <div class="text-xs text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-4 py-3 font-semibold">
+                    {{ $errors->first() }}
+                </div>
+                @endif
+
+                <div x-show="changed" x-cloak class="flex gap-3 border-t border-slate-100 dark:border-slate-800 pt-5 animate-fadeIn">
+                    <button type="submit"
+                            class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-glow-brand transition-all">
+                        Salvar Alterações
+                    </button>
+                    <button type="button" @click="window.location.reload()"
+                            class="px-6 py-3 border border-slate-200 dark:border-slate-750 text-slate-600 dark:text-slate-400 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                        Descartar
+                    </button>
+                </div>
+            </form>
 
 
 
@@ -287,37 +200,6 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
 
             </div>
 
-            {{-- 2. Edit Mode Workspace --}}
-            <div x-show="editing" x-cloak class="bg-white dark:bg-slate-900 border border-brand-200 dark:border-brand-900/80 p-6 shadow-premium animate-fadeIn relative">
-                <div class="absolute top-0 left-0 w-full h-[4px] bg-brand-500"></div>
-                
-                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 mb-5 tracking-tight flex items-center gap-2">
-                    🛠️ Painel de Edição de Conta
-                </h3>
-                
-                <form method="POST" action="{{ route('customers.update', $customer) }}" class="space-y-6">
-                    @csrf @method('PATCH')
-                    @include('customers._form', ['customer' => $customer])
-
-                    @if($errors->any())
-                    <div class="text-xs text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-4 py-3 font-semibold">
-                        {{ $errors->first() }}
-                    </div>
-                    @endif
-
-                    <div class="flex gap-3 border-t border-slate-100 dark:border-slate-800 pt-5">
-                        <button type="submit"
-                                class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-glow-brand transition-all">
-                            Salvar Alterações
-                        </button>
-                        <button type="button" @click="editing = false"
-                                class="px-6 py-3 border border-slate-200 dark:border-slate-750 text-slate-600 dark:text-slate-400 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-                            Cancelar
-                        </button>
-                    </div>
-                </form>
-            </div>
-
         </div>
 
         {{-- RIGHT COLUMN: Ombudsman Activity (Span 1) --}}
@@ -426,6 +308,25 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
                 @if($customer->updated_at != $customer->created_at)
                 <p>Atualizado em: {{ $customer->updated_at->format('d/m/Y H:i') }}</p>
                 @endif
+            </div>
+
+            {{-- Danger Zone: Delete Client --}}
+            <div class="bg-rose-50/10 dark:bg-rose-950/5 border border-rose-100 dark:border-rose-900/40 rounded-2xl p-5 shadow-sm space-y-3">
+                <div>
+                    <h4 class="text-xs font-extrabold text-rose-700 dark:text-rose-455 uppercase tracking-wider flex items-center gap-1">
+                        ⚠️ Zona de Perigo
+                    </h4>
+                    <p class="text-[10px] text-rose-600/70 dark:text-rose-500 mt-1 leading-relaxed">Excluir este cliente irá ocultá-lo e remover seus produtos e atendimentos associados de forma definitiva.</p>
+                </div>
+                <form method="POST" action="{{ route('customers.destroy', $customer) }}"
+                      onsubmit="return confirm('Deseja realmente excluir este cliente? Esta ação ocultará o cliente e seus registros.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                            class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-sm">
+                        Excluir Cliente
+                    </button>
+                </form>
             </div>
 
         </div>
