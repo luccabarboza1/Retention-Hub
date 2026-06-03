@@ -83,7 +83,7 @@ class CustomerWebController extends Controller
 
     public function update(Customer $customer)
     {
-        $data = $this->validated();
+        $data = $this->validated($customer);
         $data['instagram_followers_count'] ??= 0;
         $customer->update($data);
         event(new CustomerUpdated($customer->fresh()));
@@ -96,12 +96,12 @@ class CustomerWebController extends Controller
         return view('customers.cards', compact('customer', 'cards'));
     }
 
-    private function validated(): array
+    private function validated(?Customer $customer = null): array
     {
         return request()->validate([
             'company_name'              => 'required|string|max:255',
             'client_name'               => 'required|string|max:255',
-            'email'                     => 'nullable|email|max:255',
+            'email'                     => 'nullable|email|max:255|unique:customers,email' . ($customer ? ',' . $customer->id : ''),
             'related_emails'            => 'nullable|array',
             'related_emails.*'          => 'email',
             'segment'                   => 'nullable|string|max:100',
