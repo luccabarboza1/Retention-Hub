@@ -24,7 +24,7 @@ class WebhookSettingsController extends Controller
             'name'          => 'required|string|max:100',
             'url'           => 'required|url|max:2048',
             'trigger_types' => 'required|array|min:1',
-            'trigger_types.*' => 'required|string|in:card.created,card.updated,card.finished,customer.created,customer.updated,*',
+            'trigger_types.*' => 'required|string|in:card.created,card.updated,card.finished,card.deleted,customer.created,customer.updated,customer.deleted,*',
             'description'   => 'nullable|string|max:500',
             'is_active'     => 'nullable|boolean',
         ]);

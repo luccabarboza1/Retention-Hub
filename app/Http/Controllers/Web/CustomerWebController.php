@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Events\CustomerCreated;
+use App\Events\CustomerDeleted;
 use App\Events\CustomerUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\AppSetting;
@@ -113,6 +114,7 @@ class CustomerWebController extends Controller
 
     public function destroy(Customer $customer)
     {
+        event(new CustomerDeleted($customer));
         $customer->delete();
         return redirect()->route('customers.index')->with('success', 'Cliente excluído com sucesso.');
     }

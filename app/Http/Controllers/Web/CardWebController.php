@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Events\CardCreated;
+use App\Events\CardDeleted;
 use App\Events\CardFinished;
 use App\Events\CardUpdated;
 use App\Http\Controllers\Controller;
@@ -267,6 +268,8 @@ class CardWebController extends Controller
     public function destroy(Card $card)
     {
         $customerId = $card->customer_id;
+        $card->load('customer');
+        event(new CardDeleted($card));
         $card->delete();
         return redirect()->route('customers.show', $customerId)->with('success', 'Card excluído.');
     }
