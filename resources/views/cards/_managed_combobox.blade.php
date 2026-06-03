@@ -23,7 +23,7 @@
     </div>
 
     {{-- Input / trigger --}}
-    <div class="relative" x-show="!managing">
+    <div class="relative">
         @if($freeText)
         <input type="text" x-model="query" @input="filter()" @focus="open = true"
                @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
@@ -46,7 +46,7 @@
     <input type="hidden" name="{{ $name }}" x-model="value">
 
     {{-- Dropdown: estado vazio --}}
-    <div x-show="open && options.length === 0 && !managing" x-cloak
+    <div x-show="open && options.length === 0" x-cloak
          class="absolute z-50 w-full mt-1.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-premium overflow-hidden">
         <div class="px-4 py-5 flex flex-col items-center gap-3 text-center">
             <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500">
@@ -55,7 +55,7 @@
                 </svg>
             </div>
             <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">Nenhuma opção criada.</p>
-            <button type="button" @click="open = false; managing = true"
+            <button type="button" @click="open = false; managing = true; $nextTick(() => $el.closest('[x-data]').querySelector('input[type=text]')?.focus())"
                     class="text-[10px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 hover:bg-brand-100 dark:hover:bg-brand-900/40 px-3 py-1.5 rounded-lg transition-all">
                 + Adicionar primeira opção
             </button>
@@ -63,7 +63,7 @@
     </div>
 
     {{-- Dropdown: com opções --}}
-    <div x-show="open && options.length > 0 && !managing" x-cloak
+    <div x-show="open && options.length > 0" x-cloak
          class="absolute z-50 w-full mt-1.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-premium overflow-hidden">
 
         {{-- Campo de busca (apenas freeText) --}}
