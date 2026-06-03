@@ -98,7 +98,7 @@
                 </div>
                 <div>
                     <label class="field-label">E-mails Relacionados</label>
-                    <div x-data="emailTags(@json(old('related_emails', [])))">
+                    <div x-data="emailTags([])" x-init="this.tags = JSON.parse($el.getAttribute('data-emails'))" data-emails="{{ json_encode(old('related_emails', [])) }}">
                         <div class="flex flex-wrap gap-1.5 p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl min-h-[42px] bg-slate-50/50 dark:bg-slate-800/50 focus-within:border-brand-500 focus-within:ring-4 focus-within:ring-brand-500/10 transition-all">
                             <template x-for="(tag, i) in tags" :key="i">
                                 <span class="flex items-center gap-1 text-xs font-medium bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2 py-0.5 rounded-lg">

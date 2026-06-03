@@ -16,7 +16,7 @@ $talk2Plans = $planConfigs->where('product_type', 'Talk2')->values();
 <form method="POST" action="{{ $action }}"
       x-data="{
           ptype: '{{ $type }}',
-          planConfigs: @json($talk2Plans),
+          planConfigs: [],
           planPrice: 0,
           attendants: {{ old('attendants_count', $product->attendants_count ?? 1) }},
           get total() { return this.planPrice * this.attendants; },
@@ -25,6 +25,8 @@ $talk2Plans = $planConfigs->where('product_type', 'Talk2')->values();
               this.planPrice = p ? parseFloat(p.price_per_unit) : 0;
           }
       }"
+      x-init="planConfigs = JSON.parse($el.getAttribute('data-plans'))"
+      data-plans='@json($talk2Plans)'
       class="space-y-3">
     @csrf
     @if($isEdit)

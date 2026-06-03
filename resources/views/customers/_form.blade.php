@@ -29,11 +29,15 @@
                class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all text-brand-600 dark:text-brand-400 font-medium dark:placeholder-slate-500">
     </div>
 
-    <div>
-        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Segmento de Atuação</label>
-        <input type="text" name="segment" value="{{ old('segment', $c?->segment) }}" placeholder="Ex: E-commerce, SaaS, Fintech"
-               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all dark:text-slate-300 dark:placeholder-slate-500">
-    </div>
+    @include('customers._managed_combobox', [
+        'type' => 'segments',
+        'name' => 'segment',
+        'label' => 'Segmento de Atuação',
+        'placeholder' => 'Selecione…',
+        'options' => $segments,
+        'old' => old('segment', $c?->segment),
+        'freeText' => false
+    ])
 
     {{-- Seção: Contrato --}}
     <div class="md:col-span-2 border-b border-slate-100 dark:border-slate-800 pb-2 mb-1 mt-3">
@@ -43,14 +47,18 @@
     <div>
         <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Plano Contratado</label>
         <input type="text" name="plan_name" value="{{ old('plan_name', $c?->plan_name) }}" placeholder="Ex: Enterprise, Pro, Growth"
-               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-semibold text-slate-700 dark:text-slate-300 dark:placeholder-slate-500">
+               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-semibold text-slate-750 dark:text-slate-350 dark:placeholder-slate-500">
     </div>
 
-    <div>
-        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Categoria / Tier</label>
-        <input type="text" name="tier" value="{{ old('tier', $c?->tier) }}" placeholder="Ex: VIP, Gold, Silver"
-               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-semibold uppercase tracking-wider text-slate-800 dark:text-slate-200 dark:placeholder-slate-500">
-    </div>
+    @include('customers._managed_combobox', [
+        'type' => 'tiers',
+        'name' => 'tier',
+        'label' => 'Categoria / Tier',
+        'placeholder' => 'Selecione…',
+        'options' => $tiers,
+        'old' => old('tier', $c?->tier),
+        'freeText' => false
+    ])
 
     <div>
         <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Valor Recorrente Mensal (MRR)</label>

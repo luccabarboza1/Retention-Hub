@@ -38,7 +38,7 @@
                     </div>
                 </div>
 
-                {{-- Etapa + Data --}}
+                {{-- Etapa Kanban --}}
                 <div>
                     <label class="field-label">Etapa Kanban <span class="text-rose-500">*</span></label>
                     <div class="select-wrap">

@@ -92,31 +92,55 @@ $tGrad = $tierColors[$tColorKey] ?? 'bg-slate-100 text-slate-600';
                             <input type="text" name="contact_reason" value="{{ old('contact_reason', $card->contact_reason) }}"
                                    placeholder="Ex: Insatisfeito com estabilidade..." class="field-input">
                         </div>
-                        <div>
-                            <label class="field-label">Agente Responsável</label>
-                            <input type="text" name="ombudsman_agent" value="{{ old('ombudsman_agent', $card->ombudsman_agent) }}"
-                                   placeholder="Nome do ouvidor" class="field-input">
-                        </div>
-                        <div>
-                            <label class="field-label">Time</label>
-                            <input type="text" name="responsible_team" value="{{ old('responsible_team', $card->responsible_team) }}"
-                                   placeholder="Ex: Customer Success" class="field-input">
-                        </div>
-                        <div>
-                            <label class="field-label">Origem do Ticket</label>
-                            <input type="text" name="ticket_origin" value="{{ old('ticket_origin', $card->ticket_origin) }}"
-                                   placeholder="Ex: Reclame Aqui, E-mail" class="field-input">
-                        </div>
+                        {{-- Agente Responsável --}}
+                        @include('cards._managed_combobox', [
+                            'type' => 'ombudsman_agents',
+                            'name' => 'ombudsman_agent',
+                            'label' => 'Agente Responsável',
+                            'placeholder' => 'Selecione…',
+                            'options' => $agents,
+                            'old' => old('ombudsman_agent', $card->ombudsman_agent),
+                            'col' => '',
+                            'freeText' => false
+                        ])
+
+                        {{-- Time Responsável --}}
+                        @include('cards._managed_combobox', [
+                            'type' => 'responsible_teams',
+                            'name' => 'responsible_team',
+                            'label' => 'Time Responsável',
+                            'placeholder' => 'Selecione…',
+                            'options' => $teams,
+                            'old' => old('responsible_team', $card->responsible_team),
+                            'col' => '',
+                            'freeText' => false
+                        ])
+
+                        {{-- Origem do Ticket --}}
+                        @include('cards._managed_combobox', [
+                            'type' => 'ticket_origins',
+                            'name' => 'ticket_origin',
+                            'label' => 'Origem do Ticket',
+                            'placeholder' => 'Selecione…',
+                            'options' => $origins,
+                            'old' => old('ticket_origin', $card->ticket_origin),
+                            'col' => '',
+                            'freeText' => false
+                        ])
+
+                        {{-- Avaliação --}}
                         <div>
                             <label class="field-label">Avaliação (1–5)</label>
-                            <select name="rating" class="field-input">
-                                <option value="">Sem avaliação</option>
-                                @for($i=1; $i<=5; $i++)
-                                <option value="{{ $i }}" {{ old('rating', $card->rating) == $i ? 'selected' : '' }}>
-                                    {{ str_repeat('★', $i) }}{{ str_repeat('☆', 5-$i) }} ({{ $i }}/5)
-                                </option>
-                                @endfor
-                            </select>
+                            <div class="select-wrap">
+                                <select name="rating" class="field-input font-semibold text-slate-800 dark:text-slate-100">
+                                    <option value="">Sem avaliação</option>
+                                    @for($i=1; $i<=5; $i++)
+                                    <option value="{{ $i }}" {{ old('rating', $card->rating) == $i ? 'selected' : '' }}>
+                                        {{ str_repeat('★', $i) }}{{ str_repeat('☆', 5-$i) }} ({{ $i }}/5)
+                                    </option>
+                                    @endfor
+                                </select>
+                            </div>
                         </div>
                         <div>
                             <label class="field-label">Início</label>

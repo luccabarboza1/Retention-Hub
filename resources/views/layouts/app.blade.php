@@ -354,20 +354,54 @@ function managedCombobox(saveUrl, opts, initVal) {
     const _csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
     return {
         options:   [...(opts || [])],
+        filtered:  [],
         value:     initVal || '',
+        query:     initVal || '',
+        open:      false,
+        hi:        -1,
         managing:  false,
         newOption: '',
         saving:    false,
+        init() {
+            this.filtered = [...this.options];
+        },
+        filter() {
+            this.value = this.query;
+            this.hi = -1;
+            this.filtered = this.query
+                ? this.options.filter(o => o.toLowerCase().includes(this.query.toLowerCase()))
+                : [...this.options];
+            this.open = true;
+        },
+        select(v) {
+            this.value = v;
+            this.query = v;
+            this.open = false;
+            this.hi = -1;
+        },
+        nav(d) {
+            if (!this.open) { this.open = true; return; }
+            this.hi = Math.max(-1, Math.min(this.filtered.length - 1, this.hi + d));
+        },
+        confirm() {
+            if (this.hi >= 0 && this.filtered[this.hi]) this.select(this.filtered[this.hi]);
+            else this.open = false;
+        },
         async addOption() {
             const v = this.newOption.trim();
             if (!v || this.options.includes(v)) return;
             this.options.push(v);
             this.newOption = '';
+            this.filtered = [...this.options];
             await this._persist();
         },
         async removeOption(opt) {
             this.options = this.options.filter(o => o !== opt);
-            if (this.value === opt) this.value = '';
+            this.filtered = [...this.options];
+            if (this.value === opt) {
+                this.value = '';
+                this.query = '';
+            }
             await this._persist();
         },
         async _persist() {

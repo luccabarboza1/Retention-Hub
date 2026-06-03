@@ -25,10 +25,24 @@ class CardWebController extends Controller
         $card->load('customer', 'product', 'chats');
         $comments = $card->comments()->orderBy('created_at')->get();
 
+        $storedAgents  = json_decode(AppSetting::get('card_ombudsman_agents',   '[]'), true) ?: [];
+        $storedOrigins = json_decode(AppSetting::get('card_ticket_origins',     '[]'), true) ?: [];
+        $storedTeams   = json_decode(AppSetting::get('card_responsible_teams',  '[]'), true) ?: [];
+
+        $agents  = Card::whereNotNull('ombudsman_agent')->distinct()->pluck('ombudsman_agent')
+                       ->merge($storedAgents)->unique()->sort()->values();
+        $origins = Card::whereNotNull('ticket_origin')->distinct()->pluck('ticket_origin')
+                       ->merge($storedOrigins)->unique()->sort()->values();
+        $teams   = Card::whereNotNull('responsible_team')->distinct()->pluck('responsible_team')
+                       ->merge($storedTeams)->unique()->sort()->values();
+
         return view('cards.show', [
             'card'     => $card,
             'comments' => $comments,
             'statuses' => $this->statuses(),
+            'agents'   => $agents,
+            'origins'  => $origins,
+            'teams'    => $teams,
         ]);
     }
 
