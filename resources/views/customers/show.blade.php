@@ -327,7 +327,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
             </div>
 
             {{-- 2. Edit Mode Workspace --}}
-            <div x-show="editing" x-cloak class="bg-white dark:bg-slate-900 border border-brand-200 dark:border-brand-900/80 p-6 shadow-premium animate-fadeIn relative overflow-hidden">
+            <div x-show="editing" x-cloak class="bg-white dark:bg-slate-900 border border-brand-200 dark:border-brand-900/80 p-6 shadow-premium animate-fadeIn relative">
                 <div class="absolute top-0 left-0 w-full h-[4px] bg-brand-500"></div>
                 
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 mb-5 tracking-tight flex items-center gap-2">

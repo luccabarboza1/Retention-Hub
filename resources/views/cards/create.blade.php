@@ -38,8 +38,8 @@
         @csrf
 
         {{-- Step 0: Cliente e Status --}}
-        <div x-show="step === 0" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium relative overflow-hidden animate-fadeIn space-y-5">
-            <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-600 to-accent-indigo"></div>
+        <div x-show="step === 0" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium relative animate-fadeIn space-y-5">
+            <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-600 to-accent-indigo rounded-t-2xl"></div>
 
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Cliente e Status</h3>
@@ -81,8 +81,8 @@
         </div>
 
         {{-- Step 1: Responsáveis --}}
-        <div x-show="step === 1" x-cloak class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium relative overflow-hidden animate-fadeIn space-y-5">
-            <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-600 to-accent-indigo"></div>
+        <div x-show="step === 1" x-cloak class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium relative animate-fadeIn space-y-5">
+            <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-600 to-accent-indigo rounded-t-2xl"></div>
 
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Responsáveis e Origem</h3>
@@ -102,8 +102,8 @@
         </div>
 
         {{-- Step 2: Detalhes --}}
-        <div x-show="step === 2" x-cloak class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium relative overflow-hidden animate-fadeIn space-y-5">
-            <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-600 to-accent-indigo"></div>
+        <div x-show="step === 2" x-cloak class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium relative animate-fadeIn space-y-5">
+            <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-600 to-accent-indigo rounded-t-2xl"></div>
 
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Detalhes do Atendimento</h3>
