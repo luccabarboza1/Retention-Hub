@@ -16,10 +16,10 @@
 
     {{-- Trigger — sem field-input para não herdar cor fixa --}}
     <button type="button" @click="open = !open"
-            class="w-full flex items-center justify-between px-4 py-[0.625rem] text-xs
+            class="w-full flex items-center justify-between px-4 py-2.5 text-sm
                    border border-slate-200 dark:border-slate-700 rounded-xl
                    bg-slate-50/50 dark:bg-slate-800/50 outline-none transition-all
-                   cursor-pointer appearance-none"
+                   cursor-pointer"
             :class="value
                 ? 'text-slate-700 dark:text-slate-200 font-semibold'
                 : 'text-slate-400 dark:text-slate-500 font-normal'">
