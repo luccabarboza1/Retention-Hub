@@ -21,10 +21,9 @@
     }
 @endphp
 
-{{-- Correção de aspas no atributo HTML e inicialização robusta no x-init --}}
 <div x-data="managedCombobox('{{ $type ?? '' }}', '{{ $saveUrl }}', [], '{{ old($name, $old ?? '') }}')"
      x-init="options = JSON.parse($el.getAttribute('data-options')); filtered = [...options]"
-     data-options="{{ json_encode($normalizedOptions) }}"
+     data-options='@json($normalizedOptions, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS)'
      class="relative {{ $col }}"
      @click.outside="open = false; managing = false">
 
