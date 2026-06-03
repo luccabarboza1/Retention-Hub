@@ -45,7 +45,7 @@
     </div>
 
     {{-- Form --}}
-    <form method="POST" action="{{ route('customers.store') }}" class="relative">
+    <form method="POST" action="{{ route('customers.store') }}" class="relative" novalidate>
         @csrf
 
         {{-- Overlay de lookup --}}
