@@ -162,7 +162,7 @@
              x-data="productRows()">
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Produtos (opcional)</h3>
-                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Adicione produtos Host ou Talk2 agora ou depois pelo perfil do cliente.</p>gora ou depois pelo perfil do cliente.</p>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Adicione produtos Host ou Talk2 agora ou depois pelo perfil do cliente.</p>
             </div>
 
             <template x-for="(row, idx) in rows" :key="row.id">
