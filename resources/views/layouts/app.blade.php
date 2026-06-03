@@ -115,10 +115,7 @@
             border-top: 5px solid #94a3b8;
             pointer-events: none;
         }
-        .select-wrap select.field-input,
-        .select-wrap input.field-input,
-        .select-wrap button.field-input { padding-right: 2.25rem; cursor: pointer; }
-        button.field-input { display: flex; align-items: center; width: 100%; }
+        .select-wrap select.field-input { padding-right: 2.25rem; cursor: pointer; }
         .dark .select-wrap::after { border-top-color: #64748b; }
 
         /* Transição uniforme durante toggle de tema */
@@ -356,31 +353,8 @@ function appShell() {
 function managedCombobox(saveUrl, opts, initVal) {
     const _csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
     return {
-        // combobox state
-        options:  [...(opts || [])],
-        filtered: [...(opts || [])],
-        value:    initVal || '',
-        query:    initVal || '',
-        open:     false,
-        hi:       -1,
-        init()    { this.filtered = [...this.options]; },
-        filter()  {
-            this.value = this.query; this.hi = -1;
-            this.filtered = this.query
-                ? this.options.filter(o => o.toLowerCase().includes(this.query.toLowerCase()))
-                : [...this.options];
-            this.open = true;
-        },
-        select(v) { this.value = v; this.query = v; this.open = false; this.hi = -1; },
-        nav(d)    {
-            if (!this.open) { this.open = true; return; }
-            this.hi = Math.max(-1, Math.min(this.filtered.length - 1, this.hi + d));
-        },
-        confirm() {
-            if (this.hi >= 0 && this.filtered[this.hi]) this.select(this.filtered[this.hi]);
-            else this.open = false;
-        },
-        // option manager state
+        options:   [...(opts || [])],
+        value:     initVal || '',
         managing:  false,
         newOption: '',
         saving:    false,
@@ -388,15 +362,12 @@ function managedCombobox(saveUrl, opts, initVal) {
             const v = this.newOption.trim();
             if (!v || this.options.includes(v)) return;
             this.options.push(v);
-            this.filtered = [...this.options];
             this.newOption = '';
             await this._persist();
         },
         async removeOption(opt) {
             this.options = this.options.filter(o => o !== opt);
-            this.filtered = this.query
-                ? this.options.filter(o => o.toLowerCase().includes(this.query.toLowerCase()))
-                : [...this.options];
+            if (this.value === opt) this.value = '';
             await this._persist();
         },
         async _persist() {
