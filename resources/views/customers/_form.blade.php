@@ -60,7 +60,7 @@
         <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 dark:text-slate-500">R$</span>
             <input type="number" name="monthly_fee" value="{{ old('monthly_fee', $c?->monthly_fee) }}" min="0" step="0.01" placeholder="0,00"
-                   class="w-full border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-mono font-bold text-slate-800 dark:text-slate-250 dark:placeholder-slate-550">
+                   class="w-full border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all font-mono font-bold text-slate-800 dark:text-slate-100 dark:placeholder-slate-500">
         </div>
     </div>
 
