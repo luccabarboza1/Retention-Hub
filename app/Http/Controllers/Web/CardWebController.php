@@ -67,6 +67,8 @@ class CardWebController extends Controller
         }
         $teams = $teams->unique()->sort()->values();
 
+        $allTags = \App\Models\Tag::where('type', 'card')->orderBy('name')->pluck('name');
+
         return view('cards.show', [
             'card'     => $card,
             'comments' => $comments,
@@ -74,6 +76,7 @@ class CardWebController extends Controller
             'agents'   => $agents,
             'origins'  => $origins,
             'teams'    => $teams,
+            'allTags'  => $allTags,
         ]);
     }
 
@@ -109,7 +112,12 @@ class CardWebController extends Controller
         $origins = collect($storedOrigins)->unique()->sort()->values();
         $teams = collect($storedTeams)->unique()->sort()->values();
 
-        return view('cards.create', compact('customers', 'agents', 'origins', 'teams') + ['statuses' => $this->statuses()]);
+        $allTags = \App\Models\Tag::where('type', 'card')->orderBy('name')->pluck('name');
+
+        return view('cards.create', compact('customers', 'agents', 'origins', 'teams') + [
+            'statuses' => $this->statuses(),
+            'allTags' => $allTags,
+        ]);
     }
 
     public function store()
@@ -124,9 +132,14 @@ class CardWebController extends Controller
             'ombudsman_agent'  => 'nullable|string|max:100',
             'ticket_origin'    => 'nullable|string|max:100',
             'responsible_team' => 'nullable|string|max:100',
+            'tags'             => 'nullable|array',
+            'tags.*'           => 'nullable|string|max:50',
         ]);
 
+        $tags = $data['tags'] ?? [];
+        unset($data['tags']);
         $card = Card::create($data);
+        $card->syncTags($tags);
         event(new CardCreated($card));
         return redirect()->route('cards.show', $card)->with('success', 'Card criado com sucesso.');
     }
@@ -146,13 +159,19 @@ class CardWebController extends Controller
             'ra_claim_link'    => 'nullable|string|max:500',
             'rating'           => 'nullable|integer|min:1|max:5',
             'finished_at'      => 'nullable|date',
+            'tags'             => 'nullable|array',
+            'tags.*'           => 'nullable|string|max:50',
         ]);
 
         if (isset($data['status']) && in_array($data['status'], ['Retido', 'Churn']) && !$card->finished_at) {
             $data['finished_at'] = $data['finished_at'] ?? now();
         }
 
+        $tags = $data['tags'] ?? [];
+        unset($data['tags']);
+
         $card->update($data);
+        $card->syncTags($tags);
         $card->refresh();
 
         if (!$wasFinished && $card->isFinished()) {

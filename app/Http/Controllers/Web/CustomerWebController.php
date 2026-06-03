@@ -13,17 +13,22 @@ class CustomerWebController extends Controller
     public function index()
     {
         $search    = request('q');
+        $tagFilter = request('tag');
         $customers = Customer::query()
             ->when($search, fn ($q) => $q->where('company_name', 'like', "%$search%")
                 ->orWhere('client_name', 'like', "%$search%")
                 ->orWhere('email', 'like', "%$search%")
                 ->orWhereRaw("JSON_SEARCH(related_emails, 'one', ?) IS NOT NULL", ["%$search%"]))
+            ->when($tagFilter, fn ($q) => $q->whereHas('tagsRelation', fn ($q2) => $q2->where('name', $tagFilter)))
+            ->with(['tagsRelation'])
             ->withCount(['cards', 'cards as open_cards_count' => fn ($q) => $q->whereIn('status', ['Aberto', 'Em Andamento'])])
             ->orderBy('company_name')
             ->paginate(30)
             ->withQueryString();
 
-        return view('customers.index', compact('customers', 'search'));
+        $allTags = \App\Models\Tag::where('type', 'customer')->orderBy('name')->pluck('name');
+
+        return view('customers.index', compact('customers', 'search', 'allTags', 'tagFilter'));
     }
 
     public function show(Customer $customer)
@@ -80,6 +85,8 @@ class CustomerWebController extends Controller
             }
         }
 
+        $customer->syncTags($data['tags'] ?? []);
+
         event(new CustomerUpdated($customer));
         return redirect()->route('customers.show', $customer)->with('success', 'Cliente cadastrado com sucesso.');
     }
@@ -88,7 +95,11 @@ class CustomerWebController extends Controller
     {
         $data = $this->validated($customer);
         $data['instagram_followers_count'] ??= 0;
+        $tags = $data['tags'] ?? [];
+        $data['related_emails'] ??= [];
+        unset($data['tags']); // não é coluna do modelo
         $customer->update($data);
+        $customer->syncTags($tags);
         event(new CustomerUpdated($customer->fresh()));
         return redirect()->route('customers.show', $customer)->with('success', 'Cliente atualizado.');
     }
@@ -122,6 +133,8 @@ class CustomerWebController extends Controller
             'contracted_at'             => 'nullable|date',
             'canceled_at'               => 'nullable|date',
             'instagram_followers_count' => 'nullable|integer|min:0',
+            'tags'                      => 'nullable|array',
+            'tags.*'                    => 'nullable|string|max:50',
         ]);
     }
 
@@ -166,6 +179,8 @@ class CustomerWebController extends Controller
         $channels = Customer::whereNotNull('channel_type')->distinct()->orderBy('channel_type')->pluck('channel_type')
                         ->merge(['Inbound', 'Outbound', 'Indicação', 'Parceiro', 'RA', 'Marketplace'])->unique()->sort()->values();
 
-        return compact('tiers', 'plans', 'segments', 'sizes', 'channels', 'planConfigs');
+        $allTags = \App\Models\Tag::where('type', 'customer')->orderBy('name')->pluck('name');
+
+        return compact('tiers', 'plans', 'segments', 'sizes', 'channels', 'planConfigs', 'allTags');
     }
 }

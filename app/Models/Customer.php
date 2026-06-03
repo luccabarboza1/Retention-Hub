@@ -46,4 +46,29 @@ class Customer extends Model
     {
         return $this->hasMany(Card::class);
     }
+
+    public function tagsRelation()
+    {
+        return $this->belongsToMany(Tag::class, 'customer_tag');
+    }
+
+    public function getTagsAttribute()
+    {
+        return $this->tagsRelation->pluck('name')->toArray();
+    }
+
+    public function syncTags(array $tagNames)
+    {
+        $tagIds = [];
+        foreach ($tagNames as $name) {
+            $name = trim($name);
+            if ($name === '') continue;
+            $tag = Tag::firstOrCreate([
+                'name' => $name,
+                'type' => 'customer',
+            ]);
+            $tagIds[] = $tag->id;
+        }
+        $this->tagsRelation()->sync($tagIds);
+    }
 }

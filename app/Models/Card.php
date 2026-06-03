@@ -68,4 +68,29 @@ class Card extends Model
     {
         return in_array($this->status, ['Retido', 'Churn']);
     }
+
+    public function tagsRelation()
+    {
+        return $this->belongsToMany(Tag::class, 'card_tag');
+    }
+
+    public function getTagsAttribute()
+    {
+        return $this->tagsRelation->pluck('name')->toArray();
+    }
+
+    public function syncTags(array $tagNames)
+    {
+        $tagIds = [];
+        foreach ($tagNames as $name) {
+            $name = trim($name);
+            if ($name === '') continue;
+            $tag = Tag::firstOrCreate([
+                'name' => $name,
+                'type' => 'card',
+            ]);
+            $tagIds[] = $tag->id;
+        }
+        $this->tagsRelation()->sync($tagIds);
+    }
 }
