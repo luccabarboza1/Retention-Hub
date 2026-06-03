@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\GeneralSettingsController;
 use App\Http\Controllers\Web\ProductSettingsController;
 use App\Http\Controllers\Web\ProductWebController;
 use App\Http\Controllers\Web\SearchController;
+use App\Http\Controllers\Web\TagSettingsController;
 use App\Http\Controllers\Web\WebhookSettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +58,11 @@ Route::post('/settings/card-options/{type}',     [GeneralSettingsController::cla
 Route::post('/settings/customer-options/{type}', [GeneralSettingsController::class, 'saveCustomerOptions'])->name('settings.customer-options');
 Route::post('/settings/options/check-usage',        [GeneralSettingsController::class, 'checkUsage'])->name('settings.options.check-usage');
 Route::post('/settings/options/delete-and-replace', [GeneralSettingsController::class, 'deleteAndReplace'])->name('settings.options.delete-and-replace');
+
+// Configurações de etiquetas
+Route::get('/settings/tags',                  [TagSettingsController::class, 'index'])->name('settings.tags');
+Route::post('/settings/tags',                 [TagSettingsController::class, 'store'])->name('settings.tags.store');
+Route::delete('/settings/tags/{tag}',         [TagSettingsController::class, 'destroy'])->name('settings.tags.destroy');
 
 // Configurações de webhooks
 Route::get('/settings/webhooks',                [WebhookSettingsController::class, 'index'])->name('settings.webhooks');

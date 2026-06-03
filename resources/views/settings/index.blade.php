@@ -43,6 +43,23 @@
             </svg>
         </a>
 
+        {{-- Etiquetas --}}
+        <a href="{{ route('settings.tags') }}"
+           class="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 shadow-premium hover:shadow-premium-hover hover:border-brand-300 dark:hover:border-brand-800 transition-all duration-200 flex items-center gap-4 min-h-[80px]">
+            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/40 transition-colors">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Etiquetas</h3>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Crie e gerencie etiquetas para clientes e cards de ouvidoria.</p>
+            </div>
+            <svg class="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-brand-400 transition-colors shrink-0 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </a>
+
         {{-- Webhooks --}}
         <a href="{{ route('settings.webhooks') }}"
            class="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 shadow-premium hover:shadow-premium-hover hover:border-brand-300 dark:hover:border-brand-800 transition-all duration-200 flex items-center gap-4 min-h-[80px]">
