@@ -326,8 +326,15 @@
             </button>
         </div>
 
+        {{-- Erro de validação do step --}}
+        <div x-show="stepError" x-cloak
+             class="flex items-center gap-2 bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800/50 rounded-xl px-4 py-2.5 mt-4 animate-fadeIn">
+            <span class="text-rose-500 shrink-0">⚠</span>
+            <p x-text="stepError" class="text-xs font-semibold text-rose-700 dark:text-rose-400"></p>
+        </div>
+
         {{-- Navigation --}}
-        <div class="flex justify-between mt-5">
+        <div class="flex justify-between mt-4">
             <button type="button" @click="prev()" x-show="step > 0" x-cloak
                     class="px-5 py-2.5 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                 ← Voltar
@@ -360,8 +367,26 @@ const _csrfToken   = document.querySelector('meta[name="csrf-token"]')?.getAttri
 function wizard() {
     return {
         step: 0,
-        next() { if (this.step < 3) this.step++; },
-        prev() { if (this.step > 0) this.step--; },
+        stepError: '',
+
+        next() {
+            this.stepError = '';
+            const error = this._validateStep(this.step);
+            if (error) { this.stepError = error; return; }
+            if (this.step < 3) this.step++;
+        },
+
+        prev() { if (this.step > 0) { this.stepError = ''; this.step--; } },
+
+        _validateStep(s) {
+            if (s === 0) {
+                const company = document.querySelector('[name="company_name"]')?.value?.trim();
+                const client  = document.querySelector('[name="client_name"]')?.value?.trim();
+                if (!company) return 'Razão Social / Empresa é obrigatória.';
+                if (!client)  return 'Responsável Principal é obrigatório.';
+            }
+            return null;
+        },
 
         // Lookup
         lookupEmail:        '',
