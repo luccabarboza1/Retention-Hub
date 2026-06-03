@@ -10,36 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50:  '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe',
-                            300: '#c4b5fd', 400: '#a78bfa', 500: '#8b5cf6',
-                            600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95',
-                        },
-                        accent: {
-                            emerald: '#10b981', amber: '#f59e0b', rose: '#f43f5e',
-                            indigo: '#6366f1', purple: '#a855f7', cyan: '#06b6d4',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'Courier New', 'monospace'],
-                    },
-                    boxShadow: {
-                        'premium':       '0 8px 30px rgb(0 0 0 / 0.04)',
-                        'premium-hover': '0 20px 40px -10px rgb(124 58 237 / 0.08)',
-                        'glow-brand':    '0 0 20px rgba(124, 58, 237, 0.15)',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/css/app.css">
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
