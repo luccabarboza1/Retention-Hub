@@ -207,7 +207,7 @@
     @endif
 
     {{-- Referência de eventos --}}
-    <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800 p-5">
+    <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5">
         <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Referência de Eventos</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
             @foreach(['card.created' => 'Card criado via interface ou API', 'card.updated' => 'Card editado (campos, status)', 'card.finished' => 'Card encerrado (Retido ou Churn)', 'customer.updated' => 'Cliente criado ou atualizado'] as $evt => $desc)
