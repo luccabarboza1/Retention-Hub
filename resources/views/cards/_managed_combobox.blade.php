@@ -29,19 +29,21 @@
      @click.outside="open = false; managing = false">
 
     {{-- Label + botão gerenciar --}}
+    @if(isset($type) && $type)
     <div class="flex items-center justify-between mb-1.5">
         <label class="field-label mb-0">{{ $label }}</label>
-        @if(isset($type) && $type)
         <button type="button" @click="managing = !managing; open = false"
                 class="flex items-center gap-1 text-[10px] font-bold transition-colors"
                 :class="managing ? 'text-brand-600 dark:text-brand-400' : 'text-slate-400 dark:text-slate-650 hover:text-slate-600 dark:hover:text-slate-400'">
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
             <span x-text="managing ? 'Fechar' : 'Gerenciar'"></span>
         </button>
-        @endif
     </div>
+    @else
+    <label class="field-label">{{ $label }}</label>
+    @endif
 
     {{-- Trigger — padrão select-wrap nativo do projeto (mantém a chevron e o tamanho idênticos) --}}
     <div class="select-wrap">
