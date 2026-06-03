@@ -14,14 +14,20 @@
      data-options='@json($opts)'
      @click.outside="open = false">
 
-    {{-- Trigger --}}
-    <div class="select-wrap">
-        <button type="button" @click="open = !open"
-                class="field-input text-xs font-semibold text-left w-full truncate"
-                :class="value ? 'text-slate-800 dark:text-slate-100' : 'text-slate-400 dark:text-slate-500'">
-            <span x-text="value || '{{ $placeholder }}'"></span>
-        </button>
-    </div>
+    {{-- Trigger — sem field-input para não herdar cor fixa --}}
+    <button type="button" @click="open = !open"
+            class="w-full flex items-center justify-between px-4 py-[0.625rem] text-xs
+                   border border-slate-200 dark:border-slate-700 rounded-xl
+                   bg-slate-50/50 dark:bg-slate-800/50 outline-none transition-all
+                   cursor-pointer appearance-none"
+            :class="value
+                ? 'text-slate-700 dark:text-slate-200 font-semibold'
+                : 'text-slate-400 dark:text-slate-500 font-normal'">
+        <span class="truncate" x-text="value || '{{ $placeholder }}'"></span>
+        <svg class="w-3.5 h-3.5 shrink-0 ml-2 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
 
     {{-- Hidden input para o form --}}
     <input type="hidden" name="{{ $name }}" :value="value">
