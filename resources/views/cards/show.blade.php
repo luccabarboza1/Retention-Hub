@@ -9,9 +9,10 @@ $tierColors = [
     'bronze'   => 'from-orange-300 to-orange-500 text-white',
     'premium'  => 'from-brand-500 to-accent-indigo text-white',
     'vip'      => 'from-rose-500 to-pink-600 text-white',
+    'standard' => 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 text-slate-600 dark:text-slate-300',
 ];
 $tColorKey = strtolower($card->customer->tier ?? '');
-$tGrad = $tierColors[$tColorKey] ?? 'bg-slate-100 text-slate-600';
+$tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
 @endphp
 
 @section('content')

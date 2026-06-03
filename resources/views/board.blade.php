@@ -53,6 +53,7 @@ $tierColors = [
     'bronze' => 'from-orange-300 to-orange-500 text-white font-bold',
     'premium' => 'from-brand-500 to-accent-indigo text-white font-bold shadow-glow-brand',
     'vip' => 'from-rose-500 to-pink-600 text-white font-bold shadow-sm',
+    'standard' => 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 text-slate-600 dark:text-slate-300 font-bold',
 ];
 @endphp
 
@@ -135,7 +136,7 @@ $tierColors = [
                 @foreach($colCards as $card)
                 @php
                     $tColorKey = strtolower($card->customer->tier ?? '');
-                    $tGrad = $tierColors[$tColorKey] ?? 'bg-slate-100 text-slate-600';
+                    $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
                 @endphp
                 <a href="{{ route('cards.show', $card) }}"
                    class="block bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-4 hover:shadow-premium-hover hover:border-brand-300 hover:-translate-y-0.5 transition-all duration-300 group cursor-grab active:cursor-grabbing border-l-4 {{ $c['cardBorder'] }}"
