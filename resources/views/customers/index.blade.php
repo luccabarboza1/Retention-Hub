@@ -69,14 +69,7 @@ $tierColors = [
             </div>
 
             {{-- Filter by Tag Dropdown --}}
-            <div class="w-48 shrink-0 select-wrap">
-                <select name="tag" onchange="this.form.submit()" class="field-input text-xs font-semibold">
-                    <option value="">Filtrar por Etiqueta…</option>
-                    @foreach($allTags as $t)
-                    <option value="{{ $t }}" {{ $tagFilter === $t ? 'selected' : '' }}>{{ $t }}</option>
-                    @endforeach
-                </select>
-            </div>
+            @include('_filter_select', ['name' => 'tag', 'placeholder' => 'Filtrar por etiqueta…', 'options' => $allTags, 'current' => $tagFilter ?? ''])
 
             <button class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-glow-brand transition-all shrink-0">
                 Buscar

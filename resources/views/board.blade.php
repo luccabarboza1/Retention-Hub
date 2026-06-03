@@ -71,14 +71,7 @@ $tierColors = [
         <div class="flex flex-wrap items-center gap-3">
             {{-- Filter by Tag Dropdown --}}
             <form method="GET" action="{{ route('board') }}" class="flex items-center gap-2">
-                <div class="w-48 shrink-0 select-wrap">
-                    <select name="tag" onchange="this.form.submit()" class="field-input text-xs font-semibold">
-                        <option value="">Filtrar por Etiqueta…</option>
-                        @foreach($allTags as $t)
-                        <option value="{{ $t }}" {{ $tagFilter === $t ? 'selected' : '' }}>{{ $t }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                @include('_filter_select', ['name' => 'tag', 'placeholder' => 'Filtrar por etiqueta…', 'options' => $allTags, 'current' => $tagFilter ?? ''])
                 @if($tagFilter)
                 <a href="{{ route('board') }}" class="px-3.5 py-2 border border-slate-200 dark:border-slate-700 text-slate-605 dark:text-slate-400 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center shrink-0">
                     Limpar
