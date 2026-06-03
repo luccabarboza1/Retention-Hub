@@ -36,6 +36,7 @@ Route::get('/cards/{card}',                            [CardWebController::class
 Route::patch('/cards/{card}',                          [CardWebController::class, 'update'])->name('cards.update');
 Route::post('/cards/{card}/comments',                  [CardWebController::class, 'storeComment'])->name('cards.comments.store');
 Route::delete('/cards/{card}/comments/{comment}',      [CardWebController::class, 'destroyComment'])->name('cards.comments.destroy');
+Route::delete('/cards/{card}',                         [CardWebController::class, 'destroy'])->name('cards.destroy');
 Route::post('/cards/{card}/chats',                     [CardWebController::class, 'storeChat'])->name('cards.chats.store');
 Route::patch('/cards/{card}/chats/{chat}/close',       [CardWebController::class, 'closeChat'])->name('cards.chats.close');
 

@@ -95,7 +95,6 @@ $tierColors = [
                 <tr class="bg-slate-50 dark:bg-slate-950/30 border-b border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-[10px]">
                     <th class="px-6 py-4">Empresa / Cliente</th>
                     <th class="px-6 py-4">Responsável</th>
-                    <th class="px-6 py-4">Plano</th>
                     <th class="px-6 py-4">Categoria (Tier)</th>
                     <th class="px-6 py-4 text-center">Total Cards</th>
                     <th class="px-6 py-4 text-center">Casos Abertos</th>
@@ -135,11 +134,6 @@ $tierColors = [
                     </td>
                     <td class="px-6 py-4">
                         <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ $c->client_name }}</span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 border border-slate-200/40 dark:border-slate-700/60 px-2.5 py-1 rounded-lg">
-                            {{ $c->plan_name ?? 'Nenhum' }}
-                        </span>
                     </td>
                     <td class="px-6 py-4">
                         @if($c->tier)

@@ -263,4 +263,11 @@ class CardWebController extends Controller
         $comment->delete();
         return redirect()->route('cards.show', $card)->with('success', 'Comentário removido.');
     }
+
+    public function destroy(Card $card)
+    {
+        $customerId = $card->customer_id;
+        $card->delete();
+        return redirect()->route('customers.show', $customerId)->with('success', 'Card excluído.');
+    }
 }
