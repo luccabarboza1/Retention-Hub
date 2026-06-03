@@ -22,6 +22,9 @@ class Product extends Model
         'host_services',
         'consumption',
         'status',
+        'has_chatbot',
+        'has_ai',
+        'has_implementation',
         'external_created_at',
         'created_by',
         'updated_by',
@@ -31,6 +34,9 @@ class Product extends Model
         'consumption'          => 'decimal:2',
         'attendants_count'     => 'integer',
         'host_services'        => 'array',
+        'has_chatbot'          => 'boolean',
+        'has_ai'               => 'boolean',
+        'has_implementation'   => 'boolean',
         'external_created_at'  => 'datetime',
     ];
 

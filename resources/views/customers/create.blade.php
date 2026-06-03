@@ -14,7 +14,7 @@
 
     {{-- Progress --}}
     <div class="flex items-center gap-2 mb-6">
-        @php $steps = ['Identificação','Contrato','Empresa','Soluções','Produtos']; @endphp
+        @php $steps = ['Identificação','Contrato','Empresa','Produtos']; @endphp
         @foreach($steps as $i => $label)
         <div class="flex items-center gap-2 flex-1 {{ !$loop->last ? '' : '' }}">
             <div class="flex items-center gap-2">
@@ -156,48 +156,13 @@
                     <input type="number" name="instagram_followers_count" value="{{ old('instagram_followers_count') }}" min="0" placeholder="0"
                            class="field-input font-mono text-slate-700 dark:text-slate-200">
                 </div>
-            </div>
-        </div>
-
-        {{-- Step 3: Soluções --}}
-        <div x-show="step === 3" x-cloak class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-5">
-            <div>
-                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Soluções Ativas</h3>
-                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Produtos e funcionalidades habilitadas para este cliente.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                @foreach([['has_chatbot','Chatbot Ativo','brand'],['has_ai','Inteligência Artificial','purple'],['has_implementation','Implementação Assistida','emerald']] as [$name,$label,$color])
-                <label class="border rounded-xl p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-3 select-none"
-                       x-data="{ checked: {{ old($name) ? 'true' : 'false' }} }"
-                       :class="checked ? 'border-{{ $color }}-500 dark:border-{{ $color }}-600 bg-{{ $color }}-50/20 dark:bg-{{ $color }}-950/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
-                    <input type="hidden" name="{{ $name }}" value="0">
-                    <input type="checkbox" name="{{ $name }}" value="1" @change="checked = $el.checked" {{ old($name) ? 'checked' : '' }}
-                           class="w-4 h-4 rounded accent-{{ $color }}-600">
-                    <div class="min-w-0">
-                        <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block leading-tight">{{ $label }}</span>
-                        <span class="text-[9px] font-bold uppercase tracking-wider mt-0.5 block"
-                              :class="checked ? 'text-{{ $color }}-600 dark:text-{{ $color }}-400' : 'text-slate-400'"
-                              x-text="checked ? 'Habilitado' : 'Desabilitado'"></span>
-                    </div>
-                </label>
-                @endforeach
-            </div>
-
-            @if($errors->any())
-            <div class="text-xs text-rose-600 bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800 rounded-xl px-4 py-3 font-semibold">
-                {{ $errors->first() }}
-            </div>
-            @endif
-        </div>
-
-        {{-- Step 4: Produtos --}}
-        <div x-show="step === 4" x-cloak
+        {{-- Step 3: Produtos --}}
+        <div x-show="step === 3" x-cloak
              class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-4"
              x-data="productRows()">
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100">Produtos (opcional)</h3>
-                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Adicione produtos Host ou Talk2 agora ou depois pelo perfil do cliente.</p>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Adicione produtos Host ou Talk2 agora ou depois pelo perfil do cliente.</p>gora ou depois pelo perfil do cliente.</p>
             </div>
 
             <template x-for="(row, idx) in rows" :key="row.id">
@@ -243,6 +208,44 @@
                         <div>
                             <label class="field-label">Atendentes</label>
                             <input type="number" :name="`products[${idx}][attendants_count]`" x-model.number="row.attendants" min="1" class="field-input font-mono">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="field-label">Soluções Habilitadas (Talk2)</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-1">
+                                <!-- Chatbot -->
+                                <label class="border rounded-xl p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-2 select-none"
+                                       x-data="{ checked: false }"
+                                       :class="checked ? 'border-brand-500 dark:border-brand-600 bg-brand-50/20 dark:bg-brand-950/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
+                                    <input type="hidden" :name="`products[${idx}][has_chatbot]`" value="0">
+                                    <input type="checkbox" :name="`products[${idx}][has_chatbot]`" value="1" @change="checked = $el.checked"
+                                           class="w-3.5 h-3.5 rounded accent-brand-600">
+                                    <div class="min-w-0">
+                                        <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block leading-tight">Chatbot Ativo</span>
+                                    </div>
+                                </label>
+                                <!-- IA -->
+                                <label class="border rounded-xl p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-2 select-none"
+                                       x-data="{ checked: false }"
+                                       :class="checked ? 'border-purple-500 dark:border-purple-600 bg-purple-50/20 dark:bg-purple-950/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
+                                    <input type="hidden" :name="`products[${idx}][has_ai]`" value="0">
+                                    <input type="checkbox" :name="`products[${idx}][has_ai]`" value="1" @change="checked = $el.checked"
+                                           class="w-3.5 h-3.5 rounded accent-purple-600">
+                                    <div class="min-w-0">
+                                        <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block leading-tight">Inteligência Artificial</span>
+                                    </div>
+                                </label>
+                                <!-- Implementacao -->
+                                <label class="border rounded-xl p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-2 select-none"
+                                       x-data="{ checked: false }"
+                                       :class="checked ? 'border-emerald-500 dark:border-emerald-600 bg-emerald-50/20 dark:bg-emerald-950/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
+                                    <input type="hidden" :name="`products[${idx}][has_implementation]`" value="0">
+                                    <input type="checkbox" :name="`products[${idx}][has_implementation]`" value="1" @change="checked = $el.checked"
+                                           class="w-3.5 h-3.5 rounded accent-emerald-600">
+                                    <div class="min-w-0">
+                                        <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block leading-tight font-sans">Impl. Assistida</span>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                         <div class="col-span-2 bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-900/40 rounded-xl px-3 py-2 flex justify-between items-center">
                             <span class="text-[10px] font-bold text-brand-700 dark:text-brand-400">Valor estimado</span>
@@ -310,11 +313,11 @@
                    class="px-5 py-2.5 text-slate-400 dark:text-slate-600 text-xs font-semibold rounded-xl hover:text-slate-600 dark:hover:text-slate-400 transition-all flex items-center">
                     Cancelar
                 </a>
-                <button type="button" @click="next()" x-show="step < 4"
+                <button type="button" @click="next()" x-show="step < 3"
                         class="btn-primary">
                     Próximo →
                 </button>
-                <button type="submit" x-show="step === 4" x-cloak
+                <button type="submit" x-show="step === 3" x-cloak
                         class="btn-primary">
                     Cadastrar Cliente
                 </button>
@@ -331,7 +334,7 @@ const _csrfToken   = document.querySelector('meta[name="csrf-token"]')?.getAttri
 function wizard() {
     return {
         step: 0,
-        next() { if (this.step < 4) this.step++; },
+        next() { if (this.step < 3) this.step++; },
         prev() { if (this.step > 0) this.step--; },
 
         // Lookup

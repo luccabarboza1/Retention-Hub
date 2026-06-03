@@ -50,7 +50,7 @@ class CustomerWebController extends Controller
         $data['instagram_followers_count'] ??= 0;
         $customer = Customer::create($data);
 
-        // Cria produtos enviados no wizard (step 5)
+        // Cria produtos enviados no wizard (step 4)
         if (request()->has('products')) {
             foreach (request()->input('products', []) as $pData) {
                 if (empty($pData['product_type']) || empty($pData['external_id'])) continue;
@@ -72,6 +72,9 @@ class CustomerWebController extends Controller
                     'host_services'       => $pData['host_services'] ?? null,
                     'consumption'         => $pData['consumption'] ?? null,
                     'status'              => $pData['status'] ?? 'ativo',
+                    'has_chatbot'         => !empty($pData['has_chatbot']),
+                    'has_ai'              => !empty($pData['has_ai']),
+                    'has_implementation'  => !empty($pData['has_implementation']),
                     'external_created_at' => $pData['external_created_at'] ?? null,
                 ]);
             }
@@ -119,9 +122,6 @@ class CustomerWebController extends Controller
             'contracted_at'             => 'nullable|date',
             'canceled_at'               => 'nullable|date',
             'instagram_followers_count' => 'nullable|integer|min:0',
-            'has_chatbot'               => 'boolean',
-            'has_ai'                    => 'boolean',
-            'has_implementation'        => 'boolean',
         ]);
     }
 

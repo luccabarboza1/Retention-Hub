@@ -97,6 +97,9 @@ class ProductWebController extends Controller
                 'contract_identifier' => 'nullable|string|max:255',
                 'plan_name'        => $sometimes . 'required|string|max:100',
                 'attendants_count' => $sometimes . 'required|integer|min:1',
+                'has_chatbot'      => 'boolean',
+                'has_ai'           => 'boolean',
+                'has_implementation' => 'boolean',
             ]);
         }
 

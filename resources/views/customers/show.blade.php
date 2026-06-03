@@ -167,74 +167,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
 
                 </div>
 
-                {{-- Products Cards Deck --}}
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium">
-                    <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
-                        🔌 Soluções & Produtos Contratados
-                    </h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {{-- Product: Chatbot --}}
-                        <div class="border rounded-2xl p-4 transition-all duration-300 flex flex-col justify-between min-h-[110px]
-                            {{ $customer->has_chatbot 
-                                ? 'bg-gradient-to-br from-blue-50/50 to-white dark:from-blue-950/10 dark:to-slate-900 border-blue-200/60 dark:border-blue-900/40 shadow-sm' 
-                                : 'bg-slate-50/30 dark:bg-slate-950/20 border-slate-200 dark:border-slate-800 border-dashed text-slate-400 dark:text-slate-600' }}">
-                            <div class="flex items-center justify-between">
-                                <span class="text-lg">🤖</span>
-                                @if($customer->has_chatbot)
-                                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)] animate-pulse"></span>
-                                @endif
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold tracking-tight text-slate-700 dark:text-slate-300">Chatbot Inteligente</h4>
-                                <p class="text-[9px] uppercase tracking-wider font-bold mt-1
-                                    {{ $customer->has_chatbot ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400' }}">
-                                    {{ $customer->has_chatbot ? 'Contratado' : 'Não Contratado' }}
-                                </p>
-                            </div>
-                        </div>
 
-                        {{-- Product: IA --}}
-                        <div class="border rounded-2xl p-4 transition-all duration-300 flex flex-col justify-between min-h-[110px]
-                            {{ $customer->has_ai 
-                                ? 'bg-gradient-to-br from-purple-50/50 to-white dark:from-purple-950/10 dark:to-slate-900 border-purple-200/60 dark:border-purple-900/40 shadow-sm' 
-                                : 'bg-slate-50/30 dark:bg-slate-950/20 border-slate-200 dark:border-slate-800 border-dashed text-slate-400 dark:text-slate-600' }}">
-                            <div class="flex items-center justify-between">
-                                <span class="text-lg">✨</span>
-                                @if($customer->has_ai)
-                                <span class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.6)] animate-pulse"></span>
-                                @endif
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold tracking-tight text-slate-700 dark:text-slate-300">Inteligência Artificial</h4>
-                                <p class="text-[9px] uppercase tracking-wider font-bold mt-1
-                                    {{ $customer->has_ai ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400' }}">
-                                    {{ $customer->has_ai ? 'Contratado' : 'Não Contratado' }}
-                                </p>
-                            </div>
-                        </div>
-
-                        {{-- Product: Implementation --}}
-                        <div class="border rounded-2xl p-4 transition-all duration-300 flex flex-col justify-between min-h-[110px]
-                            {{ $customer->has_implementation 
-                                ? 'bg-gradient-to-br from-emerald-50/50 to-white dark:from-emerald-950/10 dark:to-slate-900 border-emerald-200/60 dark:border-emerald-900/40 shadow-sm' 
-                                : 'bg-slate-50/30 dark:bg-slate-950/20 border-slate-200 dark:border-slate-800 border-dashed text-slate-400 dark:text-slate-600' }}">
-                            <div class="flex items-center justify-between">
-                                <span class="text-lg">🚀</span>
-                                @if($customer->has_implementation)
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse"></span>
-                                @endif
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold tracking-tight text-slate-700 dark:text-slate-300">Implementação Assistida</h4>
-                                <p class="text-[9px] uppercase tracking-wider font-bold mt-1
-                                    {{ $customer->has_implementation ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400' }}">
-                                    {{ $customer->has_implementation ? 'Contratado' : 'Não Contratado' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 {{-- Products Instances Deck --}}
                 <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium"
@@ -316,6 +249,23 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
                                 </p>
                                 @endif
                             </div>
+
+                            @if($product->product_type === 'Talk2')
+                            <div class="flex flex-wrap gap-1 pt-1.5 border-t border-slate-100 dark:border-slate-850 mt-1.5">
+                                <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex items-center gap-1
+                                    {{ $product->has_chatbot ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border border-blue-100 dark:border-blue-900/40' : 'bg-slate-50/50 dark:bg-slate-850 text-slate-400 dark:text-slate-600 border border-slate-100/50 dark:border-slate-800/40 border-dashed' }}">
+                                    🤖 Chatbot
+                                </span>
+                                <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex items-center gap-1
+                                    {{ $product->has_ai ? 'bg-purple-50 dark:bg-purple-950/20 text-purple-700 dark:text-purple-400 border border-purple-100 dark:border-purple-900/40' : 'bg-slate-50/50 dark:bg-slate-850 text-slate-400 dark:text-slate-600 border border-slate-100/50 dark:border-slate-800/40 border-dashed' }}">
+                                    ✨ IA
+                                </span>
+                                <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex items-center gap-1
+                                    {{ $product->has_implementation ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40' : 'bg-slate-50/50 dark:bg-slate-850 text-slate-400 dark:text-slate-600 border border-slate-100/50 dark:border-slate-800/40 border-dashed' }}">
+                                    🚀 Impl.
+                                </span>
+                            </div>
+                            @endif
 
                             {{-- Form inline de edição --}}
                             <div x-show="editing" x-cloak class="pt-2 border-t border-slate-100 dark:border-slate-800">

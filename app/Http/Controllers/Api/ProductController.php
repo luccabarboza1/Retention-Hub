@@ -40,6 +40,9 @@ class ProductController extends Controller
             'product_type'        => 'required|in:Host,Talk2',
             'consumption'         => 'nullable|numeric|min:0',
             'status'              => 'nullable|in:ativo,cancelado',
+            'has_chatbot'         => 'nullable|boolean',
+            'has_ai'              => 'nullable|boolean',
+            'has_implementation'  => 'nullable|boolean',
             'external_created_at' => 'nullable|date',
         ]);
 
@@ -57,6 +60,9 @@ class ProductController extends Controller
             'contract_identifier' => 'nullable|string|max:255',
             'consumption'         => 'nullable|numeric|min:0',
             'status'              => 'nullable|in:ativo,cancelado',
+            'has_chatbot'         => 'nullable|boolean',
+            'has_ai'              => 'nullable|boolean',
+            'has_implementation'  => 'nullable|boolean',
             'external_created_at' => 'nullable|date',
         ]);
 

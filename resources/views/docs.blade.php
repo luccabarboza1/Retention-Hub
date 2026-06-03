@@ -111,9 +111,6 @@ Authorization: Bearer e3RQ6P5nYkxNAsIuoiJLOSZG08qcWKbagyBrCFMUXEtlh7v9</pre>
                 ['plan_name',                 'string',  false, ''],
                 ['channel_type',              'string',  false, ''],
                 ['instagram_followers_count', 'integer', false, ''],
-                ['has_chatbot',               'boolean', false, ''],
-                ['has_ai',                    'boolean', false, ''],
-                ['has_implementation',        'boolean', false, ''],
                 ['contracted_at',             'date',    false, ''],
                 ['canceled_at',               'date',    false, ''],
             ];
@@ -188,6 +185,9 @@ Authorization: Bearer e3RQ6P5nYkxNAsIuoiJLOSZG08qcWKbagyBrCFMUXEtlh7v9</pre>
                     ['contract_identifier','string',false,''],
                     ['consumption','numeric',false,''],
                     ['status','string',false,'ativo | cancelado'],
+                    ['has_chatbot','boolean',false,'Talk2: Chatbot Ativo'],
+                    ['has_ai','boolean',false,'Talk2: Inteligência Artificial'],
+                    ['has_implementation','boolean',false,'Talk2: Implementação Assistida'],
                     ['external_created_at','date',false,''],
                 ]; @endphp
                 @include('_doc_fields', ['fields' => $productFields])
@@ -200,6 +200,9 @@ Authorization: Bearer e3RQ6P5nYkxNAsIuoiJLOSZG08qcWKbagyBrCFMUXEtlh7v9</pre>
                     ['contract_identifier','string',false,''],
                     ['consumption','numeric',false,''],
                     ['status','string',false,'ativo | cancelado'],
+                    ['has_chatbot','boolean',false,'Talk2: Chatbot Ativo'],
+                    ['has_ai','boolean',false,'Talk2: Inteligência Artificial'],
+                    ['has_implementation','boolean',false,'Talk2: Implementação Assistida'],
                     ['external_created_at','date',false,''],
                 ]; @endphp
                 @include('_doc_fields', ['fields' => $productUpdateFields])

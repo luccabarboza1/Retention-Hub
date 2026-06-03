@@ -77,6 +77,30 @@ $talk2Plans = $planConfigs->where('product_type', 'Talk2')->values();
                        class="field-input font-mono">
             </div>
         </div>
+
+        {{-- Soluções --}}
+        <div>
+            <label class="field-label">Soluções Habilitadas</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-1 mb-2">
+                @foreach([
+                    ['has_chatbot', 'Chatbot Ativo', 'brand', $isEdit ? $product->has_chatbot : false],
+                    ['has_ai', 'Inteligência Artificial', 'purple', $isEdit ? $product->has_ai : false],
+                    ['has_implementation', 'Implementação Assistida', 'emerald', $isEdit ? $product->has_implementation : false]
+                ] as [$name, $label, $color, $checkedVal])
+                @php $isChecked = old($name, $checkedVal); @endphp
+                <label class="border rounded-xl p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-2 select-none"
+                       x-data="{ checked: {{ $isChecked ? 'true' : 'false' }} }"
+                       :class="checked ? 'border-{{ $color }}-500 dark:border-{{ $color }}-600 bg-{{ $color }}-50/20 dark:bg-{{ $color }}-950/15' : 'bg-slate-50/30 dark:bg-slate-900/30 border-dashed border-slate-200 dark:border-slate-800'">
+                    <input type="hidden" name="{{ $name }}" value="0">
+                    <input type="checkbox" name="{{ $name }}" value="1" @change="checked = $el.checked" {{ $isChecked ? 'checked' : '' }}
+                           class="w-4 h-4 rounded accent-{{ $color }}-600">
+                    <div class="min-w-0 font-sans">
+                        <span class="text-xs font-bold text-slate-800 dark:text-slate-200 block leading-tight">{{ $label }}</span>
+                    </div>
+                </label>
+                @endforeach
+            </div>
+        </div>
         {{-- Total calculado --}}
         <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-900/40 rounded-xl px-4 py-3 flex items-center justify-between">
             <span class="text-xs font-bold text-brand-700 dark:text-brand-400">Valor mensal estimado</span>

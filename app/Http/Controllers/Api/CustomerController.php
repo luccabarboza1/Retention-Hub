@@ -49,9 +49,6 @@ class CustomerController extends Controller
             'tier'                      => 'nullable|string|max:50',
             'channel_type'              => 'nullable|string|max:50',
             'plan_name'                 => 'nullable|string|max:100',
-            'has_chatbot'               => 'nullable|boolean',
-            'has_ai'                    => 'nullable|boolean',
-            'has_implementation'        => 'nullable|boolean',
         ]);
 
         $customer = Customer::create($data);
@@ -76,9 +73,6 @@ class CustomerController extends Controller
             'tier'                      => 'nullable|string|max:50',
             'channel_type'              => 'nullable|string|max:50',
             'plan_name'                 => 'nullable|string|max:100',
-            'has_chatbot'               => 'nullable|boolean',
-            'has_ai'                    => 'nullable|boolean',
-            'has_implementation'        => 'nullable|boolean',
         ]);
 
         $customer->update($data);
