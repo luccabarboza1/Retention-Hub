@@ -113,16 +113,16 @@
         <div class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
             <template x-for="opt in options" :key="opt">
                 <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-xs shadow-sm hover:border-slate-200 dark:hover:border-slate-700 transition-all duration-200">
-                    <span class="font-semibold text-slate-700 dark:text-slate-350 truncate" x-text="opt"></span>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 truncate" x-text="opt"></span>
                     <button type="button" @click="removeOption(opt)"
-                            class="text-slate-300 dark:text-slate-650 hover:text-rose-500 dark:hover:text-rose-400 transition-colors ml-2 shrink-0 w-5 h-5 rounded-md hover:bg-rose-50 dark:hover:bg-rose-950/20 flex items-center justify-center">
+                            class="text-slate-300 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors ml-2 shrink-0 w-5 h-5 rounded-md hover:bg-rose-50 dark:hover:bg-rose-950/20 flex items-center justify-center">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                     </button>
                 </div>
             </template>
-            <div x-show="options.length === 0" class="px-2 py-2 text-xs text-slate-400 dark:text-slate-550 italic text-center">
+            <div x-show="options.length === 0" class="px-2 py-2 text-xs text-slate-400 dark:text-slate-500 italic text-center">
                 Nenhuma opção criada ainda.
             </div>
         </div>
@@ -130,7 +130,7 @@
         <div class="flex gap-2">
             <input type="text" x-model="newOption" @keydown.enter.prevent="addOption()"
                    placeholder="Digite nova opção…"
-                   class="flex-1 text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/5 transition-all">
+                   class="flex-1 text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-2 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none focus:border-brand-500 dark:focus:border-brand-400 focus:bg-white dark:focus:bg-slate-950 focus:ring-4 focus:ring-brand-500/5 transition-all">
             <button type="button" @click="addOption()" :disabled="!newOption.trim() || saving"
                     class="px-3 py-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white text-xs font-bold rounded-lg transition-all shrink-0 flex items-center gap-1 shadow-sm">
                 <span x-show="!saving" class="flex items-center gap-0.5">
