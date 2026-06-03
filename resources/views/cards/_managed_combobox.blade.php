@@ -42,7 +42,7 @@
     </div>
 
     {{-- Painel de gestão de opções --}}
-    <div x-show="managing" x-cloak
+    <div x-show="managing" style="display:none"
          class="mt-2 border border-brand-200 dark:border-brand-900/50 rounded-xl bg-brand-50/20 dark:bg-brand-900/10 p-3 space-y-2">
 
         <div class="space-y-1 max-h-36 overflow-y-auto">
