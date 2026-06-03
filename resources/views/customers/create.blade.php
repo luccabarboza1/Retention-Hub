@@ -156,6 +156,9 @@
                     <input type="number" name="instagram_followers_count" value="{{ old('instagram_followers_count') }}" min="0" placeholder="0"
                            class="field-input font-mono text-slate-700 dark:text-slate-200">
                 </div>
+            </div>
+        </div>
+
         {{-- Step 3: Produtos --}}
         <div x-show="step === 3" x-cloak
              class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-premium animate-fadeIn space-y-4"
