@@ -301,7 +301,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
             @endif
 
             {{-- 4. Profile Registry Metadata --}}
-            <div class="bg-slate-950 text-slate-500 rounded-2xl p-5 border border-slate-900 shadow-premium text-[11px] space-y-1.5 dark:bg-slate-950 dark:text-slate-650 dark:border-slate-900">
+            <div class="bg-slate-100 dark:bg-slate-950 text-slate-500 dark:text-slate-600 rounded-2xl p-5 border border-slate-200 dark:border-slate-900 shadow-premium text-[11px] space-y-1.5">
                 <p>Criado em: {{ $customer->created_at->format('d/m/Y H:i') }}</p>
                 @if($customer->updated_at != $customer->created_at)
                 <p>Atualizado em: {{ $customer->updated_at->format('d/m/Y H:i') }}</p>
