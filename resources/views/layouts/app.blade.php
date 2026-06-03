@@ -351,6 +351,7 @@ function managedCombobox(type, saveUrl, opts, initVal) {
             this.query = v;
             this.open = false;
             this.hi = -1;
+            this.$el.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: v }));
         },
         nav(d) {
             if (!this.open) { this.open = true; return; }

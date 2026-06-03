@@ -35,15 +35,15 @@ $talk2Plans = $planConfigs->where('product_type', 'Talk2')->values();
 
     {{-- Tipo do produto (fixo no edit) --}}
     @if(!$isEdit)
-    <div>
-        <label class="field-label">Tipo de Produto <span class="text-rose-500">*</span></label>
-        <div class="select-wrap">
-            <select name="product_type" x-model="ptype" @change="planPrice = 0; attendants = 1" class="field-input font-semibold" required>
-                <option value="">Selecione…</option>
-                <option value="Talk2">Talk2</option>
-                <option value="Host">Host</option>
-            </select>
-        </div>
+    <div @change="ptype = $event.detail; planPrice = 0; attendants = 1">
+        @include('cards._managed_combobox', [
+            'name' => 'product_type',
+            'label' => 'Tipo de Produto',
+            'placeholder' => 'Selecione…',
+            'options' => ['Talk2', 'Host'],
+            'old' => old('product_type', $product->product_type ?? ''),
+            'freeText' => false
+        ])
     </div>
     @endif
 
@@ -60,20 +60,15 @@ $talk2Plans = $planConfigs->where('product_type', 'Talk2')->values();
                 <input type="text" name="contract_identifier" value="{{ old('contract_identifier', $product->contract_identifier ?? '') }}"
                        placeholder="Identificador do contrato" class="field-input font-mono">
             </div>
-            <div>
-                <label class="field-label">Plano <span class="text-rose-500">*</span></label>
-                <div class="select-wrap">
-                    <select name="plan_name" @change="setPlan($event.target.value)" class="field-input font-semibold">
-                        <option value="">Selecione…</option>
-                        @foreach($talk2Plans as $plan)
-                        <option value="{{ $plan->plan_name }}"
-                            {{ old('plan_name', $product->plan_name ?? '') === $plan->plan_name ? 'selected' : '' }}>
-                            {{ $plan->plan_name }}
-                            (R$ {{ number_format($plan->price_per_unit, 2, ',', '.') }} {{ $plan->unit_label }})
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
+            <div @change="setPlan($event.detail)">
+                @include('cards._managed_combobox', [
+                    'name' => 'plan_name',
+                    'label' => 'Plano',
+                    'placeholder' => 'Selecione…',
+                    'options' => $talk2Plans->pluck('plan_name')->toArray(),
+                    'old' => old('plan_name', $product->plan_name ?? ''),
+                    'freeText' => false
+                ])
             </div>
             <div>
                 <label class="field-label">Quantidade de Atendentes <span class="text-rose-500">*</span></label>
@@ -134,15 +129,16 @@ $talk2Plans = $planConfigs->where('product_type', 'Talk2')->values();
     </div>
 
     {{-- Status e data (comum) --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3" x-show="ptype !== ''">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3" x-show="ptype !== ''" x-cloak>
         <div>
-            <label class="field-label">Status</label>
-            <div class="select-wrap">
-                <select name="status" class="field-input">
-                    <option value="ativo"     {{ old('status', $product->status ?? 'ativo') === 'ativo'     ? 'selected' : '' }}>Ativo</option>
-                    <option value="cancelado" {{ old('status', $product->status ?? '') === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
-                </select>
-            </div>
+            @include('cards._managed_combobox', [
+                'name' => 'status',
+                'label' => 'Status',
+                'placeholder' => 'Selecione…',
+                'options' => ['ativo', 'cancelado'],
+                'old' => old('status', $product->status ?? 'ativo'),
+                'freeText' => false
+            ])
         </div>
         <div>
             <label class="field-label">Data de Criação (Externa)</label>
