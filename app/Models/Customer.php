@@ -22,7 +22,6 @@ class Customer extends Model
         'contracted_at',
         'canceled_at',
         'tier',
-        'channel_type',
         'plan_name',
         'related_emails',
         'created_by',

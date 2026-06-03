@@ -127,7 +127,6 @@ class CustomerWebController extends Controller
             'segment'                   => 'nullable|string|max:100',
             'company_size'              => 'nullable|string|max:50',
             'tier'                      => 'nullable|string|max:50',
-            'channel_type'              => 'nullable|string|max:50',
             'plan_name'                 => 'nullable|string|max:100',
             'monthly_fee'               => 'nullable|numeric|min:0',
             'contracted_at'             => 'nullable|date',
@@ -175,12 +174,9 @@ class CustomerWebController extends Controller
         }
         $segments = $segments->unique()->sort()->values();
 
-        $sizes    = collect(['Microempresa', 'Pequeno Porte', 'Médio Porte', 'Grande Porte', 'Enterprise']);
-        $channels = Customer::whereNotNull('channel_type')->distinct()->orderBy('channel_type')->pluck('channel_type')
-                        ->merge(['Inbound', 'Outbound', 'Indicação', 'Parceiro', 'RA', 'Marketplace'])->unique()->sort()->values();
-
+        $sizes   = collect(['Microempresa', 'Pequeno Porte', 'Médio Porte', 'Grande Porte', 'Enterprise']);
         $allTags = \App\Models\Tag::where('type', 'customer')->orderBy('name')->pluck('name');
 
-        return compact('tiers', 'plans', 'segments', 'sizes', 'channels', 'planConfigs', 'allTags');
+        return compact('tiers', 'plans', 'segments', 'sizes', 'planConfigs', 'allTags');
     }
 }

@@ -36,7 +36,8 @@
         'placeholder' => 'Selecione…',
         'options' => $segments,
         'old' => old('segment', $c?->segment),
-        'freeText' => false
+        'freeText' => false,
+        'col' => '',
     ])
 
     {{-- Seção: Contrato --}}
@@ -52,7 +53,8 @@
         'placeholder' => 'Selecione…',
         'options' => $tiers,
         'old' => old('tier', $c?->tier),
-        'freeText' => false
+        'freeText' => false,
+        'col' => '',
     ])
 
     <div>
@@ -64,11 +66,6 @@
         </div>
     </div>
 
-    <div>
-        <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Canal de Aquisição / Venda</label>
-        <input type="text" name="channel_type" value="{{ old('channel_type', $c?->channel_type) }}" placeholder="Ex: Outbound, Inbound, Parcerias"
-               class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none bg-slate-50/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all dark:text-slate-300 dark:placeholder-slate-500">
-    </div>
 
     <div>
         <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Data de Contratação</label>
