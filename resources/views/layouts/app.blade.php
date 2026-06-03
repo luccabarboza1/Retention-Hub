@@ -477,36 +477,51 @@ function emailTags(initial) {
 
 function tagInput(initial, suggestions) {
     return {
-        tags: Array.isArray(initial) ? initial : [],
+        tags:      Array.isArray(initial)     ? initial     : [],
         available: Array.isArray(suggestions) ? suggestions : [],
         input: '',
-        open: false,
-        get filteredSuggestions() {
-            const search = this.input.trim().toLowerCase();
-            return this.available.filter(tag => {
-                const isSelected = this.tags.some(t => t.toLowerCase() === tag.toLowerCase());
-                if (isSelected) return false;
-                return tag.toLowerCase().includes(search);
-            });
+        open:  false,
+
+        // Tags disponíveis filtradas pelo que o usuário está digitando
+        get filtered() {
+            const q = this.input.trim().toLowerCase();
+            return this.available.filter(t =>
+                !this.tags.some(s => s.toLowerCase() === t.toLowerCase()) &&
+                (!q || t.toLowerCase().includes(q))
+            );
         },
+
+        // Mostra opção "Criar" se não existir correspondência exata
+        get showCreate() {
+            const v = this.input.trim();
+            if (!v) return false;
+            return !this.available.some(t => t.toLowerCase() === v.toLowerCase())
+                && !this.tags.some(t => t.toLowerCase() === v.toLowerCase());
+        },
+
         add(value) {
-            let v = (value || this.input).trim();
+            let v = (value !== undefined ? value : this.input).trim();
             if (!v) return;
-            const matchedSuggestion = this.available.find(tag => tag.toLowerCase() === v.toLowerCase());
-            if (matchedSuggestion) {
-                v = matchedSuggestion;
+            // Usa forma canônica se já existe nas disponíveis
+            const match = this.available.find(t => t.toLowerCase() === v.toLowerCase());
+            if (match) v = match;
+            // Ignora duplicata
+            if (this.tags.some(t => t.toLowerCase() === v.toLowerCase())) {
+                this.input = '';
+                this.open  = false;
+                return;
             }
-            const exists = this.tags.some(t => t.toLowerCase() === v.toLowerCase());
-            if (!exists) {
-                this.tags.push(v);
-            }
+            this.tags.push(v);
             this.input = '';
-            this.open = false;
+            this.open  = false;
         },
+
         remove(i) { this.tags.splice(i, 1); },
+
         key(e) {
-            if (['Enter','Tab',','].includes(e.key)) { e.preventDefault(); this.add(); }
+            if (['Enter', 'Tab', ','].includes(e.key)) { e.preventDefault(); this.add(); }
             if (e.key === 'Backspace' && !this.input && this.tags.length) this.tags.pop();
+            if (e.key === 'Escape') this.open = false;
         }
     };
 }
