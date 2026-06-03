@@ -192,3 +192,4 @@ POST   /api/products
 4. **`Authorization` header conflito**: API aceita `X-Api-Token` e `?api_token` além do Bearer padrão
 5. **Configs Laravel faltando**: adicionados `view.php`, `cache.php`, `logging.php`, `auth.php`, `session.php`, `filesystems.php`, `cors.php`, `hashing.php`
 6. **`RouteServiceProvider` ausente**: criado `app/Providers/RouteServiceProvider.php` e registrado em `config/app.php`
+7. **`@json()` em atributos HTML `x-data="..."` quebra o Alpine**: O Blade `@json(['a','b'])` emite aspas duplas (`["a","b"]`) que encerram prematuramente o atributo HTML delimitado por `"`, truncando o `x-data` e impedindo a inicialização do componente Alpine (todos os bindings ficam com "X is not defined"). **Solução**: passar o JSON via atributo `data-*` com aspas simples — `data-opts='@json($array)'` — e ler com `JSON.parse($el.dataset.opts)` no `x-data`. Ex: `x-data="minhaFuncao(JSON.parse($el.dataset.opts))" data-opts='@json($array)'`
