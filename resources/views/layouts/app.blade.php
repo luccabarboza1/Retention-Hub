@@ -110,27 +110,7 @@
         }
         .dark .field-label { color: #64748b; }
 
-        /* Buttons */
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.625rem 1.25rem;
-            background-color: #7c3aed;
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-radius: 0.75rem;
-            box-shadow: 0 0 20px rgba(124,58,237,0.15);
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-        }
-        .btn-primary:hover { background-color: #6d28d9; transform: translateY(-1px); }
+        /* btn-primary agora está em app.css via @layer components */
 
         .btn-ghost {
             display: inline-flex;
