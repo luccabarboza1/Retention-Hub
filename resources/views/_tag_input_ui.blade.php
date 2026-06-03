@@ -46,7 +46,7 @@
     </div>
 
     {{-- Dropdown --}}
-    <div x-show="open && (filtered.length > 0 || showCreate)" x-cloak
+    <div x-show="open" x-cloak
          class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border
                 border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-48">
 
@@ -71,6 +71,12 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
             </svg>
             Criar "<span x-text="input.trim()" class="italic"></span>"
+        </div>
+
+        {{-- Estado vazio --}}
+        <div x-show="filtered.length === 0 && !showCreate"
+             class="px-4 py-3 text-xs text-slate-400 dark:text-slate-500 italic text-center">
+            Nenhuma etiqueta criada ainda. Digite para criar.
         </div>
     </div>
 
