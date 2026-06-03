@@ -25,16 +25,47 @@ class CardWebController extends Controller
         $card->load('customer', 'product', 'chats');
         $comments = $card->comments()->orderBy('created_at')->get();
 
-        $storedAgents  = json_decode(AppSetting::get('card_ombudsman_agents',   '[]'), true) ?: [];
-        $storedOrigins = json_decode(AppSetting::get('card_ticket_origins',     '[]'), true) ?: [];
-        $storedTeams   = json_decode(AppSetting::get('card_responsible_teams',  '[]'), true) ?: [];
+        $storedAgents = AppSetting::get('card_ombudsman_agents');
+        if ($storedAgents === null) {
+            $storedAgents = Card::whereNotNull('ombudsman_agent')->distinct()->pluck('ombudsman_agent')->toArray();
+            AppSetting::set('card_ombudsman_agents', json_encode($storedAgents));
+        } else {
+            $storedAgents = json_decode($storedAgents, true) ?: [];
+        }
 
-        $agents  = Card::whereNotNull('ombudsman_agent')->distinct()->pluck('ombudsman_agent')
-                       ->merge($storedAgents)->unique()->sort()->values();
-        $origins = Card::whereNotNull('ticket_origin')->distinct()->pluck('ticket_origin')
-                       ->merge($storedOrigins)->unique()->sort()->values();
-        $teams   = Card::whereNotNull('responsible_team')->distinct()->pluck('responsible_team')
-                       ->merge($storedTeams)->unique()->sort()->values();
+        $storedOrigins = AppSetting::get('card_ticket_origins');
+        if ($storedOrigins === null) {
+            $storedOrigins = Card::whereNotNull('ticket_origin')->distinct()->pluck('ticket_origin')->toArray();
+            AppSetting::set('card_ticket_origins', json_encode($storedOrigins));
+        } else {
+            $storedOrigins = json_decode($storedOrigins, true) ?: [];
+        }
+
+        $storedTeams = AppSetting::get('card_responsible_teams');
+        if ($storedTeams === null) {
+            $storedTeams = Card::whereNotNull('responsible_team')->distinct()->pluck('responsible_team')->toArray();
+            AppSetting::set('card_responsible_teams', json_encode($storedTeams));
+        } else {
+            $storedTeams = json_decode($storedTeams, true) ?: [];
+        }
+
+        $agents = collect($storedAgents);
+        if ($card->ombudsman_agent && !$agents->contains($card->ombudsman_agent)) {
+            $agents->push($card->ombudsman_agent);
+        }
+        $agents = $agents->unique()->sort()->values();
+
+        $origins = collect($storedOrigins);
+        if ($card->ticket_origin && !$origins->contains($card->ticket_origin)) {
+            $origins->push($card->ticket_origin);
+        }
+        $origins = $origins->unique()->sort()->values();
+
+        $teams = collect($storedTeams);
+        if ($card->responsible_team && !$teams->contains($card->responsible_team)) {
+            $teams->push($card->responsible_team);
+        }
+        $teams = $teams->unique()->sort()->values();
 
         return view('cards.show', [
             'card'     => $card,
@@ -50,16 +81,33 @@ class CardWebController extends Controller
     {
         $customers = Customer::orderBy('company_name')->get(['id', 'company_name', 'client_name']);
 
-        $storedAgents  = json_decode(AppSetting::get('card_ombudsman_agents',   '[]'), true) ?: [];
-        $storedOrigins = json_decode(AppSetting::get('card_ticket_origins',     '[]'), true) ?: [];
-        $storedTeams   = json_decode(AppSetting::get('card_responsible_teams',  '[]'), true) ?: [];
+        $storedAgents = AppSetting::get('card_ombudsman_agents');
+        if ($storedAgents === null) {
+            $storedAgents = Card::whereNotNull('ombudsman_agent')->distinct()->pluck('ombudsman_agent')->toArray();
+            AppSetting::set('card_ombudsman_agents', json_encode($storedAgents));
+        } else {
+            $storedAgents = json_decode($storedAgents, true) ?: [];
+        }
 
-        $agents  = Card::whereNotNull('ombudsman_agent')->distinct()->pluck('ombudsman_agent')
-                       ->merge($storedAgents)->unique()->sort()->values();
-        $origins = Card::whereNotNull('ticket_origin')->distinct()->pluck('ticket_origin')
-                       ->merge($storedOrigins)->unique()->sort()->values();
-        $teams   = Card::whereNotNull('responsible_team')->distinct()->pluck('responsible_team')
-                       ->merge($storedTeams)->unique()->sort()->values();
+        $storedOrigins = AppSetting::get('card_ticket_origins');
+        if ($storedOrigins === null) {
+            $storedOrigins = Card::whereNotNull('ticket_origin')->distinct()->pluck('ticket_origin')->toArray();
+            AppSetting::set('card_ticket_origins', json_encode($storedOrigins));
+        } else {
+            $storedOrigins = json_decode($storedOrigins, true) ?: [];
+        }
+
+        $storedTeams = AppSetting::get('card_responsible_teams');
+        if ($storedTeams === null) {
+            $storedTeams = Card::whereNotNull('responsible_team')->distinct()->pluck('responsible_team')->toArray();
+            AppSetting::set('card_responsible_teams', json_encode($storedTeams));
+        } else {
+            $storedTeams = json_decode($storedTeams, true) ?: [];
+        }
+
+        $agents = collect($storedAgents)->unique()->sort()->values();
+        $origins = collect($storedOrigins)->unique()->sort()->values();
+        $teams = collect($storedTeams)->unique()->sort()->values();
 
         return view('cards.create', compact('customers', 'agents', 'origins', 'teams') + ['statuses' => $this->statuses()]);
     }

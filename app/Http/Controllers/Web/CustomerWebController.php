@@ -36,7 +36,7 @@ class CustomerWebController extends Controller
             ->orderByDesc('created_at')
             ->limit(8)
             ->get();
-        return view('customers.show', array_merge(compact('customer', 'recentCards', 'recentChanges'), $this->formOptions()));
+        return view('customers.show', array_merge(compact('customer', 'recentCards', 'recentChanges'), $this->formOptions($customer)));
     }
 
     public function create()
@@ -119,20 +119,43 @@ class CustomerWebController extends Controller
         ]);
     }
 
-    private function formOptions(): array
+    private function formOptions(?Customer $customer = null): array
     {
         $planConfigs = ProductPlanConfig::orderBy('product_type')->orderBy('plan_name')->get();
 
-        $storedTiers    = json_decode(AppSetting::get('customer_tiers',    '[]'), true) ?: [];
-        $storedSegments = json_decode(AppSetting::get('customer_segments', '[]'), true) ?: [];
+        $storedTiers = AppSetting::get('customer_tiers');
+        if ($storedTiers === null) {
+            $dbTiers = Customer::whereNotNull('tier')->distinct()->pluck('tier')->toArray();
+            $storedTiers = array_values(array_unique(array_merge(['Gold', 'Silver', 'Bronze', 'Premium', 'VIP'], $dbTiers)));
+            AppSetting::set('customer_tiers', json_encode($storedTiers));
+        } else {
+            $storedTiers = json_decode($storedTiers, true) ?: [];
+        }
 
-        $tiers    = collect(array_merge(['Gold', 'Silver', 'Bronze', 'Premium', 'VIP'], $storedTiers))
-                        ->unique()->sort()->values();
-        $plans    = Customer::whereNotNull('plan_name')->distinct()->orderBy('plan_name')->pluck('plan_name')
+        $storedSegments = AppSetting::get('customer_segments');
+        if ($storedSegments === null) {
+            $dbSegments = Customer::whereNotNull('segment')->distinct()->pluck('segment')->toArray();
+            $storedSegments = array_values(array_unique(array_merge(['E-commerce', 'SaaS', 'Varejo', 'Serviços', 'Indústria', 'Fintech', 'EdTech'], $dbSegments)));
+            AppSetting::set('customer_segments', json_encode($storedSegments));
+        } else {
+            $storedSegments = json_decode($storedSegments, true) ?: [];
+        }
+
+        $tiers = collect($storedTiers);
+        if ($customer && $customer->tier && !$tiers->contains($customer->tier)) {
+            $tiers->push($customer->tier);
+        }
+        $tiers = $tiers->unique()->sort()->values();
+
+        $plans = Customer::whereNotNull('plan_name')->distinct()->orderBy('plan_name')->pluck('plan_name')
                         ->merge(['Host Básico', 'Host Pro', 'Host Enterprise', 'Talk2 Basic', 'Talk2 Pro'])->unique()->sort()->values();
-        $segments = Customer::whereNotNull('segment')->distinct()->orderBy('segment')->pluck('segment')
-                        ->merge($storedSegments)
-                        ->merge(['E-commerce', 'SaaS', 'Varejo', 'Serviços', 'Indústria', 'Fintech', 'EdTech'])->unique()->sort()->values();
+
+        $segments = collect($storedSegments);
+        if ($customer && $customer->segment && !$segments->contains($customer->segment)) {
+            $segments->push($customer->segment);
+        }
+        $segments = $segments->unique()->sort()->values();
+
         $sizes    = collect(['Microempresa', 'Pequeno Porte', 'Médio Porte', 'Grande Porte', 'Enterprise']);
         $channels = Customer::whereNotNull('channel_type')->distinct()->orderBy('channel_type')->pluck('channel_type')
                         ->merge(['Inbound', 'Outbound', 'Indicação', 'Parceiro', 'RA', 'Marketplace'])->unique()->sort()->values();
