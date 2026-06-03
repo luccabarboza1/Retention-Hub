@@ -22,27 +22,18 @@
         </button>
     </div>
 
-    {{-- Input / trigger — idêntico ao combobox padrão --}}
-    <div class="relative">
+    {{-- Trigger — mesmo padrão select-wrap do projeto --}}
+    <div class="select-wrap">
         <input type="text"
-               x-model="query"
-               @input="{{ $freeText ? 'filter()' : '' }}"
+               @if($freeText) x-model="query" @input="filter()" @else :value="value" readonly @endif
                @focus="open = true"
-               @click="{{ !$freeText ? 'open = !open; $event.target.blur()' : '' }}"
+               @click="{{ !$freeText ? 'open = !open' : '' }}"
                @keydown.arrow-down.prevent="nav(1)"
                @keydown.arrow-up.prevent="nav(-1)"
                @keydown.enter.prevent="confirm()"
                @keydown.escape="open = false"
                placeholder="{{ $placeholder }}"
-               {{ !$freeText ? 'readonly' : '' }}
-               class="field-input pr-8 {{ !$freeText ? 'cursor-pointer' : '' }}"
-               :value="{{ $freeText ? 'query' : 'value' }}">
-        <button type="button" @click="open = !open" tabindex="-1"
-                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-        </button>
+               class="field-input cursor-pointer select-item">
     </div>
     <input type="hidden" name="{{ $name }}" x-model="value">
 

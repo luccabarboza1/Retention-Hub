@@ -115,7 +115,8 @@
             border-top: 5px solid #94a3b8;
             pointer-events: none;
         }
-        .select-wrap select.field-input { padding-right: 2.25rem; cursor: pointer; }
+        .select-wrap select.field-input,
+        .select-wrap input.field-input { padding-right: 2.25rem; cursor: pointer; }
         .dark .select-wrap::after { border-top-color: #64748b; }
 
         /* Transição uniforme durante toggle de tema */
