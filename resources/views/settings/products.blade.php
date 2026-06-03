@@ -110,7 +110,9 @@
                         ✏️ Editar
                     </button>
                     <form method="POST" action="{{ route('settings.products.destroy', $plan) }}"
-                          @submit.prevent="$dispatch('open-confirm', { title: 'Remover plano', message: 'Deseja remover o plano {{ $plan->plan_name }}?', form: $el })">
+                          data-confirm-title="Remover plano"
+                          data-confirm-msg="{{ $plan->plan_name }} ({{ $plan->product_type }}) — esta ação é irreversível."
+                          @submit.prevent="$dispatch('open-confirm', { title: $el.dataset.confirmTitle, message: $el.dataset.confirmMsg, form: $el })">
                         @csrf @method('DELETE')
                         <button type="submit"
                                 class="text-[10px] font-bold text-slate-400 hover:text-rose-600 px-2 py-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-all">

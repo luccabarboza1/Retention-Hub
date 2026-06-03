@@ -273,7 +273,9 @@ $tGrad = $tierColors[$tColorKey] ?? 'bg-slate-100 text-slate-600';
                                 </div>
                             </div>
                             <form method="POST" action="{{ route('cards.comments.destroy', [$card, $comment]) }}"
-                                  @submit.prevent="$dispatch('open-confirm', { title: 'Excluir nota', message: 'Deseja remover esta nota permanentemente?', form: $el })">
+                                  data-confirm-title="Excluir nota"
+                                  data-confirm-msg="Deseja remover esta nota permanentemente?"
+                                  @submit.prevent="$dispatch('open-confirm', { title: $el.dataset.confirmTitle, message: $el.dataset.confirmMsg, form: $el })">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="opacity-0 group-hover:opacity-100 text-slate-300 dark:text-slate-600 hover:text-rose-600 transition-opacity p-0.5 rounded">✕</button>
                             </form>
