@@ -101,7 +101,7 @@
     {{-- Painel de gestão --}}
     @if(isset($type) && $type)
     <div x-show="managing" x-cloak
-         class="mt-2 border border-brand-200/80 dark:border-brand-900/40 rounded-xl bg-brand-50/20 dark:bg-brand-950/5 p-3.5 space-y-3 shadow-sm animate-fadeIn">
+         class="absolute z-50 w-full mt-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 space-y-3 shadow-xl animate-fadeIn">
 
         <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
             <span class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Gerenciar Opções</span>
@@ -130,7 +130,7 @@
         <div class="flex gap-2">
             <input type="text" x-model="newOption" @keydown.enter.prevent="addOption()"
                    placeholder="Digite nova opção…"
-                   class="flex-1 text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-2 bg-white dark:bg-slate-850 text-slate-750 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/5 transition-all">
+                   class="flex-1 text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/5 transition-all">
             <button type="button" @click="addOption()" :disabled="!newOption.trim() || saving"
                     class="px-3 py-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white text-xs font-bold rounded-lg transition-all shrink-0 flex items-center gap-1 shadow-sm">
                 <span x-show="!saving" class="flex items-center gap-0.5">
