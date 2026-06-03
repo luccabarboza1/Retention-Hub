@@ -56,13 +56,13 @@
                 </div>
 
                 {{-- Ouvidor — managed combobox --}}
-                @include('cards._managed_combobox', ['type' => 'ombudsman_agents', 'name' => 'ombudsman_agent', 'label' => 'Ouvidor Responsável', 'placeholder' => 'Selecione ou digite…', 'options' => $agents, 'old' => old('ombudsman_agent'), 'col' => ''])
+                @include('cards._managed_combobox', ['type' => 'ombudsman_agents', 'name' => 'ombudsman_agent', 'label' => 'Ouvidor Responsável', 'placeholder' => 'Selecione…', 'options' => $agents, 'old' => old('ombudsman_agent'), 'col' => '', 'freeText' => false])
 
                 {{-- Origem do ticket — managed combobox --}}
-                @include('cards._managed_combobox', ['type' => 'ticket_origins', 'name' => 'ticket_origin', 'label' => 'Origem do Ticket', 'placeholder' => 'Ex: RA, WhatsApp, Email…', 'options' => $origins, 'old' => old('ticket_origin'), 'col' => ''])
+                @include('cards._managed_combobox', ['type' => 'ticket_origins', 'name' => 'ticket_origin', 'label' => 'Origem do Ticket', 'placeholder' => 'Selecione…', 'options' => $origins, 'old' => old('ticket_origin'), 'col' => '', 'freeText' => false])
 
                 {{-- Time responsável — managed combobox --}}
-                @include('cards._managed_combobox', ['type' => 'responsible_teams', 'name' => 'responsible_team', 'label' => 'Time Responsável', 'placeholder' => 'Ex: CS, Suporte, Comercial…', 'options' => $teams, 'old' => old('responsible_team'), 'col' => 'md:col-span-2'])
+                @include('cards._managed_combobox', ['type' => 'responsible_teams', 'name' => 'responsible_team', 'label' => 'Time Responsável', 'placeholder' => 'Selecione…', 'options' => $teams, 'old' => old('responsible_team'), 'col' => 'md:col-span-2', 'freeText' => false])
 
                 {{-- Título --}}
                 <div class="md:col-span-2">
