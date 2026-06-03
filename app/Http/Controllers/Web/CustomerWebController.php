@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Events\CustomerUpdated;
 use App\Http\Controllers\Controller;
+use App\Models\AppSetting;
 use App\Models\Customer;
 use App\Models\ProductPlanConfig;
 
