@@ -72,7 +72,19 @@
                         Preencher automaticamente
                     </button>
                 </div>
-                <p x-show="lookupError" x-text="lookupError" x-cloak
+                {{-- Erro: URL não configurada --}}
+                <div x-show="lookupNotConfigured" x-cloak
+                     class="flex items-center justify-between gap-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/50 rounded-lg px-3 py-2">
+                    <p class="text-xs text-amber-700 dark:text-amber-400 font-semibold">
+                        ⚙️ URL de lookup não configurada.
+                    </p>
+                    <a href="{{ route('settings.general') }}" target="_blank"
+                       class="text-[10px] font-bold text-amber-700 dark:text-amber-400 underline whitespace-nowrap hover:text-amber-900 dark:hover:text-amber-300">
+                        Configurar →
+                    </a>
+                </div>
+                {{-- Erro genérico --}}
+                <p x-show="lookupError && !lookupNotConfigured" x-text="lookupError" x-cloak
                    class="text-xs text-rose-600 dark:text-rose-400 font-semibold"></p>
                 <p x-show="lookupFilled" x-cloak
                    class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">✓ Dados preenchidos! Revise e continue.</p>
@@ -341,16 +353,27 @@ function wizard() {
         prev() { if (this.step > 0) this.step--; },
 
         // Lookup
-        lookupEmail:  '',
-        lookupLoading: false,
-        lookupError:  '',
-        lookupFilled: false,
+        lookupEmail:        '',
+        lookupLoading:      false,
+        lookupError:        '',
+        lookupNotConfigured: false,
+        lookupFilled:       false,
 
         async lookup() {
             if (!this.lookupEmail) return;
-            this.lookupLoading = true;
-            this.lookupError   = '';
-            this.lookupFilled  = false;
+
+            // Validação de e-mail no frontend
+            const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.lookupEmail.trim());
+            if (!emailOk) {
+                this.lookupError        = 'Informe um e-mail válido (ex: joao@empresa.com).';
+                this.lookupNotConfigured = false;
+                return;
+            }
+
+            this.lookupLoading       = true;
+            this.lookupError         = '';
+            this.lookupNotConfigured = false;
+            this.lookupFilled        = false;
 
             try {
                 const resp = await fetch(_lookupRoute, {
@@ -360,12 +383,24 @@ function wizard() {
                         'X-CSRF-TOKEN': _csrfToken,
                         'Accept': 'application/json',
                     },
-                    body: JSON.stringify({ email: this.lookupEmail })
+                    body: JSON.stringify({ email: this.lookupEmail.trim() })
                 });
 
                 const data = await resp.json();
 
-                if (!resp.ok || data.error) {
+                if (!resp.ok) {
+                    // Erro de validação do Laravel (422)
+                    if (resp.status === 422 && data.errors) {
+                        const msgs = Object.values(data.errors).flat();
+                        this.lookupError = msgs[0] || 'E-mail inválido.';
+                        return;
+                    }
+                    // URL não configurada (503)
+                    if (resp.status === 503 && data.error && data.error.includes('CUSTOMER_LOOKUP_URL')) {
+                        this.lookupNotConfigured = true;
+                        this.lookupError = data.error;
+                        return;
+                    }
                     this.lookupError = data.error || 'Erro ao buscar dados.';
                     return;
                 }
@@ -374,7 +409,7 @@ function wizard() {
                 this.lookupFilled = true;
 
             } catch (e) {
-                this.lookupError = 'Não foi possível conectar ao n8n.';
+                this.lookupError = 'Não foi possível conectar ao n8n. Verifique sua conexão.';
             } finally {
                 this.lookupLoading = false;
             }
