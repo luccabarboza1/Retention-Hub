@@ -36,11 +36,12 @@
     <div x-show="open" x-cloak
          class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-56">
 
-        {{-- Opção vazia --}}
-        <div @click="value = ''; open = false; $el.closest('form').submit()"
+        {{-- Opção "Todos" (limpar filtro) — apenas quando há opções --}}
+        <div x-show="options.length > 0"
+             @click="value = ''; open = false; $el.closest('form').submit()"
              :class="value === '' ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 font-bold' : 'text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
              class="px-4 py-2.5 text-xs cursor-pointer transition-colors italic">
-            {{ $placeholder }}
+            Todas
         </div>
 
         <template x-for="opt in options" :key="opt">
