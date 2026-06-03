@@ -52,6 +52,8 @@ Route::get('/customers/{customer}/cards',   [CustomerWebController::class, 'card
 // Opções de campos gerenciadas inline
 Route::post('/settings/card-options/{type}',     [GeneralSettingsController::class, 'saveCardOptions'])->name('settings.card-options');
 Route::post('/settings/customer-options/{type}', [GeneralSettingsController::class, 'saveCustomerOptions'])->name('settings.customer-options');
+Route::post('/settings/options/check-usage',        [GeneralSettingsController::class, 'checkUsage'])->name('settings.options.check-usage');
+Route::post('/settings/options/delete-and-replace', [GeneralSettingsController::class, 'deleteAndReplace'])->name('settings.options.delete-and-replace');
 
 // Hub de configurações
 Route::get('/settings',          fn () => view('settings.index'))->name('settings.index');

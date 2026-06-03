@@ -44,6 +44,91 @@ class GeneralSettingsController extends Controller
         return response()->json(['ok' => true, 'options' => $options]);
     }
 
+    public function checkUsage(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'type'   => 'required|string',
+            'option' => 'required|string',
+        ]);
+
+        $type = $data['type'];
+        $option = $data['option'];
+
+        $count = 0;
+        $entityType = 'elementos';
+
+        if (in_array($type, ['ombudsman_agents', 'ticket_origins', 'responsible_teams'])) {
+            $column = match($type) {
+                'ombudsman_agents' => 'ombudsman_agent',
+                'ticket_origins'   => 'ticket_origin',
+                'responsible_teams' => 'responsible_team',
+            };
+            $count = \App\Models\Card::where($column, $option)->count();
+            $entityType = 'cards';
+        } elseif (in_array($type, ['tiers', 'segments'])) {
+            $column = match($type) {
+                'tiers'    => 'tier',
+                'segments' => 'segment',
+            };
+            $count = \App\Models\Customer::where($column, $option)->count();
+            $entityType = 'clientes';
+        } else {
+            abort(400, 'Tipo inválido');
+        }
+
+        return response()->json([
+            'count'      => $count,
+            'entityType' => $entityType,
+        ]);
+    }
+
+    public function deleteAndReplace(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'type'        => 'required|string',
+            'option'      => 'required|string',
+            'action'      => 'required|in:clear,replace',
+            'replacement' => 'nullable|string',
+        ]);
+
+        $type = $data['type'];
+        $option = $data['option'];
+        $action = $data['action'];
+        $replacement = $data['replacement'];
+
+        if (in_array($type, ['ombudsman_agents', 'ticket_origins', 'responsible_teams'])) {
+            $column = match($type) {
+                'ombudsman_agents' => 'ombudsman_agent',
+                'ticket_origins'   => 'ticket_origin',
+                'responsible_teams' => 'responsible_team',
+            };
+            $newValue = ($action === 'replace') ? $replacement : null;
+            \App\Models\Card::where($column, $option)->update([$column => $newValue]);
+
+            $settingKey = "card_{$type}";
+            $stored = json_decode(AppSetting::get($settingKey, '[]'), true) ?: [];
+            $stored = array_values(array_filter($stored, fn($o) => $o !== $option));
+            AppSetting::set($settingKey, json_encode($stored));
+
+        } elseif (in_array($type, ['tiers', 'segments'])) {
+            $column = match($type) {
+                'tiers'    => 'tier',
+                'segments' => 'segment',
+            };
+            $newValue = ($action === 'replace') ? $replacement : null;
+            \App\Models\Customer::where($column, $option)->update([$column => $newValue]);
+
+            $settingKey = "customer_{$type}";
+            $stored = json_decode(AppSetting::get($settingKey, '[]'), true) ?: [];
+            $stored = array_values(array_filter($stored, fn($o) => $o !== $option));
+            AppSetting::set($settingKey, json_encode($stored));
+        } else {
+            abort(400, 'Tipo inválido');
+        }
+
+        return response()->json(['ok' => true]);
+    }
+
     public function update(Request $request)
     {
         $data = $request->validate([

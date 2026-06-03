@@ -350,9 +350,10 @@ function appShell() {
 </script>
 
 <script>
-function managedCombobox(saveUrl, opts, initVal) {
+function managedCombobox(type, saveUrl, opts, initVal) {
     const _csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
     return {
+        type:      type || '',
         options:   [...(opts || [])],
         filtered:  [],
         value:     initVal || '',
@@ -397,16 +398,64 @@ function managedCombobox(saveUrl, opts, initVal) {
             await this._persist();
         },
         async removeOption(opt) {
-            const idx = this.options.indexOf(opt);
-            if (idx > -1) {
-                this.options.splice(idx, 1);
-            }
-            this.filtered = [...this.options];
-            if (this.value === opt) {
-                this.value = '';
-                this.query = '';
-            }
-            await this._persist();
+            this.saving = true;
+            try {
+                const checkResponse = await fetch('/settings/options/check-usage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': _csrf, 'Accept': 'application/json' },
+                    body: JSON.stringify({ type: this.type, option: opt })
+                });
+                const checkData = await checkResponse.json();
+                
+                if (checkData.count > 0) {
+                    window.dispatchEvent(new CustomEvent('open-option-delete', {
+                        detail: {
+                            type: this.type,
+                            option: opt,
+                            count: checkData.count,
+                            entityType: checkData.entityType,
+                            options: [...this.options],
+                            callback: async (choice) => {
+                                await this._deleteAndReplace(opt, choice.action, choice.replacement);
+                            }
+                        }
+                    }));
+                } else {
+                    await this._deleteAndReplace(opt, 'clear', null);
+                }
+            } catch (err) {
+                console.error('Error checking option usage:', err);
+            } finally { this.saving = false; }
+        },
+        async _deleteAndReplace(opt, action, replacement) {
+            this.saving = true;
+            try {
+                const response = await fetch('/settings/options/delete-and-replace', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': _csrf, 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                        type: this.type,
+                        option: opt,
+                        action: action,
+                        replacement: replacement
+                    })
+                });
+                if (response.ok) {
+                    const idx = this.options.indexOf(opt);
+                    if (idx > -1) {
+                        this.options.splice(idx, 1);
+                    }
+                    this.filtered = [...this.options];
+                    if (this.value === opt) {
+                        this.value = (action === 'replace') ? replacement : '';
+                        this.query = (action === 'replace') ? replacement : '';
+                    }
+                } else {
+                    console.error('Failed to delete/replace option:', response.status, await response.text());
+                }
+            } catch (err) {
+                console.error('Error in deleteAndReplace fetch:', err);
+            } finally { this.saving = false; }
         },
         async _persist() {
             this.saving = true;
@@ -528,6 +577,120 @@ function confirmModal() {
             if (this._form) this.$nextTick(() => this._form.submit());
         },
         cancel() { this.show = false; }
+    };
+}
+</script>
+
+{{-- Modal de exclusão/substituição de opções --}}
+<div x-data="optionDeleteModal()"
+     @open-option-delete.window="openModal($event.detail)"
+     x-show="show" x-cloak
+     class="fixed inset-0 z-[200] flex items-center justify-center">
+    
+    {{-- Backdrop --}}
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="cancel()"></div>
+
+    {{-- Dialog --}}
+    <div class="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl w-full max-w-md mx-4 p-6 animate-fadeIn">
+        <div class="w-11 h-11 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            </svg>
+        </div>
+
+        <h3 class="text-sm font-extrabold text-slate-850 dark:text-slate-100 text-center mb-1">Opção em uso</h3>
+        
+        <p class="text-xs text-slate-500 dark:text-slate-400 text-center leading-relaxed mb-5">
+            A opção <strong class="text-slate-800 dark:text-slate-200">"<span x-text="option"></span>"</strong> está sendo utilizada por 
+            <strong class="text-brand-600 dark:text-brand-400"><span x-text="count"></span> <span x-text="entityType"></span></strong>. 
+            Como deseja prosseguir?
+        </p>
+
+        <div class="space-y-3.5">
+            {{-- Opção 1: Substituir --}}
+            <label class="block p-3.5 rounded-xl border border-slate-200 dark:border-slate-750 bg-slate-50/50 dark:bg-slate-950/10 cursor-pointer hover:border-brand-500 transition-all">
+                <div class="flex items-center gap-3">
+                    <input type="radio" name="delete_action" value="replace" x-model="action" class="text-brand-600 focus:ring-brand-500 border-slate-300">
+                    <div class="flex-1">
+                        <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Substituir por outra opção</span>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Atualiza todos os registros para a nova opção selecionada.</p>
+                    </div>
+                </div>
+                
+                {{-- Dropdown de substituição --}}
+                <div x-show="action === 'replace'" class="mt-2.5 pl-7">
+                    <div class="select-wrap">
+                        <select x-model="replacement" class="field-input text-xs py-1.5 font-medium">
+                            <option value="">Selecione a nova opção…</option>
+                            <template x-for="opt in list" :key="opt">
+                                <option :value="opt" x-text="opt"></option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+            </label>
+
+            {{-- Opção 2: Limpar --}}
+            <label class="block p-3.5 rounded-xl border border-slate-200 dark:border-slate-750 bg-slate-50/50 dark:bg-slate-950/10 cursor-pointer hover:border-brand-500 transition-all">
+                <div class="flex items-center gap-3">
+                    <input type="radio" name="delete_action" value="clear" x-model="action" class="text-brand-600 focus:ring-brand-500 border-slate-300">
+                    <div class="flex-1">
+                        <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Deixar em branco (Limpar)</span>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Remove a opção desses registros, deixando o campo vazio.</p>
+                    </div>
+                </div>
+            </label>
+        </div>
+
+        <div class="flex gap-2.5 mt-6">
+            <button type="button" @click="cancel()"
+                    class="flex-1 px-4 py-2 border border-slate-200 dark:border-slate-750 text-slate-500 dark:text-slate-400 text-xs font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all">
+                Cancelar
+            </button>
+            <button type="button" @click="confirm()" :disabled="action === 'replace' && !replacement"
+                    class="flex-1 px-4 py-2 bg-rose-600 hover:bg-rose-750 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-all shadow-sm">
+                Confirmar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function optionDeleteModal() {
+    return {
+        show: false,
+        type: '',
+        option: '',
+        count: 0,
+        entityType: '',
+        list: [],
+        action: 'replace',
+        replacement: '',
+        callback: null,
+
+        openModal(detail) {
+            this.show = true;
+            this.type = detail.type;
+            this.option = detail.option;
+            this.count = detail.count;
+            this.entityType = detail.entityType;
+            this.list = detail.options.filter(o => o !== detail.option);
+            this.action = 'replace';
+            this.replacement = '';
+            this.callback = detail.callback;
+        },
+        cancel() {
+            this.show = false;
+        },
+        confirm() {
+            this.show = false;
+            if (this.callback) {
+                this.callback({
+                    action: this.action,
+                    replacement: this.replacement
+                });
+            }
+        }
     };
 }
 </script>
