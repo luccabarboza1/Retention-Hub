@@ -87,7 +87,7 @@
                 <div @click="select(opt)"
                      :class="hi === i || value === opt
                          ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 font-bold'
-                         : 'text-slate-700 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
+                         : 'text-slate-800 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
                      class="px-4 py-2.5 text-xs cursor-pointer transition-colors flex items-center justify-between">
                     <span x-text="opt"></span>
                     <svg x-show="value === opt" class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
