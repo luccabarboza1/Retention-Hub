@@ -10,7 +10,7 @@ $tierColors = [
     'bronze' => 'from-orange-300 to-orange-500 text-white font-bold',
     'premium' => 'from-brand-500 to-accent-indigo text-white font-bold shadow-glow-brand',
     'vip' => 'from-rose-500 to-pink-600 text-white font-bold shadow-sm',
-    'standard' => 'from-slate-100 to-slate-200 text-slate-600 font-bold',
+    'standard' => 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 text-slate-600 dark:text-slate-300 font-bold',
 ];
 $tColorKey = strtolower($customer->tier ?? '');
 $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
@@ -20,7 +20,7 @@ $tGrad = $tierColors[$tColorKey] ?? $tierColors['standard'];
 <div class="max-w-7xl mx-auto space-y-6" x-data="{ editing: false }">
 
     {{-- Header Action Deck --}}
-    <div class="flex items-center justify-between bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-850 rounded-2xl p-5 shadow-premium shrink-0">
+    <div class="flex items-center justify-between bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-5 shadow-premium shrink-0">
         <div class="flex items-center gap-3">
             <a href="{{ route('customers.index') }}" class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 flex items-center justify-center transition-all font-bold" title="Voltar">
                 ←

@@ -569,7 +569,7 @@ function confirmModal() {
             </svg>
         </div>
 
-        <h3 class="text-sm font-extrabold text-slate-850 dark:text-slate-100 text-center mb-1">Opção em uso</h3>
+        <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 text-center mb-1">Opção em uso</h3>
         
         <p class="text-xs text-slate-500 dark:text-slate-400 text-center leading-relaxed mb-5">
             A opção <strong class="text-slate-800 dark:text-slate-200">"<span x-text="option"></span>"</strong> está sendo utilizada por 

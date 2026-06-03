@@ -10,7 +10,7 @@ $tierColors = [
     'bronze' => 'from-orange-300 to-orange-500 text-white font-bold',
     'premium' => 'from-brand-500 to-accent-indigo text-white font-bold shadow-glow-brand',
     'vip' => 'from-rose-500 to-pink-600 text-white font-bold shadow-sm',
-    'standard' => 'from-slate-100 to-slate-200 text-slate-600 font-bold',
+    'standard' => 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 text-slate-600 dark:text-slate-300 font-bold',
 ];
 @endphp
 
@@ -19,7 +19,7 @@ $tierColors = [
 
     @if(strlen($q) < 2)
     <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-16 text-center shadow-premium animate-fadeIn">
-        <div class="w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-300 dark:text-slate-600 flex items-center justify-center text-3xl mx-auto mb-4 border border-slate-100 dark:border-slate-850">
+        <div class="w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-300 dark:text-slate-600 flex items-center justify-center text-3xl mx-auto mb-4 border border-slate-100 dark:border-slate-800">
             🔍
         </div>
         <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300">Central de Pesquisa Inteligente</h3>

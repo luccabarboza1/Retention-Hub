@@ -10,7 +10,7 @@ $tierColors = [
     'bronze' => 'from-orange-300 to-orange-500 text-white font-bold',
     'premium' => 'from-brand-500 to-accent-indigo text-white font-bold shadow-glow-brand',
     'vip' => 'from-rose-500 to-pink-600 text-white font-bold shadow-sm',
-    'standard' => 'from-slate-100 to-slate-200 text-slate-600 font-bold',
+    'standard' => 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 text-slate-600 dark:text-slate-300 font-bold',
 ];
 @endphp
 
