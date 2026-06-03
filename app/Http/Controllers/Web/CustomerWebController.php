@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Events\CustomerCreated;
 use App\Events\CustomerUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\AppSetting;
@@ -87,7 +88,7 @@ class CustomerWebController extends Controller
 
         $customer->syncTags($data['tags'] ?? []);
 
-        event(new CustomerUpdated($customer));
+        event(new CustomerCreated($customer));
         return redirect()->route('customers.show', $customer)->with('success', 'Cliente cadastrado com sucesso.');
     }
 

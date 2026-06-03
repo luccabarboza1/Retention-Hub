@@ -67,7 +67,7 @@
                 <div class="md:col-span-2">
                     <label class="field-label">Eventos <span class="text-rose-500">*</span></label>
                     <div class="flex flex-wrap gap-2 mt-1">
-                        @foreach(['*' => 'Todos os eventos', 'card.created' => 'Card criado', 'card.updated' => 'Card atualizado', 'card.finished' => 'Card encerrado', 'customer.updated' => 'Cliente atualizado'] as $val => $label)
+                        @foreach(['*' => 'Todos os eventos', 'customer.created' => 'Cliente criado', 'customer.updated' => 'Cliente atualizado', 'card.created' => 'Card criado', 'card.updated' => 'Card atualizado', 'card.finished' => 'Card encerrado'] as $val => $label)
                         <label class="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border cursor-pointer select-none transition-all
                                       bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400
                                       has-[:checked]:bg-brand-50 has-[:checked]:dark:bg-brand-900/20 has-[:checked]:border-brand-400 has-[:checked]:dark:border-brand-700 has-[:checked]:text-brand-700 has-[:checked]:dark:text-brand-300">
@@ -170,7 +170,7 @@
                         <div class="md:col-span-2">
                             <label class="field-label">Eventos</label>
                             <div class="flex flex-wrap gap-2 mt-1">
-                                @foreach(['*' => 'Todos os eventos', 'card.created' => 'Card criado', 'card.updated' => 'Card atualizado', 'card.finished' => 'Card encerrado', 'customer.updated' => 'Cliente atualizado'] as $val => $label)
+                                @foreach(['*' => 'Todos os eventos', 'customer.created' => 'Cliente criado', 'customer.updated' => 'Cliente atualizado', 'card.created' => 'Card criado', 'card.updated' => 'Card atualizado', 'card.finished' => 'Card encerrado'] as $val => $label)
                                 <label class="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border cursor-pointer select-none transition-all
                                               bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400
                                               has-[:checked]:bg-brand-50 has-[:checked]:dark:bg-brand-900/20 has-[:checked]:border-brand-400 has-[:checked]:dark:border-brand-700 has-[:checked]:text-brand-700 has-[:checked]:dark:text-brand-300">
@@ -210,7 +210,7 @@
     <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5">
         <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Referência de Eventos</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-            @foreach(['card.created' => 'Card criado via interface ou API', 'card.updated' => 'Card editado (campos, status)', 'card.finished' => 'Card encerrado (Retido ou Churn)', 'customer.updated' => 'Cliente criado ou atualizado'] as $evt => $desc)
+            @foreach(['customer.created' => 'Cliente cadastrado pela primeira vez', 'customer.updated' => 'Dados do cliente atualizados', 'card.created' => 'Card criado via interface ou API', 'card.updated' => 'Card editado (campos, status, etapa)', 'card.finished' => 'Card encerrado (Retido ou Churn)'] as $evt => $desc)
             <div class="flex items-start gap-2.5">
                 <code class="text-[10px] font-mono font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 px-2 py-0.5 rounded shrink-0">{{ $evt }}</code>
                 <span class="text-[11px] text-slate-400 dark:text-slate-500">{{ $desc }}</span>

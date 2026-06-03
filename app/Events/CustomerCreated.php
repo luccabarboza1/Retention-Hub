@@ -5,11 +5,11 @@ namespace App\Events;
 use App\Models\Customer;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class CustomerUpdated
+class CustomerCreated
 {
     use Dispatchable;
 
-    public string $triggerType = 'customer.updated';
+    public string $triggerType = 'customer.created';
     public int $entityId;
 
     public function __construct(public readonly Customer $customer)
