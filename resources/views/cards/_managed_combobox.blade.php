@@ -7,6 +7,7 @@
 @php
     $freeText = $freeText ?? true;
     $saveUrl = $saveUrl ?? (isset($type) ? route('settings.card-options', $type) : '');
+    $col = $col ?? '';
     
     // Normalizar opções para array de strings
     if (isset($options)) {
