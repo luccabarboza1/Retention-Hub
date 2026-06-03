@@ -362,6 +362,7 @@ function managedCombobox(saveUrl, opts, initVal) {
         managing:  false,
         newOption: '',
         saving:    false,
+        justFocused: false,
         init() {
             this.filtered = [...this.options];
         },

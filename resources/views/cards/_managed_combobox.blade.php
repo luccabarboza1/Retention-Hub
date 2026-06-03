@@ -45,9 +45,17 @@
     {{-- Trigger — padrão select-wrap nativo do projeto (mantém a chevron e o tamanho idênticos) --}}
     <div class="select-wrap">
         <input type="text"
-               @if($freeText) x-model="query" @input="filter()" @else :value="value" readonly @endif
-               @focus="open = true"
-               @click="{{ !$freeText ? 'open = !open' : '' }}"
+               @if($freeText)
+                   x-model="query"
+                   @input="filter()"
+                   @focus="open = true"
+                   @click.stop="open = true"
+               @else
+                   :value="value"
+                   readonly
+                   @focus="open = true; justFocused = true; setTimeout(() => justFocused = false, 200)"
+                   @click.stop="if (justFocused) { justFocused = false; } else { open = !open; }"
+               @endif
                @keydown.arrow-down.prevent="nav(1)"
                @keydown.arrow-up.prevent="nav(-1)"
                @keydown.enter.prevent="confirm()"
