@@ -121,10 +121,16 @@ class CustomerWebController extends Controller
     private function formOptions(): array
     {
         $planConfigs = ProductPlanConfig::orderBy('product_type')->orderBy('plan_name')->get();
-        $tiers    = collect(['Gold', 'Silver', 'Bronze', 'Premium', 'VIP']);
+
+        $storedTiers    = json_decode(AppSetting::get('customer_tiers',    '[]'), true) ?: [];
+        $storedSegments = json_decode(AppSetting::get('customer_segments', '[]'), true) ?: [];
+
+        $tiers    = collect(array_merge(['Gold', 'Silver', 'Bronze', 'Premium', 'VIP'], $storedTiers))
+                        ->unique()->sort()->values();
         $plans    = Customer::whereNotNull('plan_name')->distinct()->orderBy('plan_name')->pluck('plan_name')
                         ->merge(['Host Básico', 'Host Pro', 'Host Enterprise', 'Talk2 Basic', 'Talk2 Pro'])->unique()->sort()->values();
         $segments = Customer::whereNotNull('segment')->distinct()->orderBy('segment')->pluck('segment')
+                        ->merge($storedSegments)
                         ->merge(['E-commerce', 'SaaS', 'Varejo', 'Serviços', 'Indústria', 'Fintech', 'EdTech'])->unique()->sort()->values();
         $sizes    = collect(['Microempresa', 'Pequeno Porte', 'Médio Porte', 'Grande Porte', 'Enterprise']);
         $channels = Customer::whereNotNull('channel_type')->distinct()->orderBy('channel_type')->pluck('channel_type')

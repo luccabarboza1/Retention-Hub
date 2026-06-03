@@ -18,6 +18,19 @@ class GeneralSettingsController extends Controller
         return view('settings.general', compact('settings'));
     }
 
+    public function saveCustomerOptions(string $type, Request $request): JsonResponse
+    {
+        $allowed = ['tiers', 'segments'];
+        abort_unless(in_array($type, $allowed), 404);
+
+        $options = $request->validate(['options' => 'present|array'])['options'];
+        $options = array_values(array_filter(array_unique(array_map('trim', $options))));
+
+        AppSetting::set("customer_{$type}", json_encode($options));
+
+        return response()->json(['ok' => true, 'options' => $options]);
+    }
+
     public function saveCardOptions(string $type, Request $request): JsonResponse
     {
         $allowed = ['ombudsman_agents', 'ticket_origins', 'responsible_teams'];

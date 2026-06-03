@@ -126,25 +126,8 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                {{-- Tier combobox --}}
-                <div x-data="combobox(@json($tiers->values()), '{{ old('tier') }}')" class="relative md:col-span-2" @click.outside="open = false">
-                    <label class="field-label">Tier</label>
-                    <div class="relative">
-                        <input type="text" x-model="query" @input="filter()" @focus="open = true"
-                               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
-                               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
-                               placeholder="Ex: Gold, VIP…" class="field-input pr-8">
-                        <button type="button" @click="open = !open" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                    </div>
-                    <input type="hidden" name="tier" x-model="value">
-                    <div x-show="open && filtered.length" x-cloak class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
-                        <template x-for="(opt, i) in filtered" :key="opt">
-                            <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'" class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
-                        </template>
-                    </div>
-                </div>
+                {{-- Tier managed combobox --}}
+                @include('customers._managed_combobox', ['type' => 'tiers', 'name' => 'tier', 'label' => 'Tier', 'placeholder' => 'Selecione…', 'options' => $tiers, 'old' => old('tier'), 'col' => 'md:col-span-2', 'freeText' => false])
 
                 <div>
                     <label class="field-label">Data de Contratação</label>
@@ -165,25 +148,8 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                {{-- Segmento combobox --}}
-                <div x-data="combobox(@json($segments->values()), '{{ old('segment') }}')" class="relative" @click.outside="open = false">
-                    <label class="field-label">Segmento de Atuação</label>
-                    <div class="relative">
-                        <input type="text" x-model="query" @input="filter()" @focus="open = true"
-                               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
-                               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
-                               placeholder="Ex: E-commerce, SaaS…" class="field-input pr-8">
-                        <button type="button" @click="open = !open" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                    </div>
-                    <input type="hidden" name="segment" x-model="value">
-                    <div x-show="open && filtered.length" x-cloak class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
-                        <template x-for="(opt, i) in filtered" :key="opt">
-                            <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'" class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
-                        </template>
-                    </div>
-                </div>
+                {{-- Segmento managed combobox --}}
+                @include('customers._managed_combobox', ['type' => 'segments', 'name' => 'segment', 'label' => 'Segmento de Atuação', 'placeholder' => 'Selecione…', 'options' => $segments, 'old' => old('segment'), 'col' => '', 'freeText' => false])
 
                 <div class="md:col-span-2">
                     <label class="field-label">Seguidores no Instagram</label>

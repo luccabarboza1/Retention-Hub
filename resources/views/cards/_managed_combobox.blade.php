@@ -1,8 +1,11 @@
 {{--
   Partial: combobox com gestão inline de opções
   Variáveis: $type, $name, $label, $placeholder, $options (Collection), $old (string), $col (classes extra)
+             $freeText (bool, default true) — false = somente selecionar, sem digitação livre
+             $saveUrl (string, opcional) — URL de save; padrão usa settings.card-options
 --}}
-<div x-data="managedCombobox('{{ $type }}', @json($options->values()), '{{ old($name, $old ?? '') }}')"
+@php $freeText = $freeText ?? true; @endphp
+<div x-data="managedCombobox('{{ $saveUrl ?? route('settings.card-options', $type) }}', @json($options->values()), '{{ old($name, $old ?? '') }}')"
      class="relative {{ $col }}"
      @click.outside="open = false; managing = false">
 
@@ -19,16 +22,23 @@
 
     {{-- Input do combobox --}}
     <div class="relative" x-show="!managing">
+        @if($freeText)
         <input type="text" x-model="query" @input="filter()" @focus="open = true"
                @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
                @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
                placeholder="{{ $placeholder }}" class="field-input pr-8">
-        <button type="button" @click="open = !open" tabindex="-1"
-                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+        @else
+        <button type="button" @click="open = !open"
+                class="field-input pr-8 text-left flex items-center justify-between cursor-pointer"
+                :class="value ? 'text-slate-800 dark:text-slate-100 font-semibold' : 'text-slate-400 dark:text-slate-500'">
+            <span x-text="value || '{{ $placeholder }}'"></span>
+        </button>
+        @endif
+        <span class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
-        </button>
+        </span>
     </div>
     <input type="hidden" name="{{ $name }}" x-model="value">
 

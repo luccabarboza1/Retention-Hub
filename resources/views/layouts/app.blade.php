@@ -350,7 +350,7 @@ function appShell() {
 </script>
 
 <script>
-function managedCombobox(type, opts, initVal) {
+function managedCombobox(saveUrl, opts, initVal) {
     const _csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
     return {
         // combobox state
@@ -399,7 +399,7 @@ function managedCombobox(type, opts, initVal) {
         async _persist() {
             this.saving = true;
             try {
-                await fetch(`/settings/card-options/${type}`, {
+                await fetch(saveUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': _csrf, 'Accept': 'application/json' },
                     body: JSON.stringify({ options: this.options })

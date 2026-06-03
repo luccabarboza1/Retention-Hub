@@ -49,8 +49,9 @@ Route::get('/customers/{customer}',         [CustomerWebController::class, 'show
 Route::patch('/customers/{customer}',       [CustomerWebController::class, 'update'])->name('customers.update');
 Route::get('/customers/{customer}/cards',   [CustomerWebController::class, 'cards'])->name('customers.cards');
 
-// Opções de campos de card (gerenciadas inline)
-Route::post('/settings/card-options/{type}', [GeneralSettingsController::class, 'saveCardOptions'])->name('settings.card-options');
+// Opções de campos gerenciadas inline
+Route::post('/settings/card-options/{type}',     [GeneralSettingsController::class, 'saveCardOptions'])->name('settings.card-options');
+Route::post('/settings/customer-options/{type}', [GeneralSettingsController::class, 'saveCustomerOptions'])->name('settings.customer-options');
 
 // Hub de configurações
 Route::get('/settings',          fn () => view('settings.index'))->name('settings.index');
