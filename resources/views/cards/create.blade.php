@@ -55,74 +55,14 @@
                     <input type="datetime-local" name="started_at" value="{{ old('started_at', now()->format('Y-m-d\TH:i')) }}" required class="field-input">
                 </div>
 
-                {{-- Ouvidor — combobox --}}
-                <div x-data="combobox(@json($agents->values()), '{{ old('ombudsman_agent') }}')" class="relative" @click.outside="open = false">
-                    <label class="field-label">Ouvidor Responsável</label>
-                    <div class="relative">
-                        <input type="text" x-model="query" @input="filter()" @focus="open = true"
-                               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
-                               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
-                               placeholder="Selecione ou digite…" class="field-input pr-8">
-                        <button type="button" @click="open = !open" tabindex="-1"
-                                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                    </div>
-                    <input type="hidden" name="ombudsman_agent" x-model="value">
-                    <div x-show="open && filtered.length" x-cloak
-                         class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
-                        <template x-for="(opt, i) in filtered" :key="opt">
-                            <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
-                                 class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
-                        </template>
-                    </div>
-                </div>
+                {{-- Ouvidor — managed combobox --}}
+                @include('cards._managed_combobox', ['type' => 'ombudsman_agents', 'name' => 'ombudsman_agent', 'label' => 'Ouvidor Responsável', 'placeholder' => 'Selecione ou digite…', 'options' => $agents, 'old' => old('ombudsman_agent'), 'col' => ''])
 
-                {{-- Origem do ticket — combobox --}}
-                <div x-data="combobox(@json($origins->values()), '{{ old('ticket_origin') }}')" class="relative" @click.outside="open = false">
-                    <label class="field-label">Origem do Ticket</label>
-                    <div class="relative">
-                        <input type="text" x-model="query" @input="filter()" @focus="open = true"
-                               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
-                               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
-                               placeholder="Ex: RA, WhatsApp, Email…" class="field-input pr-8">
-                        <button type="button" @click="open = !open" tabindex="-1"
-                                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                    </div>
-                    <input type="hidden" name="ticket_origin" x-model="value">
-                    <div x-show="open && filtered.length" x-cloak
-                         class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
-                        <template x-for="(opt, i) in filtered" :key="opt">
-                            <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
-                                 class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
-                        </template>
-                    </div>
-                </div>
+                {{-- Origem do ticket — managed combobox --}}
+                @include('cards._managed_combobox', ['type' => 'ticket_origins', 'name' => 'ticket_origin', 'label' => 'Origem do Ticket', 'placeholder' => 'Ex: RA, WhatsApp, Email…', 'options' => $origins, 'old' => old('ticket_origin'), 'col' => ''])
 
-                {{-- Time responsável — combobox --}}
-                <div x-data="combobox(@json($teams->values()), '{{ old('responsible_team') }}')" class="relative md:col-span-2" @click.outside="open = false">
-                    <label class="field-label">Time Responsável</label>
-                    <div class="relative">
-                        <input type="text" x-model="query" @input="filter()" @focus="open = true"
-                               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
-                               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
-                               placeholder="Ex: CS, Suporte, Comercial…" class="field-input pr-8">
-                        <button type="button" @click="open = !open" tabindex="-1"
-                                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                    </div>
-                    <input type="hidden" name="responsible_team" x-model="value">
-                    <div x-show="open && filtered.length" x-cloak
-                         class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
-                        <template x-for="(opt, i) in filtered" :key="opt">
-                            <div @click="select(opt)" :class="hi === i ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
-                                 class="px-4 py-2.5 text-sm cursor-pointer transition-colors" x-text="opt"></div>
-                        </template>
-                    </div>
-                </div>
+                {{-- Time responsável — managed combobox --}}
+                @include('cards._managed_combobox', ['type' => 'responsible_teams', 'name' => 'responsible_team', 'label' => 'Time Responsável', 'placeholder' => 'Ex: CS, Suporte, Comercial…', 'options' => $teams, 'old' => old('responsible_team'), 'col' => 'md:col-span-2'])
 
                 {{-- Título --}}
                 <div class="md:col-span-2">

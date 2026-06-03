@@ -350,6 +350,65 @@ function appShell() {
 </script>
 
 <script>
+function managedCombobox(type, opts, initVal) {
+    const _csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    return {
+        // combobox state
+        options:  [...(opts || [])],
+        filtered: [...(opts || [])],
+        value:    initVal || '',
+        query:    initVal || '',
+        open:     false,
+        hi:       -1,
+        init()    { this.filtered = [...this.options]; },
+        filter()  {
+            this.value = this.query; this.hi = -1;
+            this.filtered = this.query
+                ? this.options.filter(o => o.toLowerCase().includes(this.query.toLowerCase()))
+                : [...this.options];
+            this.open = true;
+        },
+        select(v) { this.value = v; this.query = v; this.open = false; this.hi = -1; },
+        nav(d)    {
+            if (!this.open) { this.open = true; return; }
+            this.hi = Math.max(-1, Math.min(this.filtered.length - 1, this.hi + d));
+        },
+        confirm() {
+            if (this.hi >= 0 && this.filtered[this.hi]) this.select(this.filtered[this.hi]);
+            else this.open = false;
+        },
+        // option manager state
+        managing:  false,
+        newOption: '',
+        saving:    false,
+        async addOption() {
+            const v = this.newOption.trim();
+            if (!v || this.options.includes(v)) return;
+            this.options.push(v);
+            this.filtered = [...this.options];
+            this.newOption = '';
+            await this._persist();
+        },
+        async removeOption(opt) {
+            this.options = this.options.filter(o => o !== opt);
+            this.filtered = this.query
+                ? this.options.filter(o => o.toLowerCase().includes(this.query.toLowerCase()))
+                : [...this.options];
+            await this._persist();
+        },
+        async _persist() {
+            this.saving = true;
+            try {
+                await fetch(`/settings/card-options/${type}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': _csrf, 'Accept': 'application/json' },
+                    body: JSON.stringify({ options: this.options })
+                });
+            } finally { this.saving = false; }
+        }
+    };
+}
+
 function combobox(opts, init) {
     return {
         options: opts || [],

@@ -6,6 +6,7 @@ use App\Events\CardCreated;
 use App\Events\CardFinished;
 use App\Events\CardUpdated;
 use App\Http\Controllers\Controller;
+use App\Models\AppSetting;
 use App\Models\Card;
 use App\Models\CardComment;
 use App\Models\Chat;
@@ -34,11 +35,17 @@ class CardWebController extends Controller
     public function create()
     {
         $customers = Customer::orderBy('company_name')->get(['id', 'company_name', 'client_name']);
-        $agents    = Card::whereNotNull('ombudsman_agent')->distinct()->orderBy('ombudsman_agent')->pluck('ombudsman_agent')->values();
-        $origins   = Card::whereNotNull('ticket_origin')->distinct()->orderBy('ticket_origin')->pluck('ticket_origin')
-                         ->merge(['RA', 'Email', 'Telefone', 'WhatsApp', 'Chat', 'Presencial'])->unique()->sort()->values();
-        $teams     = Card::whereNotNull('responsible_team')->distinct()->orderBy('responsible_team')->pluck('responsible_team')
-                         ->merge(['CS', 'Sucesso do Cliente', 'Comercial', 'Suporte', 'Produto', 'Financeiro'])->unique()->sort()->values();
+
+        $storedAgents  = json_decode(AppSetting::get('card_ombudsman_agents',   '[]'), true) ?: [];
+        $storedOrigins = json_decode(AppSetting::get('card_ticket_origins',     '[]'), true) ?: [];
+        $storedTeams   = json_decode(AppSetting::get('card_responsible_teams',  '[]'), true) ?: [];
+
+        $agents  = Card::whereNotNull('ombudsman_agent')->distinct()->pluck('ombudsman_agent')
+                       ->merge($storedAgents)->unique()->sort()->values();
+        $origins = Card::whereNotNull('ticket_origin')->distinct()->pluck('ticket_origin')
+                       ->merge($storedOrigins)->unique()->sort()->values();
+        $teams   = Card::whereNotNull('responsible_team')->distinct()->pluck('responsible_team')
+                       ->merge($storedTeams)->unique()->sort()->values();
 
         return view('cards.create', compact('customers', 'agents', 'origins', 'teams') + ['statuses' => $this->statuses()]);
     }
