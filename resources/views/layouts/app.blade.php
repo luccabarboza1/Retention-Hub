@@ -397,7 +397,10 @@ function managedCombobox(saveUrl, opts, initVal) {
             await this._persist();
         },
         async removeOption(opt) {
-            this.options = this.options.filter(o => o !== opt);
+            const idx = this.options.indexOf(opt);
+            if (idx > -1) {
+                this.options.splice(idx, 1);
+            }
             this.filtered = [...this.options];
             if (this.value === opt) {
                 this.value = '';
@@ -408,11 +411,16 @@ function managedCombobox(saveUrl, opts, initVal) {
         async _persist() {
             this.saving = true;
             try {
-                await fetch(saveUrl, {
+                const response = await fetch(saveUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': _csrf, 'Accept': 'application/json' },
-                    body: JSON.stringify({ options: this.options })
+                    body: JSON.stringify({ options: [...this.options] })
                 });
+                if (!response.ok) {
+                    console.error('Failed to persist options on server:', response.status, await response.text());
+                }
+            } catch (err) {
+                console.error('Network/Server error persisting options:', err);
             } finally { this.saving = false; }
         }
     };
