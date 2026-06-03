@@ -43,6 +43,23 @@
             </svg>
         </a>
 
+        {{-- Webhooks --}}
+        <a href="{{ route('settings.webhooks') }}"
+           class="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 shadow-premium hover:shadow-premium-hover hover:border-brand-300 dark:hover:border-brand-800 transition-all duration-200 flex items-center gap-4 min-h-[80px]">
+            <div class="w-10 h-10 rounded-xl bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 flex items-center justify-center shrink-0 group-hover:bg-violet-100 dark:group-hover:bg-violet-900/40 transition-colors">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Webhooks</h3>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Gerencie assinaturas para receber eventos em endpoints externos.</p>
+            </div>
+            <svg class="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-brand-400 transition-colors shrink-0 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </a>
+
         {{-- API Docs --}}
         <a href="/docs/api" target="_blank"
            class="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 shadow-premium hover:shadow-premium-hover hover:border-brand-300 dark:hover:border-brand-800 transition-all duration-200 flex items-center gap-4 min-h-[80px]">

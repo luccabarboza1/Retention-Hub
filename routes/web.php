@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\GeneralSettingsController;
 use App\Http\Controllers\Web\ProductSettingsController;
 use App\Http\Controllers\Web\ProductWebController;
 use App\Http\Controllers\Web\SearchController;
+use App\Http\Controllers\Web\WebhookSettingsController;
 use Illuminate\Support\Facades\Route;
 
 // Dashboard (home operacional + busca universal)
@@ -55,6 +56,12 @@ Route::post('/settings/card-options/{type}',     [GeneralSettingsController::cla
 Route::post('/settings/customer-options/{type}', [GeneralSettingsController::class, 'saveCustomerOptions'])->name('settings.customer-options');
 Route::post('/settings/options/check-usage',        [GeneralSettingsController::class, 'checkUsage'])->name('settings.options.check-usage');
 Route::post('/settings/options/delete-and-replace', [GeneralSettingsController::class, 'deleteAndReplace'])->name('settings.options.delete-and-replace');
+
+// Configurações de webhooks
+Route::get('/settings/webhooks',                [WebhookSettingsController::class, 'index'])->name('settings.webhooks');
+Route::post('/settings/webhooks',               [WebhookSettingsController::class, 'store'])->name('settings.webhooks.store');
+Route::patch('/settings/webhooks/{webhook}',    [WebhookSettingsController::class, 'update'])->name('settings.webhooks.update');
+Route::delete('/settings/webhooks/{webhook}',   [WebhookSettingsController::class, 'destroy'])->name('settings.webhooks.destroy');
 
 // Hub de configurações
 Route::get('/settings',          fn () => view('settings.index'))->name('settings.index');
