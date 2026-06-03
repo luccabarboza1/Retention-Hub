@@ -22,20 +22,21 @@
         </button>
     </div>
 
-    {{-- Input / trigger --}}
+    {{-- Input / trigger — idêntico ao combobox padrão --}}
     <div class="relative">
-        @if($freeText)
-        <input type="text" x-model="query" @input="filter()" @focus="open = true"
-               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
-               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
-               placeholder="{{ $placeholder }}" class="field-input pr-8">
-        @else
-        <button type="button" @click="open = !open"
-                class="field-input pr-8 text-left flex items-center cursor-pointer w-full"
-                :class="value ? 'text-slate-800 dark:text-slate-100 font-semibold' : 'text-slate-400 dark:text-slate-500'">
-            <span x-text="value || '{{ $placeholder }}'"></span>
-        </button>
-        @endif
+        <input type="text"
+               x-model="query"
+               @input="{{ $freeText ? 'filter()' : '' }}"
+               @focus="open = true"
+               @click="{{ !$freeText ? 'open = !open; $event.target.blur()' : '' }}"
+               @keydown.arrow-down.prevent="nav(1)"
+               @keydown.arrow-up.prevent="nav(-1)"
+               @keydown.enter.prevent="confirm()"
+               @keydown.escape="open = false"
+               placeholder="{{ $placeholder }}"
+               {{ !$freeText ? 'readonly' : '' }}
+               class="field-input pr-8 {{ !$freeText ? 'cursor-pointer' : '' }}"
+               :value="{{ $freeText ? 'query' : 'value' }}">
         <button type="button" @click="open = !open" tabindex="-1"
                 class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -45,33 +46,34 @@
     </div>
     <input type="hidden" name="{{ $name }}" x-model="value">
 
-    {{-- Dropdown: estado vazio --}}
-    <div x-show="open && options.length === 0" x-cloak
+    {{-- Dropdown --}}
+    <div x-show="open" x-cloak
          class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-hidden">
-        <div class="px-4 py-4 flex flex-col items-center gap-2.5 text-center">
+
+        {{-- Estado vazio --}}
+        <div x-show="options.length === 0" class="px-4 py-4 flex flex-col items-center gap-2.5 text-center">
             <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">Nenhuma opção criada.</p>
             <button type="button" @click="open = false; managing = true"
                     class="text-[10px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-100 dark:hover:bg-brand-900/50 px-3 py-1.5 rounded-lg transition-all">
                 + Adicionar primeira opção
             </button>
         </div>
-    </div>
 
-    {{-- Dropdown: com opções --}}
-    <div x-show="open && options.length > 0" x-cloak
-         class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-auto max-h-44">
-        <template x-for="(opt, i) in filtered" :key="opt">
-            <div @click="select(opt)"
-                 :class="hi === i || value === opt
-                     ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300'
-                     : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
-                 class="px-4 py-2.5 text-sm cursor-pointer transition-colors flex items-center justify-between">
-                <span x-text="opt"></span>
-                <svg x-show="value === opt" x-cloak class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                </svg>
-            </div>
-        </template>
+        {{-- Opções --}}
+        <div x-show="options.length > 0" class="overflow-auto max-h-44">
+            <template x-for="(opt, i) in filtered" :key="opt">
+                <div @click="select(opt)"
+                     :class="hi === i || value === opt
+                         ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300'
+                         : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
+                     class="px-4 py-2.5 text-sm cursor-pointer transition-colors flex items-center justify-between">
+                    <span x-text="opt"></span>
+                    <svg x-show="value === opt" class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+            </template>
+        </div>
     </div>
 
     {{-- Painel de gestão --}}
