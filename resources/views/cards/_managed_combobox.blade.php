@@ -39,25 +39,25 @@
         @endif
     </div>
 
-    {{-- Trigger — padrão select-wrap nativo do projeto (mantém a chevron e o tamanho idênticos) --}}
+    {{-- Trigger --}}
+    @if($freeText)
     <div class="select-wrap">
-        <input type="text"
-               @if($freeText)
-                   x-model="query"
-                   @input="filter()"
-                   @focus="open = true"
-               @else
-                   :value="value"
-                   readonly
-                   @click="open = !open"
-               @endif
-               @keydown.arrow-down.prevent="nav(1)"
-               @keydown.arrow-up.prevent="nav(-1)"
-               @keydown.enter.prevent="confirm()"
-               @keydown.escape="open = false"
+        <input type="text" x-model="query"
+               @input="filter()" @focus="open = true"
+               @keydown.arrow-down.prevent="nav(1)" @keydown.arrow-up.prevent="nav(-1)"
+               @keydown.enter.prevent="confirm()" @keydown.escape="open = false"
                placeholder="{{ $placeholder }}"
-               class="field-input cursor-pointer select-item text-slate-800 dark:text-slate-100 font-semibold">
+               class="field-input cursor-pointer text-slate-800 dark:text-slate-100">
     </div>
+    @else
+    <div class="select-wrap">
+        <button type="button" @click="open = !open"
+                class="field-input text-left"
+                :class="value ? 'text-slate-800 dark:text-slate-100 font-semibold' : 'text-slate-400 dark:text-slate-500'">
+            <span x-text="value || '{{ $placeholder }}'"></span>
+        </button>
+    </div>
+    @endif
     <input type="hidden" name="{{ $name }}" x-model="value">
 
     {{-- Dropdown de Opções --}}

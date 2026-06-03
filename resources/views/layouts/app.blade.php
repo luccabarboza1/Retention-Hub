@@ -116,7 +116,9 @@
             pointer-events: none;
         }
         .select-wrap select.field-input,
-        .select-wrap input.field-input { padding-right: 2.25rem; cursor: pointer; }
+        .select-wrap input.field-input,
+        .select-wrap button.field-input { padding-right: 2.25rem; cursor: pointer; }
+        button.field-input { display: flex; align-items: center; width: 100%; }
         .dark .select-wrap::after { border-top-color: #64748b; }
 
         /* Transição uniforme durante toggle de tema */
