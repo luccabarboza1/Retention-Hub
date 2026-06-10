@@ -1,0 +1,314 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Customer {
+  id                      Int           @id @default(autoincrement())
+  clientName              String        @map("client_name")
+  companyName             String        @map("company_name")
+  segment                 String?       @db.VarChar(100)
+  companySize             String?       @map("company_size") @db.VarChar(50)
+  instagramFollowersCount Int           @default(0) @map("instagram_followers_count")
+  email                   String?
+  phone                   String?       @db.VarChar(50)
+  relatedEmails           Json?         @map("related_emails")
+  monthlyFee              Decimal?      @map("monthly_fee") @db.Decimal(10, 2)
+  contractedAt            DateTime?     @map("contracted_at") @db.Date
+  canceledAt              DateTime?     @map("canceled_at") @db.Date
+  tier                    String?       @db.VarChar(50)
+  planName                String?       @map("plan_name") @db.VarChar(100)
+  createdBy               String?       @map("created_by") @db.VarChar(100)
+  updatedBy               String?       @map("updated_by") @db.VarChar(100)
+  deletedBy               String?       @map("deleted_by") @db.VarChar(100)
+  createdAt               DateTime      @default(now()) @map("created_at")
+  updatedAt               DateTime      @updatedAt @map("updated_at")
+  deletedAt               DateTime?     @map("deleted_at")
+  products                Product[]
+  cards                   Card[]
+  tags                    CustomerTag[]
+  productChanges          ProductChange[]
+
+  @@map("customers")
+}
+
+model Product {
+  id                 Int             @id @default(autoincrement())
+  customerId         Int             @map("customer_id")
+  externalId         String          @map("external_id")
+  contractIdentifier String?         @map("contract_identifier")
+  productType        String          @map("product_type") // 'Host' | 'Talk2'
+  planName           String?         @map("plan_name") @db.VarChar(100)
+  attendantsCount    Int?            @map("attendants_count")
+  hostServices       Json?           @map("host_services")
+  consumption        Decimal         @default(0) @db.Decimal(10, 2)
+  status             String          @default("ativo") // 'ativo' | 'cancelado'
+  hasChatbot         Boolean         @default(false) @map("has_chatbot")
+  hasAi              Boolean         @default(false) @map("has_ai")
+  hasImplementation  Boolean         @default(false) @map("has_implementation")
+  externalCreatedAt  DateTime?       @map("external_created_at")
+  createdBy          String?         @map("created_by") @db.VarChar(100)
+  updatedBy          String?         @map("updated_by") @db.VarChar(100)
+  deletedBy          String?         @map("deleted_by") @db.VarChar(100)
+  createdAt          DateTime        @default(now()) @map("created_at")
+  updatedAt          DateTime        @updatedAt @map("updated_at")
+  deletedAt          DateTime?       @map("deleted_at")
+  customer           Customer        @relation(fields: [customerId], references: [id])
+  cards              Card[]
+  changes            ProductChange[]
+
+  @@unique([externalId, productType], name: "uk_external_product")
+  @@map("products")
+}
+
+model ProductChange {
+  id               Int       @id @default(autoincrement())
+  customerId       Int       @map("customer_id")
+  productId        Int       @map("product_id")
+  changeType       String    @map("change_type") // 'upgrade' | 'downgrade' | 'churn' | 'reactivation'
+  deltaConsumption Decimal   @map("delta_consumption") @db.Decimal(10, 2)
+  createdBy        String?   @map("created_by") @db.VarChar(100)
+  updatedBy        String?   @map("updated_by") @db.VarChar(100)
+  deletedBy        String?   @map("deleted_by") @db.VarChar(100)
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+  customer         Customer  @relation(fields: [customerId], references: [id])
+  product          Product   @relation(fields: [productId], references: [id])
+
+  @@map("product_changes")
+}
+
+model Card {
+  id                          Int               @id @default(autoincrement())
+  customerId                  Int               @map("customer_id")
+  productId                   Int?              @map("product_id")
+  status                      String            @default("Aberto") @db.VarChar(50)
+  priority                    String            @default("normal") // 'baixa' | 'normal' | 'alta' | 'urgente'
+  startedAt                   DateTime          @map("started_at")
+  deadlineAt                  DateTime?         @map("deadline_at")
+  finishedAt                  DateTime?         @map("finished_at")
+  ticketOrigin                String?           @map("ticket_origin") @db.VarChar(100)
+  ombudsmanAgent              String?           @map("ombudsman_agent") @db.VarChar(100)
+  raClaimLink                 String?           @map("ra_claim_link") @db.VarChar(500)
+  rating                      Int?
+  firstResponseHours          Decimal?          @map("first_response_hours") @db.Decimal(10, 2)
+  raPublicResponseHours       Decimal?          @map("ra_public_response_hours") @db.Decimal(10, 2)
+  usageTimePostOmbudsmanHours Decimal?          @map("usage_time_post_ombudsman_hours") @db.Decimal(10, 2)
+  contactReason               String?           @map("contact_reason") @db.VarChar(255)
+  reasonDetails               String?           @map("reason_details")
+  responsibleTeam             String?           @map("responsible_team") @db.VarChar(100)
+  appliedSolution             String?           @map("applied_solution")
+  createdBy                   String?           @map("created_by") @db.VarChar(100)
+  updatedBy                   String?           @map("updated_by") @db.VarChar(100)
+  deletedBy                   String?           @map("deleted_by") @db.VarChar(100)
+  createdAt                   DateTime          @default(now()) @map("created_at")
+  updatedAt                   DateTime          @updatedAt @map("updated_at")
+  deletedAt                   DateTime?         @map("deleted_at")
+  customer                    Customer          @relation(fields: [customerId], references: [id])
+  product                     Product?          @relation(fields: [productId], references: [id])
+  chats                       Chat[]
+  comments                    CardComment[]
+  tags                        CardTag[]
+  activityLogs                CardActivityLog[]
+  relatedFrom                 RelatedCard[]     @relation("CardRelatedFrom")
+  relatedTo                   RelatedCard[]     @relation("CardRelatedTo")
+
+  @@index([customerId])
+  @@index([productId])
+  @@index([status])
+  @@map("cards")
+}
+
+model Chat {
+  id                 String                @id // string, não auto-increment
+  ombudsmanCardId    Int                   @map("ombudsman_card_id")
+  startedAt          DateTime?             @map("started_at")
+  closedAt           DateTime?             @map("closed_at")
+  firstResponseHours Decimal?              @map("first_response_hours") @db.Decimal(10, 2)
+  createdBy          String?               @map("created_by") @db.VarChar(100)
+  updatedBy          String?               @map("updated_by") @db.VarChar(100)
+  deletedBy          String?               @map("deleted_by") @db.VarChar(100)
+  createdAt          DateTime              @default(now()) @map("created_at")
+  updatedAt          DateTime              @updatedAt @map("updated_at")
+  deletedAt          DateTime?             @map("deleted_at")
+  card               Card                  @relation(fields: [ombudsmanCardId], references: [id])
+  interactions       ChatAgentInteraction[]
+
+  @@map("chats")
+}
+
+model ChatAgentInteraction {
+  id           Int      @id @default(autoincrement())
+  chatId       String   @map("chat_id")
+  agent        String   @db.VarChar(100)
+  interactedOn DateTime @map("interacted_on") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  chat         Chat     @relation(fields: [chatId], references: [id])
+
+  @@unique([chatId, agent, interactedOn])
+  @@map("chat_agent_interactions")
+}
+
+model CardComment {
+  id        Int      @id @default(autoincrement())
+  cardId    Int      @map("card_id")
+  author    String?  @db.VarChar(100)
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  card      Card     @relation(fields: [cardId], references: [id])
+
+  @@map("card_comments")
+}
+
+model CardActivityLog {
+  id        Int      @id @default(autoincrement())
+  cardId    Int      @map("card_id")
+  actor     String?  @db.VarChar(100)
+  action    String   @db.VarChar(50)
+  fromValue String?  @map("from_value")
+  toValue   String?  @map("to_value")
+  createdAt DateTime @default(now()) @map("created_at")
+  card      Card     @relation(fields: [cardId], references: [id])
+
+  @@map("card_activity_logs")
+}
+
+model RelatedCard {
+  cardId        Int      @map("card_id")
+  relatedCardId Int      @map("related_card_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  card          Card     @relation("CardRelatedFrom", fields: [cardId], references: [id])
+  related       Card     @relation("CardRelatedTo", fields: [relatedCardId], references: [id])
+
+  @@id([cardId, relatedCardId])
+  @@map("related_cards")
+}
+
+model Tag {
+  id        Int           @id @default(autoincrement())
+  name      String
+  type      String // 'customer' | 'card'
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+  customers CustomerTag[]
+  cards     CardTag[]
+
+  @@unique([name, type])
+  @@map("tags")
+}
+
+model CustomerTag {
+  customerId Int      @map("customer_id")
+  tagId      Int      @map("tag_id")
+  customer   Customer @relation(fields: [customerId], references: [id])
+  tag        Tag      @relation(fields: [tagId], references: [id])
+
+  @@id([customerId, tagId])
+  @@map("customer_tag")
+}
+
+model CardTag {
+  cardId Int  @map("card_id")
+  tagId  Int  @map("tag_id")
+  card   Card @relation(fields: [cardId], references: [id])
+  tag    Tag  @relation(fields: [tagId], references: [id])
+
+  @@id([cardId, tagId])
+  @@map("card_tag")
+}
+
+model KanbanColumn {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(100)
+  order     Int      @default(0)
+  color     String   @default("gray") @db.VarChar(30)
+  type      String   @default("aberto") // 'aberto' | 'concluido'
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("kanban_columns")
+}
+
+model WebhookSubscription {
+  id           Int                  @id @default(autoincrement())
+  name         String               @db.VarChar(100)
+  url          String               @db.VarChar(2048)
+  triggerTypes Json                 @map("trigger_types") // string[]
+  secret       String
+  isActive     Boolean              @default(true) @map("is_active")
+  description  String?
+  createdBy    String?              @map("created_by") @db.VarChar(100)
+  createdAt    DateTime             @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt @map("updated_at")
+  deletedAt    DateTime?            @map("deleted_at")
+  logs         WebhookDispatchLog[]
+
+  @@index([isActive, deletedAt])
+  @@map("webhook_subscriptions")
+}
+
+model WebhookDispatchLog {
+  id             Int                 @id @default(autoincrement())
+  subscriptionId Int                 @map("subscription_id")
+  eventType      String              @map("event_type")
+  eventEntityId  Int                 @map("event_entity_id")
+  attemptNumber  Int                 @default(1) @map("attempt_number")
+  maxAttempts    Int                 @default(5) @map("max_attempts")
+  status         String              @default("pending") // pending | success | failed | permanently_failed
+  payload        Json
+  targetUrl      String              @map("target_url") @db.VarChar(2048)
+  httpStatus     Int?                @map("http_status")
+  responseBody   String?             @map("response_body")
+  errorMessage   String?             @map("error_message") @db.VarChar(1000)
+  dispatchedAt   DateTime?           @map("dispatched_at")
+  respondedAt    DateTime?           @map("responded_at")
+  nextRetryAt    DateTime?           @map("next_retry_at")
+  createdAt      DateTime            @default(now()) @map("created_at")
+  updatedAt      DateTime            @updatedAt @map("updated_at")
+  subscription   WebhookSubscription @relation(fields: [subscriptionId], references: [id])
+
+  @@index([subscriptionId, status])
+  @@index([status, nextRetryAt])
+  @@index([eventType, eventEntityId])
+  @@map("webhook_dispatch_logs")
+}
+
+model SolutionTemplate {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(100)
+  body        String
+  productType String?  @map("product_type") @db.VarChar(20) // 'Talk2' | 'Host' | null
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("solution_templates")
+}
+
+model ProductPlanConfig {
+  id           Int      @id @default(autoincrement())
+  productType  String   @map("product_type") @db.VarChar(20)
+  planName     String   @map("plan_name") @db.VarChar(100)
+  pricePerUnit Decimal  @default(0) @map("price_per_unit") @db.Decimal(10, 2)
+  unitLabel    String   @default("unidade") @map("unit_label") @db.VarChar(50)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("product_plan_configs")
+}
+
+model AppSetting {
+  key       String   @id @db.VarChar(100)
+  value     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("app_settings")
+}
